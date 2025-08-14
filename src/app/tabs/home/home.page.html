@@ -1,0 +1,71 @@
+<!-- src/app/tabs/home/home.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>SignLingoKids</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="viewer">
+    <canvas #canvas></canvas>
+  </div>
+  <div class="action-buttons">
+    <ion-button (click)="playEmbeddedAnimation('t1')">Play T1</ion-button>
+    <ion-button (click)="playEmbeddedAnimation('rest')">Play Rest</ion-button>
+    <ion-button (click)="listModelAnimations()">List Animations</ion-button>
+  </div>
+  @if(listName && listName.length){ @for (name of listName; track $index) {
+  <div>
+    <ion-button (click)="playEmbeddedAnimation(name)"
+      >name: {{name}}</ion-button
+    >
+  </div>
+  } }
+  <div class="animation-indicator" *ngIf="isPlaying">
+    <ion-spinner name="circular"></ion-spinner>
+    <span>Playing: {{ selectedSign?.label }}</span>
+  </div>
+  <div class="sign-info" *ngIf="selectedSign">
+    <ion-card>
+      <ion-card-content>
+        <h2>{{ selectedSign.label }}</h2>
+        <p *ngIf="selectedSign.description">{{ selectedSign.description }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-list>
+    <ion-item
+      *ngFor="let sign of aslSigns"
+      button
+      (click)="playSign(sign)"
+      [color]="selectedSign?.id === sign.id && isPlaying ? 'success' : (selectedSign?.id === sign.id ? 'primary' : undefined)"
+    >
+      <ion-avatar slot="start" *ngIf="sign.thumbUrl">
+        <ion-img [src]="sign.thumbUrl"></ion-img>
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ sign.label }}</h2>
+        <p *ngIf="sign.description">{{ sign.description }}</p>
+      </ion-label>
+      <ion-icon
+        slot="end"
+        name="play-circle"
+        *ngIf="selectedSign?.id === sign.id && isPlaying"
+      >
+      </ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="loading">
+    <ion-item>
+      <ion-label>Loading model…</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="error">
+    <ion-item>
+      <ion-label color="danger">{{ error }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
