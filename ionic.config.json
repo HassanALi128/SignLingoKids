@@ -1,0 +1,7 @@
+{
+  "name": "SignLingoKids",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
