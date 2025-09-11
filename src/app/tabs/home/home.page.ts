@@ -5,33 +5,34 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
+  OnInit,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonCardContent,
-  IonButton,
-  IonCard,
-  IonImg,
-  IonThumbnail,
-  IonAvatar,
-  IonIcon,
-  IonSpinner,
-} from '@ionic/angular/standalone';
+import {IonicModule} from '@ionic/angular'
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
+import { DataService } from 'src/app/services/data';
+import { addIcons } from 'ionicons';
+import { arrowBack, volumeHigh } from 'ionicons/icons';
 
 interface AslSign {
-  id: string; // Action file name or clip name
-  label: string; // Display name
-  description?: string; // Optional description
-  thumbUrl?: string; // Optional thumbnail
+  id: string;
+  label: string;
+  thumbUrl?: string;
+  audioUrl?: string;
+  actionName: string; // Name of the action in GLB file
+}
+
+interface Category {
+  id: string;
+  label: string;
+  thumbUrl?: string;
+  color?: string;
+  audioUrl?: string;
+  actionFile?: string; // Path to category's action GLB file
+  signs: AslSign[];
 }
 
 @Component({
@@ -41,135 +42,192 @@ interface AslSign {
   standalone: true,
   imports: [
     CommonModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonCard,
-    IonCardContent,
-    IonButton,
-    IonImg,
-    IonThumbnail,
-    IonAvatar,
-    IonIcon,
-    IonSpinner,
+    IonicModule
   ],
 })
-export class HomePage implements AfterViewInit, OnDestroy {
+export class HomePage implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
-  listName: string[] = [];
-  // Define available ASL signs - can be expanded
-  aslSigns: AslSign[] = [
-    {
-      id: 'Afraid',
-      label: 'Afraid',
-      description: 'Sign for showing fear or being scared',
-    },
-    {
-      id: 'Afternoon',
-      label: 'Afternoon',
-      description: 'Sign for showing Afternoon',
-    },
-    {
-      id: 'AirPlane',
-      label: 'AirPlane',
-      description: 'Sign for showing Air Plane',
-    },
-    {
-      id: 'Ball',
-      label: 'Ball',
-      description: 'Sign for showing Ball',
-    },
-    // Add more signs here as you add more action files
-  ];
+  @ViewChildren('scrollCard', { read: ElementRef }) scrollCards!: QueryList<ElementRef>;
 
+  // Data properties
+  categories: Category[] = [];
+  selectedCategory: Category | null = null;
   selectedSign?: AslSign;
+
+  // UI state
   loading = true;
   error?: string;
   characterLoaded = false;
   isPlaying = false;
-  constructor(private three: ThreeRenderer) {}
+  playedCount = 0;
+  learnedSigns: string[] = []; // Track which signs user has marked as learned
+
+  // Audio management
+  private currentAudio?: HTMLAudioElement;
+
+  constructor(
+    private three: ThreeRenderer,
+    private data: DataService
+  ) {
+    addIcons({volumeHigh,arrowBack});
+  }
+
+  async ngOnInit(): Promise<void> {
+    try {
+      this.categories = await this.data.loadCategories();
+      console.log('Loaded categories:', this.categories);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      this.error = 'Failed to load categories';
+    }
+  }
 
   async ngAfterViewInit(): Promise<void> {
     try {
+      if (!this.canvasRef) {
+        console.error('Canvas not found!');
+        return;
+      }
+
       const canvas = this.canvasRef.nativeElement;
-      const width =
-        canvas.clientWidth ||
-        canvas.parentElement?.clientWidth ||
-        window.innerWidth;
-      const height =
-        canvas.clientHeight || Math.round(window.innerHeight * 0.5);
+      const width = canvas.clientWidth || window.innerWidth;
+      const height = canvas.clientHeight || Math.round(window.innerHeight * 0.5);
 
-      console.log('Initializing ThreeJS with canvas size:', width, height);
       this.three.initialize(this.canvasRef, width, height);
-      this.three.setBackground('#f8f8f8');
 
-      // Load the Lisa character model - use simple relative path
-      console.log('Loading Lisa model...');
-      const modelPath = 'assets/aslkidanimation/models/lisa.glb';
-      await this.three.loadModel(modelPath);
+      // Load the main character model
+      await this.three.loadModel('assets/aslkidanimation/models/alsagirl_model.glb');
 
-      // Center the model ONLY ONCE after loading
+      // Load default actions (if any)
+      await this.three.loadActions('assets/aslkidanimation/actions/alsagirl_model_animation.glb');
       this.three.centerModel();
 
-      console.log('Model loaded and positioned');
-      console.log('Available animations:', this.three.getClipNames());
-      this.listName = this.three.getClipNames();
       this.characterLoaded = true;
       this.loading = false;
     } catch (e: any) {
-      console.error('Error in ngAfterViewInit:', e);
-      this.error = e?.message || 'Failed to load character model';
+      this.error = e?.message || 'Failed to load character';
       this.loading = false;
     }
   }
-  listModelAnimations() {
-    this.three.listModelAnimations();
-  }
-  playEmbeddedAnimation(name: string): void {
-    if (!this.characterLoaded) {
-      console.error('Character not loaded');
-      return;
+
+  //  Category Selection Logic
+  async selectCategory(category: Category): Promise<void> {
+    console.log('Selected category:', category);
+    this.selectedCategory = category;
+
+    // Play category audio
+    if (category.audioUrl) {
+      this.playAudio(category.audioUrl);
     }
 
-    console.log('Available animations:', this.three.getClipNames());
-    console.log('Attempting to play:', name);
-
-    // Try to play animation directly
-    this.three.play(name, 0.3);
+    // Load category-specific actions if available
+    if (category.actionFile) {
+      try {
+        await this.three.loadActions(category.actionFile);
+        console.log('Loaded actions for category:', category.label);
+      } catch (error) {
+        console.warn('Could not load category actions:', error);
+      }
+    }
   }
 
+  // 🔥 Sign Selection Logic - Only Animation, No Audio
   async playSign(sign: AslSign): Promise<void> {
-    if (!this.characterLoaded || this.isPlaying) {
-      return;
-    }
+    if (!this.characterLoaded || !this.selectedCategory) return;
 
-    this.isPlaying = true;
-    this.error = undefined;
+    console.log('Playing sign:', sign);
     this.selectedSign = sign;
 
     try {
-      console.log('Playing sign:', sign.id);
+      // Play the sign animation only
+      if (sign.actionName) {
+        this.three.play(sign.actionName);
+        console.log('Playing animation:', sign.actionName);
+      }
 
-      // Use relative path for assets that will work in all environments
-      const actionPath = `assets/aslkidanimation/actions/${sign.id}.glb`;
+      // ❌ Removed audio - audio will only play when user clicks Listen button
+      // ❌ Removed progress update - progress will only update when user checks "I Learned"
 
-      await this.three.playAnimationForExistingModel(actionPath);
-
-      // Set a timeout to match the animation duration
-      setTimeout(() => {
-        this.isPlaying = false;
-      }, 4000);
-    } catch (e: any) {
-      console.error('Error playing sign:', e);
-      this.error = `Failed to play sign: ${sign.id}`;
-      this.isPlaying = false;
+    } catch (error) {
+      console.error('Error playing sign:', error);
     }
   }
 
+  //  Audio Management
+  playAudio(audioUrl: string): void {
+    // Stop current audio if playing
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio = undefined;
+    }
+
+    try {
+      this.currentAudio = new Audio(audioUrl);
+      this.currentAudio.play().catch(error => {
+        console.warn('Could not play audio:', error);
+      });
+    } catch (error) {
+      console.warn('Error creating audio:', error);
+    }
+  }
+
+  // 🔥 Category Audio Button
+  playCategoryAudio(): void {
+    if (this.selectedCategory?.audioUrl) {
+      this.playAudio(this.selectedCategory.audioUrl);
+    }
+  }
+
+  //  Sign Audio Button
+  playSignAudio(): void {
+    if (this.selectedSign?.audioUrl) {
+      this.playAudio(this.selectedSign.audioUrl);
+    }
+  }
+
+  //  Back to Categories
+  backToCategories(): void {
+    this.selectedCategory = null;
+    this.selectedSign = undefined;
+    this.playedCount = 0;
+    this.learnedSigns = []; // Reset learned signs when going back
+  }
+
+  // 🔥 Progress Calculation
+  getProgress(): number {
+    if (!this.selectedCategory || this.selectedCategory.signs.length === 0) {
+      return 0;
+    }
+    return this.playedCount / this.selectedCategory.signs.length;
+  }
+
+  // 🔥 Check if sign is learned (checked by user)
+  isSignPlayed(sign: AslSign): boolean {
+    // Check if this sign is in the learned signs array
+    return this.learnedSigns.includes(sign.id);
+  }
+
+  // 🔥 Toggle learned status when user checks/unchecks
+  toggleLearnedStatus(sign: AslSign): void {
+    if (this.isSignPlayed(sign)) {
+      // Remove from learned signs
+      this.learnedSigns = this.learnedSigns.filter(id => id !== sign.id);
+      this.playedCount--;
+    } else {
+      // Add to learned signs
+      this.learnedSigns.push(sign.id);
+      this.playedCount++;
+    }
+    console.log('Learned signs:', this.learnedSigns);
+    console.log('Progress:', this.playedCount, '/', this.selectedCategory?.signs.length);
+  }
+
+  //  Animation Controls
+  listModelAnimations(): void {
+    this.three.listModelAnimations();
+  }
+
+  // 🔥 Window resize handling
   @HostListener('window:resize')
   onResize(): void {
     const canvas = this.canvasRef.nativeElement;
@@ -181,7 +239,29 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.three.resize(width, height);
   }
 
+  // 🔥 Scroll effect for sign cards
+  onScroll(event: any): void {
+    const container = event.target as HTMLElement;
+    const centerX = container.offsetWidth / 2;
+
+    this.scrollCards.forEach((el) => {
+      const card = el.nativeElement as HTMLElement;
+      const rect = card.getBoundingClientRect();
+      const cardCenter = rect.left + rect.width / 2;
+      const offset = Math.abs(centerX - cardCenter);
+
+      // Scale effect
+      const scale = Math.max(0.8, 1 - offset / 300);
+      card.style.transform = `scale(${scale})`;
+      card.style.opacity = String(scale);
+    });
+  }
+
   ngOnDestroy(): void {
-    // Service cleans up resources
+    // Clean up audio
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio = undefined;
+    }
   }
 }

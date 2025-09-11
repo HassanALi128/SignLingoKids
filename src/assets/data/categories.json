@@ -1,0 +1,112 @@
+[
+  {
+    "id": "animals",
+    "label": "Animals",
+    "thumbUrl": "assets/images/animals.png",
+    "color": "#ff8a65",
+    "audioUrl": "assets/audio/animals.m4a",
+      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+    "signs": [
+      {
+        "id": "cat",
+        "label": "Cat",
+        "thumbUrl": "assets/images/objects/cat.svg",
+        "audioUrl": "assets/audio/cat.m4a",
+        "actionName": "cat"
+      },
+      {
+        "id": "dog",
+        "label": "Dog",
+        "thumbUrl": "assets/images/objects/dog.svg",
+        "audioUrl": "assets/audio/dog.m4a",
+        "actionName": "dog"
+      },
+      {
+        "id": "bird",
+        "label": "Bird",
+        "thumbUrl": "assets/images/objects/bird.svg",
+        "audioUrl": "assets/audio/bird.m4a",
+        "actionName": "bird"
+      },
+      {
+        "id": "fish",
+        "label": "Fish",
+        "thumbUrl": "assets/images/objects/fish.svg",
+        "audioUrl": "assets/audio/fish.m4a",
+        "actionName": "fish"
+      }
+    ]
+  },
+  {
+    "id": "food",
+    "label": "Food",
+    "thumbUrl": "assets/images/food.png",
+    "color": "#4caf50",
+    "audioUrl": "assets/audio/food.m4a",
+      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+    "signs": [
+      {
+        "id": "apple",
+        "label": "Apple",
+        "thumbUrl": "assets/images/objects/apple.svg",
+        "audioUrl": "assets/audio/apple.m4a",
+        "actionName": "apple"
+      },
+      {
+        "id": "banana",
+        "label": "Banana",
+        "thumbUrl": "assets/images/objects/banana.svg",
+        "audioUrl": "assets/audio/banana.m4a",
+        "actionName": "banana"
+      }
+    ]
+  },
+  {
+    "id": "colors",
+    "label": "Colors",
+    "thumbUrl": "assets/images/colors.png",
+    "color": "#e91e63",
+    "audioUrl": "assets/audio/colors.m4a",
+      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+    "signs": [
+      {
+        "id": "red",
+        "label": "Red",
+        "thumbUrl": "assets/images/objects/red.svg",
+        "audioUrl": "assets/audio/red.m4a",
+        "actionName": "red"
+      },
+      {
+        "id": "blue",
+        "label": "Blue",
+        "thumbUrl": "assets/images/objects/blue.svg",
+        "audioUrl": "assets/audio/blue.m4a",
+        "actionName": "blue"
+      }
+    ]
+  },
+  {
+    "id": "numbers",
+    "label": "Numbers",
+    "thumbUrl": "assets/images/numbers.png",
+    "color": "#9c27b0",
+    "audioUrl": "assets/audio/numbers.m4a",
+      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+    "signs": [
+      {
+        "id": "one",
+        "label": "One",
+        "thumbUrl": "assets/images/spelling/1.svg",
+        "audioUrl": "assets/audio/one.m4a",
+        "actionName": "one"
+      },
+      {
+        "id": "two",
+        "label": "Two",
+        "thumbUrl": "assets/images/spelling/2.svg",
+        "audioUrl": "assets/audio/two.m4a",
+        "actionName": "two"
+      }
+    ]
+  }
+]
