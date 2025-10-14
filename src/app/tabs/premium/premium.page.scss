@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
+
+// Premium Header
+.premium-header {
+  .header-toolbar {
+    --background: white;
+    background: white;
+    --color: #000000;
+    box-shadow: none;
+  }
+
+  .back-button {
+    --color: #000000;
+    font-size: 24px;
+  }
+}
+
+// Premium Content
+.premium-content {
+  --background: white;
+  font-family: 'Comic Neue', cursive;
+}
+
+.premium-container {
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.premium-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 28px;
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 40px;
+  line-height: 1.2;
+}
+
+.features-list {
+  margin-bottom: 40px;
+  text-align: left;
+  max-width: 300px;
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #000000;
+
+    .bullet {
+      font-size: 24px;
+      margin-right: 15px;
+      color: #000000;
+    }
+
+    .feature-text {
+      font-family: 'Comic Neue', cursive;
+      font-weight: 500;
+    }
+  }
+}
+
+.buy-premium-button {
+  --background: #77bef0;
+  --color: #ffffff;
+  --border-radius: 15px;
+  --box-shadow: 0 8px 25px rgba(119, 190, 240, 0.3);
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  font-weight: bold;
+  height: 60px;
+  max-width: 300px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  // Chain pattern overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="chain" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="3" fill="%23FFD700" opacity="0.3"/><circle cx="30" cy="10" r="3" fill="%23FFD700" opacity="0.3"/><circle cx="10" cy="30" r="3" fill="%23FFD700" opacity="0.3"/><circle cx="30" cy="30" r="3" fill="%23FFD700" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23chain)"/></svg>') repeat;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .button-text {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  }
+}
+
+.character-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 20px;
+  position: relative;
+
+  .character {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .character-body {
+      font-size: 120px;
+      animation: characterBounce 2s infinite ease-in-out;
+      position: relative;
+      z-index: 2;
+    }
+
+    .floating-heart {
+      position: absolute;
+      top: -20px;
+      right: -10px;
+      font-size: 24px;
+      animation: heartFloat 3s infinite ease-in-out;
+      z-index: 3;
+    }
+  }
+}
+
+// Animations
+@keyframes characterBounce {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+@keyframes heartFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-15px) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .premium-title {
+    font-size: 24px;
+  }
+
+  .features-list {
+    .feature-item {
+      font-size: 16px;
+    }
+  }
+
+  .buy-premium-button {
+    font-size: 18px;
+    height: 50px;
+  }
+
+  .character-section {
+    .character {
+      .character-body {
+        font-size: 100px;
+      }
+
+      .floating-heart {
+        font-size: 20px;
+      }
+    }
+  }
+}

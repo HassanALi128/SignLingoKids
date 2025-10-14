@@ -1,0 +1,314 @@
+<ion-header class="cartoon-header">
+  <ion-toolbar class="rainbow-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" class="corner-btn left" (click)="goToLanding()">
+        <ion-icon name="home"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <!-- <ion-buttons slot="start">
+      <ion-button (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back" class="back-icon"></ion-icon>
+        <span class="back-text">Back</span>
+      </ion-button>
+    </ion-buttons> -->
+    <ion-title class="bouncy-title">
+      <span class="title-emoji">🧠</span>
+      Quiz Time!
+      <span class="title-emoji">🎯</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="kids-content">
+  <!-- Fun Background Elements -->
+  <div class="floating-shapes">
+    <div class="shape shape-1">⭐</div>
+    <div class="shape shape-2">🌈</div>
+    <div class="shape shape-3">🎈</div>
+    <div class="shape shape-4">🎨</div>
+    <div class="shape shape-5">🎪</div>
+  </div>
+
+  <!-- Complete Canvas Container with Everything Inside -->
+  <div class="viewer cartoon-viewer">
+    <div class="viewer-border">
+      <!-- 3D Model Canvas -->
+      <canvas #canvas></canvas>
+
+      <!-- Everything Inside Canvas Area -->
+      <div class="canvas-content">
+<!-- 🎉 Start Screen -->
+@if (!quizStarted && !quizCompleted) {
+  <div class="quiz-start-container">
+    <div class="quiz-welcome">
+
+      <div class="quiz-info">
+        <div class="info-item">
+          <span class="info-emoji">📝</span>
+          <span class="info-text">5 Questions</span>
+        </div>
+        <!-- <div class="info-item">
+          <span class="info-emoji">⏱️</span>
+          <span class="info-text">No Time Limit</span>
+        </div>
+        <div class="info-item">
+          <span class="info-emoji">🏆</span>
+          <span class="info-text">Earn Stars</span>
+        </div> -->
+      </div>
+
+      <ion-button (click)="startQuiz()" class="start-quiz-button" expand="block">
+        <ion-icon name="play" slot="start"></ion-icon>
+        Start Quiz!
+      </ion-button>
+    </div>
+
+     <!-- ⭐ Show history -->
+     @if (resultsHistory.length > 0) {
+       <div class="history-section">
+         <div class="quiz-results-header">
+           <h2 class="results-title">Quiz Results</h2>
+           <div class="total-badge">5/5</div>
+         </div>
+
+         <div class="results-cards">
+           @for (res of resultsHistory; track res; let i = $index) {
+             <div class="result-card"
+                  [class.awesome]="res.percentage >= 80"
+                  [class.good]="res.percentage >= 60 && res.percentage < 80"
+                  [class.fine]="res.percentage < 60"
+                  (click)="showResultModal(res)">
+               <div class="card-icon">
+                 @if (res.percentage >= 80) {
+                   <ion-icon name="star" color="warning"></ion-icon>
+                 } @else {
+                   <span class="emoji-icon">😊</span>
+                 }
+               </div>
+               <div class="card-text">
+                 <span class="result-message">
+                   @if (res.percentage >= 80) {
+                     Your Progress Was Awesome {{ res.score }}/{{ res.total }}
+                   } @else if (res.percentage >= 60) {
+                     Your Progress Was Good {{ res.score }}/{{ res.total }}
+                   } @else {
+                     Your Progress Was Fine {{ res.score }}/{{ res.total }}
+                   }
+                 </span>
+               </div>
+             </div>
+           }
+         </div>
+       </div>
+     }
+  </div>
+}
+
+
+  <!-- ❓ Quiz Question Screen -->
+  @if (quizStarted && !quizCompleted) {
+    <div class="quiz-question-container">
+      <!-- <div class="quiz-progress">
+        <div class="progress-info">
+          <span class="progress-text">Question {{ currentQuestionIndex + 1 }} of {{ totalQuestions }}</span>
+          <span class="progress-stars">⭐ {{ correctAnswers }}</span>
+        </div>
+        <ion-progress-bar [value]="(currentQuestionIndex + 1) / totalQuestions"></ion-progress-bar>
+      </div> -->
+
+      <div class="question-section">
+        <h2 class="question-title">{{ currentQuestion.question }}</h2>
+
+        <div class="media-container">
+          <ion-button (click)="playQuestionMedia()" fill="clear">
+            <ion-icon name="play-circle"></ion-icon>
+          </ion-button>
+        </div>
+
+        <p class="instruction-text">Select the answer!</p>
+      </div>
+
+      <div class="answers-container">
+        <!-- First Row - 2 Options -->
+        <div class="options-row">
+          @for (option of currentQuestion.options.slice(0, 2); track option; let i = $index) {
+            <div
+              class="answer-option"
+              [class.selected]="selectedAnswer === i"
+              [class.correct]="showResult && option.isCorrect"
+              [class.incorrect]="showResult && selectedAnswer === i && !option.isCorrect"
+              (click)="selectAnswer(i)">
+
+              <div class="option-content">
+                <div class="option-icon">
+                  <img [src]="option.imageUrl" [alt]="option.text" class="option-image">
+                </div>
+                <span class="option-text">{{ option.text }}</span>
+              </div>
+
+              @if (showResult) {
+                <div class="result-icon">
+                  @if (option.isCorrect) {
+                    <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                  }
+                  @if (selectedAnswer === i && !option.isCorrect) {
+                    <ion-icon name="close-circle" color="danger"></ion-icon>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Second Row - 3rd Option Centered -->
+        @if (currentQuestion.options.length > 2) {
+          <div class="options-row single-option">
+            <div
+              class="answer-option"
+              [class.selected]="selectedAnswer === 2"
+              [class.correct]="showResult && currentQuestion.options[2].isCorrect"
+              [class.incorrect]="showResult && selectedAnswer === 2 && !currentQuestion.options[2].isCorrect"
+              (click)="selectAnswer(2)">
+
+              <div class="option-content">
+                <div class="option-icon">
+                  <img [src]="currentQuestion.options[2].imageUrl" [alt]="currentQuestion.options[2].text" class="option-image">
+                </div>
+                <span class="option-text">{{ currentQuestion.options[2].text }}</span>
+              </div>
+
+              @if (showResult) {
+                <div class="result-icon">
+                  @if (currentQuestion.options[2].isCorrect) {
+                    <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                  }
+                  @if (selectedAnswer === 2 && !currentQuestion.options[2].isCorrect) {
+                    <ion-icon name="close-circle" color="danger"></ion-icon>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="check-button-container">
+        @if (!showResult) {
+          <ion-button (click)="checkAnswer()" class="check-button" expand="block" [disabled]="selectedAnswer === null">
+            Check <svg style="margin-left: 10px;" width="13" height="20" viewBox="0 0 13 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.8706 2.1092C3.99136 1.22995 2.58012 1.21565 1.71852 2.07726C0.856914 2.93886 0.871215 4.3501 1.75046 5.22934L8.129 11.6079C9.00824 12.4871 10.4195 12.5014 11.2811 11.6398C12.1427 10.7782 12.1284 9.36698 11.2491 8.48774L4.8706 2.1092Z" fill="#F4F5F0"/>
+              <path d="M11.2814 11.6722C12.143 10.8106 12.1287 9.39936 11.2495 8.52011C10.3702 7.64087 8.959 7.62657 8.0974 8.48817L1.84684 14.7387C0.985233 15.6003 0.999533 17.0116 1.87878 17.8908C2.75802 18.7701 4.16926 18.7844 5.03087 17.9228L11.2814 11.6722Z" fill="#F4F5F0"/>
+              </svg>
+
+
+          </ion-button>
+        }
+        @if (showResult) {
+          <div class="result-info">
+            <ion-icon name="checkmark-circle" color="success" class="result-icon"></ion-icon>
+            <span class="result-text">Answer submitted!</span>
+          </div>
+        }
+      </div>
+
+      <!-- Feedback Popup Modal -->
+      @if (showFeedback) {
+        <div class="feedback-popup-overlay" (click)="hideFeedback()">
+          <div class="feedback-popup" [class.correct-popup]="isCorrectAnswer" [class.incorrect-popup]="!isCorrectAnswer" (click)="$event.stopPropagation()">
+            <div class="popup-content">
+              <div class="popup-emoji">{{ isCorrectAnswer ? '🎉' : '😔' }}</div>
+              <h2 class="popup-title">{{ isCorrectAnswer ? 'Great Job!' : 'Oops!' }}</h2>
+              <p class="popup-message">{{ isCorrectAnswer ? 'You got it right!' : 'That\'s not quite right. Keep learning!' }}</p>
+
+              <div class="popup-actions">
+                <ion-button (click)="hideFeedback()" class="continue-button" expand="block">
+                  <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                  Continue
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- 🏆 Quiz Results Screen -->
+  @if (quizCompleted) {
+    <div class="quiz-results-container">
+      <div class="results-content">
+        <h2 class="results-label">Quiz Completed!</h2>
+
+        <div class="progress-card" (click)="showProgressPopup()">
+          <div class="progress-content">
+            <ion-icon name="star" class="star-icon"></ion-icon>
+            <span class="progress-text">{{ correctAnswers }}/{{ totalQuestions }} Correct</span>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </div>
+
+        <!-- 🎯 Results History -->
+        <div class="history-section">
+          <h2 class="history-title">Your Last Attempts</h2>
+          <ion-list>
+            @for (res of resultsHistory; track res) {
+              <ion-item>
+                <ion-icon name="trophy" slot="start" color="tertiary"></ion-icon>
+                <ion-label>
+                  <h3>{{ res.score }}/{{ res.total }} ({{ res.percentage }}%)</h3>
+                  <p>{{ res.date | date:'short' }}</p>
+                </ion-label>
+              </ion-item>
+            }
+          </ion-list>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Quiz Result Modal -->
+  @if (showResultModalFlag) {
+    <div class="result-modal-overlay" (click)="hideResultModal()">
+      <div class="result-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2 class="modal-title">Quiz Result</h2>
+        </div>
+
+        <div class="modal-content">
+          <div class="result-message">
+            <p class="congratulations-text">You Really did a great job</p>
+          </div>
+
+          <div class="progress-bar-section">
+            <div class="progress-bar-container">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" [style.width.%]="selectedResult?.percentage || 0"></div>
+              </div>
+              <div class="progress-text">{{ selectedResult?.score || 0 }}/{{ selectedResult?.total || 5 }}</div>
+            </div>
+          </div>
+
+          <div class="celebration-character">
+            <div class="character"><img src="assets/images/quiz-result.png" alt=""></div>
+            <div class="confetti">
+              <div class="confetti-piece yellow">⭐</div>
+              <div class="confetti-piece blue">💙</div>
+              <div class="confetti-piece pink">💖</div>
+              <div class="confetti-piece green">✨</div>
+            </div>
+          </div>
+
+          <ion-button (click)="hideResultModal()" expand="block" class="ok-button">
+            ok
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  }
+      </div>
+    </div>
+    <div class="viewer-decoration">
+      <span class="decoration-emoji">🌟</span>
+    </div>
+  </div>
+</ion-content>

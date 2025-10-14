@@ -1,0 +1,46 @@
+<ion-header class="premium-header">
+  <ion-toolbar class="header-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="premium-content">
+  <div class="premium-container">
+    <!-- Main Content -->
+    <div class="main-content">
+      <h1 class="premium-title">Premium Feature is<br>Still in progress</h1>
+
+      <!-- Features List -->
+      <div class="features-list">
+        <div class="feature-item">
+          <span class="bullet">•</span>
+          <span class="feature-text">200+ Sign</span>
+        </div>
+        <div class="feature-item">
+          <span class="bullet">•</span>
+          <span class="feature-text">More Model to interact</span>
+        </div>
+        <div class="feature-item">
+          <span class="bullet">•</span>
+          <span class="feature-text">More Emotes</span>
+        </div>
+      </div>
+
+      <!-- Buy Premium Button -->
+      <ion-button class="buy-premium-button" expand="block" (click)="buyPremium()">
+        <span class="button-text">Buy Premium</span>
+      </ion-button>
+    </div>
+
+    <!-- Character Illustration -->
+    <div class="character-section">
+      <div class="character">
+   <img src="assets/images/permium-page.png" alt="">
+      </div>
+    </div>
+  </div>
+</ion-content>

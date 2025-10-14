@@ -1,0 +1,57 @@
+<ion-header class="settings-header">
+  <ion-toolbar class="header-toolbar">
+ <ion-buttons slot="start">
+  <ion-button fill="clear" (click)="goBack()" class="back-button">
+    <ion-icon name="home"></ion-icon>
+  </ion-button>
+ </ion-buttons>
+    <ion-title class="header-title">Setting</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="settings-content">
+  <div class="settings-container">
+    <!-- More Section -->
+    <div class="more-section">
+      <h2 class="more-title">More</h2>
+
+      <div class="settings-list">
+        <div class="setting-item" (click)="openPremium()">
+          <div class="setting-icon">
+            <ion-icon name="card" class="dollar-icon"></ion-icon>
+          </div>
+          <span class="setting-label">Premium</span>
+          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="setting-item" (click)="restorePurchase()">
+          <div class="setting-icon">
+            <ion-icon name="refresh-circle" class="restore-icon"></ion-icon>
+          </div>
+          <span class="setting-label">Restore purchase</span>
+          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="setting-item" (click)="restoreProgress()">
+          <div class="setting-icon">
+            <ion-icon name="time" class="clock-icon"></ion-icon>
+          </div>
+          <span class="setting-label">Restore Progress</span>
+          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="setting-item" (click)="openPrivacyPolicy()">
+          <div class="setting-icon">
+            <ion-icon name="document-text" class="document-icon"></ion-icon>
+          </div>
+          <span class="setting-label">Privacy Policy</span>
+          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+        </div>
+      </div>
+
+      <div class="version-info">
+        <span class="version-text">v 1.1</span>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -2,8 +2,8 @@
   {
     "id": "animals",
     "label": "Animals",
-    "thumbUrl": "assets/images/animals.png",
-    "color": "#ff8a65",
+    "thumbUrl": "../../assets/images/objects/catanimals.svg",
+    "color": "#ff6b6b",
     "audioUrl": "assets/audio/animals.m4a",
       "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
     "signs": [
@@ -38,13 +38,135 @@
     ]
   },
   {
-    "id": "food",
-    "label": "Food",
-    "thumbUrl": "assets/images/food.png",
-    "color": "#4caf50",
+    "id": "basics",
+    "label": "Basics",
+    "thumbUrl": "../../assets/images/objects/car.svg",
+    "color": "#4ecdc4",
     "audioUrl": "assets/audio/food.m4a",
       "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
     "signs": [
+      {
+        "id": "bath",
+        "label": "Bath",
+        "thumbUrl": "assets/images/objects/bath.svg",
+        "audioUrl": "assets/audio/bath.m4a",
+        "actionName": "bath"
+      },
+      {
+        "id": "boat",
+        "label": "Boat",
+        "thumbUrl": "assets/images/objects/boat.svg",
+        "audioUrl": "assets/audio/boat.m4a",
+        "actionName": "boat"
+      },
+      {
+        "id": "book",
+        "label": "Book",
+        "thumbUrl": "assets/images/objects/book.svg",
+        "audioUrl": "assets/audio/book.m4a",
+        "actionName": "book"
+      },
+      {
+        "id": "candy",
+        "label": "Candy",
+        "thumbUrl": "assets/images/objects/candy.svg",
+        "audioUrl": "assets/audio/candy.m4a",
+        "actionName": "candy"
+      },
+      {
+        "id": "car",
+        "label": "Car",
+        "thumbUrl": "assets/images/objects/car.svg",
+        "audioUrl": "assets/audio/car.m4a",
+        "actionName": "car"
+      },
+      {
+        "id": "subway",
+        "label": "Subway",
+        "thumbUrl": "assets/images/objects/subway.svg",
+        "audioUrl": "assets/audio/subway.m4a",
+        "actionName": "subway"
+      },
+      {
+        "id": "teacher",
+        "label": "Teacher",
+        "thumbUrl": "assets/images/objects/teacher.svg",
+        "audioUrl": "assets/audio/teacher.m4a",
+        "actionName": "teacher"
+      },
+      {
+        "id": "thankyou",
+        "label": "Thankyou",
+        "thumbUrl": "assets/images/objects/thankyou.svg",
+        "audioUrl": "assets/audio/thankyou.m4a",
+        "actionName": "thankyou"
+      },
+      {
+        "id": "umbrella",
+        "label": "Umbrella",
+        "thumbUrl": "assets/images/objects/umbrella.svg",
+        "audioUrl": "assets/audio/umbrella.m4a",
+        "actionName": "umbrella"
+      },
+      {
+        "id": "underpants",
+        "label": "Underpants",
+        "thumbUrl": "assets/images/objects/underpants.svg",
+        "audioUrl": "assets/audio/underpants.m4a",
+        "actionName": "underpants"
+      }
+    ]
+  },
+  {
+    "id": "family&food",
+    "label": "Family & Food",
+    "thumbUrl": "../../assets/images/objects/apple.svg",
+    "color": "#45b7d1",
+    "audioUrl": "assets/audio/food.m4a",
+      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+    "signs": [
+      {
+        "id": "grandpa",
+        "label": "Grandpa",
+        "thumbUrl": "assets/images/objects/grandpa.svg",
+        "audioUrl": "assets/audio/grandpa.m4a",
+        "actionName": "grandpa"
+      },
+      {
+        "id": "brother",
+        "label": "Brother",
+        "thumbUrl": "assets/images/objects/brother.svg",
+        "audioUrl": "assets/audio/brother.m4a",
+        "actionName": "brother"
+      },
+      {
+        "id": "daddy",
+        "label": "Daddy",
+        "thumbUrl": "assets/images/objects/daddy.svg",
+        "audioUrl": "assets/audio/daddy.m4a",
+        "actionName": "daddy"
+      },
+      {
+        "id": "mommy",
+        "label": "Mommy",
+        "thumbUrl": "assets/images/objects/mommy.svg",
+        "audioUrl": "assets/audio/mommy.m4a",
+        "actionName": "mommy"
+      },
+      {
+        "id": "sister",
+        "label": "Sister",
+        "thumbUrl": "assets/images/objects/sister.svg",
+        "audioUrl": "assets/audio/sister.m4a",
+        "actionName": "sister"
+      },
+      {
+        "id": "grandma",
+        "label": "Grandma",
+        "thumbUrl": "assets/images/objects/grandma.svg",
+        "audioUrl": "assets/audio/grandma.m4a",
+        "actionName": "grandma"
+      },
       {
         "id": "apple",
         "label": "Apple",
@@ -53,19 +175,34 @@
         "actionName": "apple"
       },
       {
-        "id": "banana",
+        "id": "bread",
         "label": "Banana",
-        "thumbUrl": "assets/images/objects/banana.svg",
-        "audioUrl": "assets/audio/banana.m4a",
-        "actionName": "banana"
+        "thumbUrl": "assets/images/objects/bread.svg",
+        "audioUrl": "assets/audio/bread.m4a",
+        "actionName": "bread"
+      },
+      {
+        "id": "cake",
+        "label": "Cake",
+        "thumbUrl": "assets/images/objects/cake.svg",
+        "audioUrl": "assets/audio/cake.m4a",
+        "actionName": "cake"
+      },
+      {
+        "id": "drink",
+        "label": "Drink",
+        "thumbUrl": "assets/images/objects/drink.svg",
+        "audioUrl": "assets/audio/drink.m4a",
+        "actionName": "drink"
       }
+
     ]
   },
   {
-    "id": "colors",
-    "label": "Colors",
-    "thumbUrl": "assets/images/colors.png",
-    "color": "#e91e63",
+    "id": "emotions&colors",
+    "label": "Emotions & Colors",
+    "thumbUrl": "../../assets/images/objects/catemotions.svg",
+    "color": "#96ceb4",
     "audioUrl": "assets/audio/colors.m4a",
       "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
     "signs": [
@@ -82,30 +219,166 @@
         "thumbUrl": "assets/images/objects/blue.svg",
         "audioUrl": "assets/audio/blue.m4a",
         "actionName": "blue"
+      },
+      {
+        "id": "black",
+        "label": "Black",
+        "thumbUrl": "assets/images/objects/black.svg",
+        "audioUrl": "assets/audio/black.m4a",
+        "actionName": "black"
+      },
+      {
+        "id": "yellow",
+        "label": "Yellow",
+        "thumbUrl": "assets/images/objects/yellow.svg",
+        "audioUrl": "assets/audio/yellow.m4a",
+        "actionName": "yellow"
+      },
+      {
+        "id": "crying",
+        "label": "Crying",
+        "thumbUrl": "assets/images/objects/crying.svg",
+        "audioUrl": "assets/audio/crying.m4a",
+        "actionName": "crying"
+      },
+      {
+        "id": "happy",
+        "label": "Happy",
+        "thumbUrl": "assets/images/objects/happy.svg",
+        "audioUrl": "assets/audio/happy.m4a",
+        "actionName": "happy"
+      },
+      {
+        "id": "angry",
+        "label": "Angry",
+        "thumbUrl": "assets/images/objects/angry.svg",
+        "audioUrl": "assets/audio/angry.m4a",
+        "actionName": "angry"
       }
     ]
   },
   {
-    "id": "numbers",
-    "label": "Numbers",
-    "thumbUrl": "assets/images/numbers.png",
-    "color": "#9c27b0",
-    "audioUrl": "assets/audio/numbers.m4a",
+    "id": "nature",
+    "label": "Nature",
+    "thumbUrl": "assets/images/objects/catnature.svg",
+    "color": "#feca57",
+    "audioUrl": "assets/audio/nature.m4a",
       "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
     "signs": [
       {
-        "id": "one",
-        "label": "One",
-        "thumbUrl": "assets/images/spelling/1.svg",
-        "audioUrl": "assets/audio/one.m4a",
-        "actionName": "one"
+        "id": "autumn",
+        "label": "Autumn",
+        "thumbUrl": "assets/images/objects/autumn.svg",
+        "audioUrl": "assets/audio/autumn.m4a",
+        "actionName": "autumn"
       },
       {
-        "id": "two",
-        "label": "Two",
-        "thumbUrl": "assets/images/spelling/2.svg",
-        "audioUrl": "assets/audio/two.m4a",
-        "actionName": "two"
+        "id": "beach",
+        "label": "Beach",
+        "thumbUrl": "assets/images/objects/beach.svg",
+        "audioUrl": "assets/audio/beach.m4a",
+        "actionName": "beach"
+      },
+      {
+        "id": "forest",
+        "label": "Forest",
+        "thumbUrl": "assets/images/objects/forest.svg",
+        "audioUrl": "assets/audio/forest.m4a",
+        "actionName": "forest"
+      },
+      {
+        "id": "cloud",
+        "label": "Cloud",
+        "thumbUrl": "assets/images/objects/cloud.svg",
+        "audioUrl": "assets/audio/cloud.m4a",
+        "actionName": "cloud"
+      },
+      {
+        "id": "freezing",
+        "label": "Freeze",
+        "thumbUrl": "assets/images/objects/freezing.svg",
+        "audioUrl": "assets/audio/freezing.m4a",
+        "actionName": "freezing"
+      },
+      {
+        "id": "grass",
+        "label": "Grass",
+        "thumbUrl": "assets/images/objects/grass.svg",
+        "audioUrl": "assets/audio/grass.m4a",
+        "actionName": "grass"
+      },
+      {
+        "id": "dry",
+        "label": "Dry",
+        "thumbUrl": "assets/images/objects/dry.svg",
+        "audioUrl": "assets/audio/dry.m4a",
+        "actionName": "dry"
+      }
+    ]
+  },
+  {
+    "id": "playtime",
+    "label": "Playtime",
+    "thumbUrl": "assets/images/objects/catplaytime.svg",
+    "color": "#ff9ff3",
+    "audioUrl": "assets/audio/playtime.m4a",
+      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+    "signs": [
+      {
+        "id": "ball",
+        "label": "Ball",
+        "thumbUrl": "assets/images/objects/ball.svg",
+        "audioUrl": "assets/audio/ball.m4a",
+        "actionName": "ball"
+      },
+      {
+        "id": "balloon",
+        "label": "Balloon",
+        "thumbUrl": "assets/images/objects/balloon.svg",
+        "audioUrl": "assets/audio/balloon.m4a",
+        "actionName": "balloon"
+      },
+      {
+        "id": "bicycle",
+        "label": "Bicycle",
+        "thumbUrl": "assets/images/objects/bicycle.svg",
+        "audioUrl": "assets/audio/bicycle.m4a",
+        "actionName": "bicycle"
+      },
+      {
+        "id": "blocks",
+        "label": "Blocks",
+        "thumbUrl": "assets/images/objects/blocks.svg",
+        "audioUrl": "assets/audio/blocks.m4a",
+        "actionName": "blocks"
+      },
+      {
+        "id": "blow",
+        "label": "Blow",
+        "thumbUrl": "assets/images/objects/blow.svg",
+        "audioUrl": "assets/audio/blow.m4a",
+        "actionName": "blow"
+      },
+      {
+        "id": "candle",
+        "label": "Candle",
+        "thumbUrl": "assets/images/objects/candle.svg",
+        "audioUrl": "assets/audio/candle.m4a",
+        "actionName": "candle"
+      },
+      {
+        "id": "clown",
+        "label": "Clown",
+        "thumbUrl": "assets/images/objects/clown.svg",
+        "audioUrl": "assets/audio/clown.m4a",
+        "actionName": "clown"
+      },
+      {
+        "id": "decorating",
+        "label": "Decorating",
+        "thumbUrl": "assets/images/objects/decorating.svg",
+        "audioUrl": "assets/audio/decorating.m4a",
+        "actionName": "decorating"
       }
     ]
   }

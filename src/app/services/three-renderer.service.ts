@@ -2,8 +2,8 @@
 import { ElementRef, Injectable, NgZone, OnDestroy } from '@angular/core';
 import * as THREE from 'three';
 // Use the correct import paths that match your TypeScript config
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 @Injectable({
   providedIn: 'root',
@@ -35,27 +35,12 @@ export class ThreeRenderer implements OnDestroy {
   ): void {
     this.scene = new THREE.Scene();
 
-    // 🔥 Same Background as Page - Create gradient texture
-    const canvasTexture = document.createElement('canvas');
-    canvasTexture.width = 1024;
-    canvasTexture.height = 1024;
-    const ctx = canvasTexture.getContext('2d')!;
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvasTexture.height);
-
-    // Same gradient as page: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)
-    gradient.addColorStop(0, '#ff9a9e');
-    gradient.addColorStop(0.5, '#fecfef');
-    gradient.addColorStop(1, '#fecfef');
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvasTexture.width, canvasTexture.height);
-
-    const bgTexture = new THREE.CanvasTexture(canvasTexture);
-    this.scene.background = bgTexture;
+    // 🔥 White Background for Model
+    this.scene.background = new THREE.Color(0xffffff);
 
     // Camera
     this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    this.camera.position.set(0, 1, 2);
+    this.camera.position.set(0, 1.2, 2.5); // Moved back and up for zoom out
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -114,7 +99,7 @@ export class ThreeRenderer implements OnDestroy {
       const dir = new THREE.DirectionalLight(0xffffff, 1.2);
       dir.position.set(3, 6, 4);
       this.scene.add(ambient, dir);
-      this.camera.position.set(0, 1.2, 1.4);
+      this.camera.position.set(0, 1.2, 1.8); // Consistent zoom out position
       // Handle animations
       this.actions.clear();
       this.mixer = undefined;

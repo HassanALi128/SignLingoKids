@@ -1,9 +1,9 @@
 // Kids-friendly Cartoon Design
-@import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
 
 // Global Kids Theme - Same background everywhere
 ion-content {
-  --background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+  --background: #f8f9fa; // Light background for better contrast
   font-family: 'Comic Neue', cursive;
 }
 
@@ -12,15 +12,15 @@ ion-content {
 .progress-section,
 .fun-carousel,
 .content-container {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+  // background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
 }
 
 // Fun Header
 .cartoon-header {
   .rainbow-toolbar {
-    --background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+    --background: var(--ion-color-primary);
     --background-size: 400% 400%;
-    animation: rainbow 3s ease infinite;
+    // animation: rainbow 3s ease infinite; // Disabled since using solid color
 
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   }
@@ -28,6 +28,7 @@ ion-content {
   .bouncy-title {
     font-family: 'Fredoka One', cursive;
     font-size: 24px;
+    text-align: center;
     color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     animation: bounce 2s infinite;
@@ -93,7 +94,7 @@ ion-content {
   top: 56px; // Below header
   left: 0;
   width: 100%;
-  height: 40vh;
+  height: calc(100vh - 56px); // Full height minus header
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,17 +104,269 @@ ion-content {
   z-index: 10; // Above other content
 
   .viewer-border {
-    width: 100%; // Changed from 90% to 100%
-    height: 100%; // Changed from 90% to 100%
-    // border: 4px solid #fff; // Removed border
-    // border-radius: 20px; // Removed border radius
-    // box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 0 20px rgba(0,0,0,0.2); // Removed shadow
+  width: 100%;
+  height: 100%;
     overflow: hidden;
+    position: relative;
+    background: #f8f9fa; // Consistent background
 
     canvas {
       width: 100%;
-      height: 100%;
-      display: block;
+      height: 45%; // Model takes top 50%
+  display: block;
+}
+
+    // 🔥 Canvas Content - Everything Below Model
+    .canvas-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 55%; // Content takes bottom 55%
+      background: #f8f9fa; // Consistent with ion-content
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 5px 20px 20px 20px; // Reduced top padding, added bottom padding
+      z-index: 5;
+      -webkit-overflow-scrolling: touch; // Smooth scrolling on mobile
+      // No separator - completely seamless
+
+      // Categories Section
+      .categories-section {
+        margin-bottom: 15px; // Reduced margin for better fit
+
+        .section-title {
+          text-align: center;
+          font-family: 'Fredoka One', cursive;
+          font-size: 18px;
+          color: #333;
+          margin-bottom: 12px;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+
+          .title-icon {
+            font-size: 20px;
+            margin: 0 6px;
+            animation: bounce 2s infinite;
+          }
+        }
+
+        .categories-horizontal-scroll {
+          overflow-x: auto;
+          overflow-y: hidden;
+          -webkit-overflow-scrolling: touch;
+          scroll-snap-type: x mandatory;
+          padding: 0;
+          margin-top: 5rem;
+          width: calc(100% + 40px);
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          &::-webkit-scrollbar {
+            display: none; // Chrome/Safari
+          }
+        }
+
+        .categories-scroll-container {
+          display: flex;
+          gap: 15px;
+          padding: 5px 20px; // Increased padding for better spacing
+          min-width: max-content;
+          width: max-content; // Ensure full width for scrolling
+        }
+      }
+
+      // Category Detail Section
+      .category-detail-section {
+        .progress-section {
+          margin: 10px 0;
+          padding: 10px;
+          background: transparent;
+          border-radius: 15px;
+
+          .progress-label {
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+
+            .progress-emoji {
+              font-size: 18px;
+              margin: 0 6px;
+              animation: bounce 2s infinite;
+            }
+          }
+
+          .main-progress {
+            --progress-background: rgba(0,0,0,0.1);
+            --progress-color: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            height: 10px;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+          }
+
+          .progress-text {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+          }
+        }
+
+        .fun-header {
+          margin: 8px 0;
+          background: transparent; // Remove colored background
+          color: #333; // Change text color to dark
+          position: relative;
+          overflow: hidden;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+          }
+
+          .cartoon-button {
+            --background: #ffca28;
+            --color: #000;
+            --border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+
+            .button-text {
+              margin-left: 6px;
+            }
+          }
+
+          .cartoon-checkbox {
+            --background: #fff;
+            --border-color: #4caf50;
+            --checkmark-color: #4caf50;
+            --size: 24px;
+    border-radius: 12px;
+            padding: 6px;
+            font-weight: 700;
+
+            .checkbox-text {
+              margin-left: 6px;
+              font-size: 12px;
+            }
+          }
+        }
+
+        .fun-carousel {
+          margin: 10px 0;
+          position: relative;
+
+          .carousel-title {
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+
+            .carousel-emoji {
+      font-size: 20px;
+              margin: 0 6px;
+              animation: wiggle 2s ease-in-out infinite;
+            }
+          }
+
+          .scroll-container {
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .fun-sign-card {
+            flex: 0 0 auto;
+            width: 100px;
+            height: 140px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            scroll-snap-align: center;
+            transform-origin: center;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+
+            &:hover {
+              transform: translateY(-8px) scale(1.05);
+              box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            }
+
+            &:active {
+              transform: translateY(-4px) scale(0.95);
+            }
+
+            .card-decoration {
+              position: absolute;
+              top: 6px;
+              right: 6px;
+
+              .card-emoji {
+                font-size: 14px;
+                animation: twinkle 2s infinite;
+              }
+            }
+
+            .sign-avatar {
+              margin: 15px auto 8px;
+              width: 60px;
+              height: 60px;
+              border: 3px solid rgba(255,255,255,0.8);
+              box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+
+            .sign-label {
+              font-family: 'Fredoka One', cursive;
+              font-size: 12px;
+              font-weight: bold;
+              color: white;
+              margin: 8px 0;
+              text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            }
+
+            .play-indicator {
+              position: absolute;
+              bottom: 8px;
+              right: 8px;
+
+              .play-emoji {
+                font-size: 16px;
+                animation: pulse 2s infinite;
+              }
+            }
+
+            .learned-badge {
+              position: absolute;
+              top: 8px;
+              left: 8px;
+
+              .badge-emoji {
+                font-size: 16px;
+                background: rgba(255,255,255,0.9);
+                border-radius: 50%;
+                padding: 2px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -129,11 +382,9 @@ ion-content {
   }
 }
 
-// 🔥 Content Container - Scrollable
+// 🔥 Content Container - Now everything is inside canvas
 .content-container {
-  margin-top: calc(40vh + 56px); // Start below fixed model
-  position: relative;
-  z-index: 2;
+  display: none; // Hidden since everything is now inside canvas
 }
 
 // Categories Section
@@ -202,6 +453,56 @@ ion-content {
   height: 200px;
   scroll-snap-align: center;
 
+  // 🔥 Smaller size when inside canvas overlay
+  .categories-overlay & {
+    flex: 0 0 180px;
+    width: 180px;
+    height: 140px;
+    padding: 12px;
+
+    .category-info {
+      margin-bottom: 10px;
+
+      .category-icon {
+        .cartoon-avatar {
+          width: 40px;
+          height: 40px;
+        }
+
+        .default-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
+        }
+      }
+
+      .category-label {
+    font-size: 14px;
+      }
+    }
+
+    .fun-progress {
+      font-size: 12px;
+      margin-bottom: 10px;
+
+      .progress-emoji {
+        font-size: 16px;
+      }
+    }
+
+    .progress-container {
+      .cartoon-progress {
+        height: 6px;
+      }
+
+      .progress-emoji-small {
+        font-size: 12px;
+        right: -20px;
+        top: -6px;
+      }
+    }
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -253,19 +554,20 @@ ion-content {
     .category-icon {
       margin-bottom: 10px;
 
+
       .cartoon-avatar {
-        width: 60px;
-        height: 60px;
-        border: 4px solid rgba(255,255,255,0.8);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        width: 80px;
+        height: 80px;
+        // border: 4px solid rgba(255,255,255,0.8);
+        // box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         animation: float 3s ease-in-out infinite;
       }
 
       .default-icon {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
         background: rgba(255,255,255,0.2);
-        border-radius: 50%;
+        // border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -312,7 +614,7 @@ ion-content {
   border-radius: 20px;
   color: white;
   margin: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  // box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   position: relative;
   overflow: hidden;
 
@@ -333,7 +635,6 @@ ion-content {
     --border-radius: 25px;
     font-weight: 700;
     font-size: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
 
     &:hover {
@@ -588,10 +889,29 @@ ion-content {
 
   // 🔥 Mobile model adjustments
   .cartoon-viewer {
-    height: 35vh;
+    height: calc(100vh - 56px);
   }
 
   .content-container {
-    margin-top: calc(35vh + 3px); // Adjust for mobile
+    display: none; // Hidden since everything is now inside canvas
+  }
+}
+
+// Quiz Section
+.quiz-section {
+  margin: 20px;
+  padding: 20px;
+  background: transparent;
+  border-radius: 20px;
+
+  .quiz-button {
+    --background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    --color: white;
+    --border-radius: 25px;
+    --box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    height: 60px;
+    animation: pulse 2s infinite;
   }
 }

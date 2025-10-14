@@ -1,9 +1,12 @@
 <ion-header class="cartoon-header">
   <ion-toolbar class="rainbow-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" class="corner-btn left" (click)="goToLanding()">
+        <ion-icon name="home"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title class="bouncy-title">
-      <span class="title-emoji">🌟</span>
       SignLingoKids
-      <span class="title-emoji">🌟</span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -18,151 +21,141 @@
     <div class="shape shape-5">🎪</div>
   </div>
 
-  <!-- Fixed 3D Model Viewer -->
+  <!-- Complete Canvas Container with Everything Inside -->
   <div class="viewer cartoon-viewer">
     <div class="viewer-border">
+      <!-- 3D Model Canvas -->
       <canvas #canvas></canvas>
+
+      <!-- Everything Inside Canvas Area -->
+      <div class="canvas-content">
+        <!-- Categories List -->
+        @if (!selectedCategory) {
+        <div class="categories-section">
+          <h2 class="section-title">
+            <span class="title-icon">📚</span>
+            Choose Your Adventure!
+            <span class="title-icon">🎯</span>
+          </h2>
+
+          <!-- Horizontal Scrollable Categories -->
+          <div class="categories-horizontal-scroll">
+            <div class="categories-scroll-container">
+              @for (cat of categories; track cat.id) {
+              <div class="category-card cartoon-card" (click)="selectCategory(cat)" [style.background]="cat.color || '#f0f0f0'">
+                <!-- Fun Progress Counter -->
+                <div class="category-progress fun-progress">
+                  <span class="progress-emoji">🎪</span>
+                  <span class="progress-text">0/{{ cat.signs.length }}</span>
+                </div>
+
+                <!-- Category Info -->
+                <div class="category-info">
+                  <div class="category-icon">
+                    @if (cat.thumbUrl) {
+                    <!-- <ion-avatar class="cartoon-avatar"> -->
+                      <ion-img style="width: 7rem; margin-right: 15px;" [src]="cat.thumbUrl"></ion-img>
+                    <!-- </ion-avatar> -->
+                    } @else {
+                    <div class="default-icon">🎪</div>
+                    }
+                  </div>
+                  <ion-label class="category-label">{{ cat.label }}</ion-label>
+                </div>
+
+                <!-- Fun Progress Bar -->
+                <div class="progress-container">
+                  <ion-progress-bar [value]="0" class="cartoon-progress">
+                  </ion-progress-bar>
+                  <!-- <span class="progress-emoji-small">⭐</span> -->
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Category Detail with Signs List -->
+        @if (selectedCategory) {
+        <div class="category-detail-section">
+          <!-- Category Header -->
+          <div class="category-header fun-header">
+            <div class="category-back">
+              <ion-button fill="solid" shape="round" class="cartoon-button" (click)="backToCategories()">
+                <ion-icon name="arrow-back"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+
+          <!-- Progress Section -->
+          <div class="progress-section">
+            <div class="progress-label">
+              <span class="progress-emoji">🏆</span>
+              Your Progress
+              <span class="progress-emoji">🎯</span>
+            </div>
+            <ion-progress-bar
+              [value]="getProgress()"
+              class="main-progress">
+            </ion-progress-bar>
+            <div class="progress-text">{{ playedCount }}/{{ selectedCategory.signs.length }} signs learned!</div>
+          </div>
+
+          <!-- Selected Sign Header (when sign is selected) -->
+          @if (selectedSign) {
+          <div class="selected-sign-header fun-header">
+            <div class="sign-audio">
+              <ion-button fill="solid" shape="round" class="cartoon-button audio-button" (click)="playSignAudio()">
+                <ion-icon name="volume-high"></ion-icon>
+                <span class="button-text">Listen!</span>
+              </ion-button>
+            </div>
+            <div class="sign-check">
+              <ion-checkbox color="success" class="cartoon-checkbox" [checked]="isSignPlayed(selectedSign)" (ionChange)="toggleLearnedStatus(selectedSign!)">
+                <span class="checkbox-text">I Learned!</span>
+              </ion-checkbox>
+            </div>
+          </div>
+          }
+
+          <!-- Signs Carousel -->
+          <div class="sign-carousel fun-carousel" (ionScroll)="onScroll($event)" scrollEvents="true">
+            <div class="carousel-title">
+              <span class="carousel-emoji">🤟</span>
+              Tap to Learn Signs!
+              <span class="carousel-emoji">✨</span>
+            </div>
+            <div class="scroll-container">
+              @for (sign of selectedCategory.signs; track sign.id) {
+                <div class="scroll-card fun-sign-card" #scrollCard (click)="playSign(sign)" [class.selected]="selectedSign?.id === sign.id">
+                  <div class="card-decoration">
+                    <span class="card-emoji">✨</span>
+                  </div>
+                  <!-- <ion-avatar class="sign-avatar"> -->
+                    <ion-img style="width: 7rem; margin-right: 15px; margin-top: 15px;" [src]="sign.thumbUrl"></ion-img>
+                  <!-- </ion-avatar> -->
+                  <h2 class="sign-label">{{ sign.label }}</h2>
+                  <div class="play-indicator">
+                    <span class="play-emoji">▶️</span>
+                  </div>
+                  @if (isSignPlayed(sign)) {
+                  <div class="learned-badge">
+                    <span class="badge-emoji">✅</span>
+                  </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
     </div>
     <div class="viewer-decoration">
       <span class="decoration-emoji">🌟</span>
     </div>
   </div>
 
-  <!-- Scrollable Content Container -->
-  <div class="content-container">
-    <!-- Categories List -->
-    @if (!selectedCategory) {
-    <div class="categories-container">
-      <h2 class="section-title">
-        <span class="title-icon">📚</span>
-        Choose Your Adventure!
-        <span class="title-icon">🎯</span>
-      </h2>
 
-      <!-- Horizontal Scrollable Categories -->
-      <div class="categories-horizontal-scroll">
-        <div class="categories-scroll-container">
-          @for (cat of categories; track cat.id) {
-          <div class="category-card cartoon-card" (click)="selectCategory(cat)" [style.background]="cat.color || '#f0f0f0'">
-            <!-- Fun Progress Counter -->
-            <div class="category-progress fun-progress">
-              <span class="progress-emoji">🎪</span>
-              <span class="progress-text">0/{{ cat.signs.length }}</span>
-            </div>
-
-            <!-- Category Info -->
-            <div class="category-info">
-              <div class="category-icon">
-                @if (cat.thumbUrl) {
-                <ion-avatar class="cartoon-avatar">
-                  <ion-img [src]="cat.thumbUrl"></ion-img>
-                </ion-avatar>
-                } @else {
-                <div class="default-icon">🎪</div>
-                }
-              </div>
-              <ion-label class="category-label">{{ cat.label }}</ion-label>
-            </div>
-
-            <!-- Fun Progress Bar -->
-            <div class="progress-container">
-              <ion-progress-bar [value]="0" class="cartoon-progress">
-              </ion-progress-bar>
-              <span class="progress-emoji-small">⭐</span>
-            </div>
-          </div>
-          }
-        </div>
-      </div>
-    </div>
-    }
-
-    <!-- Category Detail -->
-    @if (selectedCategory) {
-      <!-- Category Header with Audio Button -->
-      <div class="category-header fun-header" [style.background]="selectedCategory.color || '#6a5acd'">
-        <!-- Left: Category Audio Button -->
-        <!-- <div class="category-audio">
-          <ion-button fill="solid" shape="round" class="cartoon-button audio-button" (click)="playCategoryAudio()">
-            <ion-icon name="volume-high"></ion-icon>
-            <span class="button-text">Listen!</span>
-          </ion-button>
-        </div> -->
-
-        <!-- Center: Category Title -->
-
-
-        <!-- Right: Back Button -->
-        <div class="category-back">
-          <ion-button fill="clear" shape="round" class="cartoon-button" (click)="backToCategories()">
-            <ion-icon name="arrow-back"></ion-icon>
-          </ion-button>
-        </div>
-      </div>
-
-      <!-- Progress Section -->
-      <div class="progress-section">
-        <div class="progress-label">
-          <span class="progress-emoji">🏆</span>
-          Your Progress
-          <span class="progress-emoji">🎯</span>
-        </div>
-        <ion-progress-bar
-          [value]="getProgress()"
-          class="main-progress"
-        ></ion-progress-bar>
-        <div class="progress-text">{{ playedCount }}/{{ selectedCategory.signs.length }} signs learned!</div>
-      </div>
-
-      <!-- Selected Sign Header (when sign is selected) -->
-      @if (selectedSign) {
-      <div class="selected-sign-header fun-header" [style.background]="selectedCategory.color || '#6a5acd'">
-        <div class="sign-audio">
-          <ion-button fill="solid" shape="round" class="cartoon-button audio-button" (click)="playSignAudio()">
-            <ion-icon name="volume-high"></ion-icon>
-            <span class="button-text">Listen!</span>
-          </ion-button>
-        </div>
-        <div class="sign-title">
-          <!-- <ion-label class="fun-title">{{ selectedSign.label }}</ion-label> -->
-        </div>
-        <div class="sign-check">
-          <ion-checkbox color="success" class="cartoon-checkbox" [checked]="isSignPlayed(selectedSign)" (ionChange)="toggleLearnedStatus(selectedSign!)">
-            <span class="checkbox-text">I Learned!</span>
-          </ion-checkbox>
-        </div>
-      </div>
-      }
-
-      <!-- Signs Carousel -->
-      <div class="sign-carousel fun-carousel" (ionScroll)="onScroll($event)" scrollEvents="true">
-        <div class="carousel-title">
-          <span class="carousel-emoji">🤟</span>
-          Tap to Learn Signs!
-          <span class="carousel-emoji">✨</span>
-        </div>
-        <div class="scroll-container">
-          @for (sign of selectedCategory.signs; track sign.id) {
-            <div class="scroll-card fun-sign-card" #scrollCard (click)="playSign(sign)" [class.selected]="selectedSign?.id === sign.id">
-              <div class="card-decoration">
-                <span class="card-emoji">✨</span>
-              </div>
-              <ion-avatar class="sign-avatar">
-                <ion-img [src]="sign.thumbUrl"></ion-img>
-              </ion-avatar>
-              <h2 class="sign-label">{{ sign.label }}</h2>
-              <div class="play-indicator">
-                <span class="play-emoji">▶️</span>
-              </div>
-              @if (isSignPlayed(sign)) {
-              <div class="learned-badge">
-                <span class="badge-emoji">✅</span>
-              </div>
-              }
-            </div>
-          }
-        </div>
-      </div>
-    }
-  </div>
 </ion-content>

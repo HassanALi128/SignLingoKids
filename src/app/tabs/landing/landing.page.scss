@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
+
+ion-content.landing-content {
+  --background: none;
+  background: url('/assets/landing/day-bg.png') center top / cover no-repeat fixed;
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-content.landing-content {
+    background: url('/assets/landing/night-bg.png') center top / cover no-repeat fixed;
+  }
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 20px 16px 40px;
+  margin-top: 70px;
+}
+
+.menu-card {
+  width: 260px;
+  background: transparent;
+  border: 0;
+  border-radius: 22px;
+  padding: 16px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // box-shadow: 0 10px 0 #d66a2d, 0 10px 24px rgba(0,0,0,0.15);
+}
+
+.menu-art {
+  width: 220px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.corner-buttons {
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.corner-btn {
+  // --background: rgba(255, 255, 255, 0.8);
+  --box-shadow: none;
+  border-radius: 18px;
+}
+
+.cartoon-header .rainbow-toolbar {
+  --background: var(--ion-color-primary);
+}
+
+.bouncy-title {
+  font-family: 'Fredoka One', cursive;
+}
+
+
+
+.custom-toolbar {
+  --background: transparent;
+  box-shadow: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+}

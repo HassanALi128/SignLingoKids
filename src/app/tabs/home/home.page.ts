@@ -11,11 +11,12 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import {IonicModule} from '@ionic/angular'
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { DataService } from 'src/app/services/data';
 import { addIcons } from 'ionicons';
-import { arrowBack, volumeHigh } from 'ionicons/icons';
+import { arrowBack, volumeHigh, school, home } from 'ionicons/icons';
 
 interface AslSign {
   id: string;
@@ -67,14 +68,19 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(
     private three: ThreeRenderer,
-    private data: DataService
+    private data: DataService,
+    private router: Router
   ) {
-    addIcons({volumeHigh,arrowBack});
+    addIcons({volumeHigh,arrowBack,school,home});
+  }
+
+  goToLanding(): void {
+    this.router.navigate(['/']);
   }
 
   async ngOnInit(): Promise<void> {
     try {
-      this.categories = await this.data.loadCategories();
+    this.categories = await this.data.loadCategories();
       console.log('Loaded categories:', this.categories);
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -191,6 +197,11 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
     this.selectedSign = undefined;
     this.playedCount = 0;
     this.learnedSigns = []; // Reset learned signs when going back
+  }
+
+  // 🔥 Navigate to Quiz
+  goToQuiz(): void {
+    this.router.navigate(['/quiz']);
   }
 
   // 🔥 Progress Calculation

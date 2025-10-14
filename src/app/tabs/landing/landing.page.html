@@ -1,0 +1,35 @@
+<ion-header class="cartoon-header">
+  <ion-toolbar class="custom-toolbar">
+
+  </ion-toolbar>
+  </ion-header>
+
+<ion-content class="kids-content landing-content">
+
+  <div class="menu-list">
+    <button class="menu-card" (click)="goToHandSign()">
+      <img src="assets/landing/hand-sign.png" class="menu-art" alt="Hand Sign" />
+
+    </button>
+    <button class="menu-card" (click)="goToAbc()">
+      <img src="assets/landing/abc-learning.png" class="menu-art" alt="ABC Learn" />
+
+    </button>
+    <button class="menu-card" (click)="goToQuiz()">
+      <img src="assets/landing/sign-quiz.png" class="menu-art" alt="Sign Quiz" />
+
+    </button>
+  </div>
+
+  <div class="corner-buttons">
+    <ion-button fill="clear" class="corner-btn left" (click)="goToSettings()">
+     <img src="assets/landing/setting.png" alt="Parent" class="corner-btn-img">
+
+    </ion-button>
+    <ion-button fill="clear" class="corner-btn right" routerLink="/quiz">
+  <img src="assets/landing/app.png" alt="Star" class="corner-btn-img">
+    </ion-button>
+  </div>
+</ion-content>
+
+
