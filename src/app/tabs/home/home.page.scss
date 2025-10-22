@@ -22,7 +22,7 @@ ion-content {
     --background-size: 400% 400%;
     // animation: rainbow 3s ease infinite; // Disabled since using solid color
 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   }
 
   .bouncy-title {
@@ -30,7 +30,7 @@ ion-content {
     font-size: 24px;
     text-align: center;
     color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     animation: bounce 2s infinite;
 
     .title-emoji {
@@ -104,8 +104,8 @@ ion-content {
   z-index: 10; // Above other content
 
   .viewer-border {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     position: relative;
     background: #f8f9fa; // Consistent background
@@ -113,8 +113,8 @@ ion-content {
     canvas {
       width: 100%;
       height: 45%; // Model takes top 50%
-  display: block;
-}
+      display: block;
+    }
 
     // 🔥 Canvas Content - Everything Below Model
     .canvas-content {
@@ -141,7 +141,7 @@ ion-content {
           font-size: 18px;
           color: #333;
           margin-bottom: 12px;
-          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 
           .title-icon {
             font-size: 20px;
@@ -160,6 +160,7 @@ ion-content {
           width: calc(100% + 40px);
           scrollbar-width: none;
           -ms-overflow-style: none;
+
           &::-webkit-scrollbar {
             display: none; // Chrome/Safari
           }
@@ -197,11 +198,11 @@ ion-content {
           }
 
           .main-progress {
-            --progress-background: rgba(0,0,0,0.1);
+            --progress-background: rgba(0, 0, 0, 0.1);
             --progress-color: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
             height: 10px;
             border-radius: 12px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
           }
 
           .progress-text {
@@ -226,7 +227,7 @@ ion-content {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             animation: shimmer 2s infinite;
           }
 
@@ -248,11 +249,11 @@ ion-content {
           }
 
           .cartoon-checkbox {
-            --background: #fff;
-            --border-color: #4caf50;
-            --checkmark-color: #4caf50;
+            --background: #77bef0;
+            --border-color: #77bef1;
+            --checkmark-color: white;
             --size: 24px;
-    border-radius: 12px;
+            border-radius: 12px;
             padding: 6px;
             font-weight: 700;
 
@@ -275,7 +276,7 @@ ion-content {
             margin-bottom: 15px;
 
             .carousel-emoji {
-      font-size: 20px;
+              font-size: 20px;
               margin: 0 6px;
               animation: wiggle 2s ease-in-out infinite;
             }
@@ -288,6 +289,14 @@ ion-content {
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
+
+            // Hide scrollbar
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+
+            &::-webkit-scrollbar {
+              display: none; /* Chrome, Safari, Opera */
+            }
           }
 
           .fun-sign-card {
@@ -302,11 +311,15 @@ ion-content {
             transform-origin: center;
             position: relative;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px;
 
             &:hover {
               transform: translateY(-8px) scale(1.05);
-              box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+              box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
             }
 
             &:active {
@@ -324,12 +337,13 @@ ion-content {
               }
             }
 
-            .sign-avatar {
-              margin: 15px auto 8px;
+            // Image container with fixed dimensions
+            img {
               width: 60px;
               height: 60px;
-              border: 3px solid rgba(255,255,255,0.8);
-              box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+              object-fit: contain;
+              margin: 5px auto;
+              display: block;
             }
 
             .sign-label {
@@ -337,13 +351,18 @@ ion-content {
               font-size: 12px;
               font-weight: bold;
               color: white;
-              margin: 8px 0;
-              text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+              text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+              position: absolute;
+              bottom: 8px;
+              left: 0;
+              right: 0;
+              margin: 0;
+              padding: 0 5px;
             }
 
             .play-indicator {
               position: absolute;
-              bottom: 8px;
+              bottom: 30px;
               right: 8px;
 
               .play-emoji {
@@ -359,7 +378,7 @@ ion-content {
 
               .badge-emoji {
                 font-size: 16px;
-                background: rgba(255,255,255,0.9);
+                background: rgba(255, 255, 255, 0.9);
                 border-radius: 50%;
                 padding: 2px;
               }
@@ -399,7 +418,7 @@ ion-content {
     font-size: 28px;
     color: #333;
     margin-bottom: 30px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 
     .title-icon {
       font-size: 32px;
@@ -440,8 +459,8 @@ ion-content {
   padding: 20px;
   color: white;
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.2);
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer;
   position: relative;
@@ -477,7 +496,7 @@ ion-content {
       }
 
       .category-label {
-    font-size: 14px;
+        font-size: 14px;
       }
     }
 
@@ -510,7 +529,7 @@ ion-content {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     transform: rotate(45deg);
     transition: all 0.6s;
     opacity: 0;
@@ -518,7 +537,7 @@ ion-content {
 
   &:hover {
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 
     &::before {
       opacity: 1;
@@ -534,7 +553,7 @@ ion-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
     font-weight: 700;
     font-size: 16px;
 
@@ -549,10 +568,10 @@ ion-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
 
     .category-icon {
-      margin-bottom: 10px;
+      // margin-bottom: 10px;
 
 
       .cartoon-avatar {
@@ -566,13 +585,13 @@ ion-content {
       .default-icon {
         width: 80px;
         height: 80px;
-        background: rgba(255,255,255,0.2);
+        background: rgba(255, 255, 255, 0.2);
         // border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 30px;
-        border: 4px solid rgba(255,255,255,0.8);
+        border: 4px solid rgba(255, 255, 255, 0.8);
       }
     }
 
@@ -580,7 +599,7 @@ ion-content {
       font-family: 'Fredoka One', cursive;
       font-size: 18px;
       text-align: center;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
   }
 
@@ -592,7 +611,7 @@ ion-content {
       --progress-color: #ffffff;
       height: 8px;
       border-radius: 10px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .progress-emoji-small {
@@ -618,6 +637,19 @@ ion-content {
   position: relative;
   overflow: hidden;
 
+  .category-back,
+  .category-play {
+    z-index: 10;
+  }
+
+  .category-play {
+    .play-btn {
+      --background: #4caf50;
+      --color: white;
+      animation: pulse 2s infinite;
+    }
+  }
+
   &::before {
     content: '';
     position: absolute;
@@ -625,7 +657,7 @@ ion-content {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     animation: shimmer 2s infinite;
   }
 
@@ -650,7 +682,7 @@ ion-content {
     font-family: 'Fredoka One', cursive;
     font-size: 24px;
     text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .cartoon-checkbox {
@@ -692,11 +724,11 @@ ion-content {
   }
 
   .main-progress {
-    --progress-background: rgba(0,0,0,0.1);
+    --progress-background: rgba(0, 0, 0, 0.1);
     --progress-color: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
     height: 12px;
     border-radius: 15px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -726,6 +758,14 @@ ion-content {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+
+    // Hide scrollbar
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
   }
 
   .fun-sign-card {
@@ -740,11 +780,11 @@ ion-content {
     transform-origin: center;
     position: relative;
     cursor: pointer;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 
     &:hover {
       transform: translateY(-10px) scale(1.05);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     }
 
     &:active {
@@ -766,8 +806,8 @@ ion-content {
       margin: 20px auto 10px;
       width: 80px;
       height: 80px;
-      border: 3px solid rgba(255,255,255,0.8);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      border: 3px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     .sign-label {
@@ -776,7 +816,7 @@ ion-content {
       font-weight: bold;
       color: white;
       margin: 10px 0;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .play-indicator {
@@ -801,12 +841,12 @@ ion-content {
   font-family: 'Fredoka One', cursive;
   font-size: 18px;
   font-weight: 700;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
   }
 
   .button-emoji {
@@ -818,51 +858,118 @@ ion-content {
 
 // Fun Animations
 @keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-10px);
+  }
+
+  60% {
+    transform: translateY(-5px);
+  }
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(5deg); }
-  75% { transform: rotate(-5deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(5deg);
+  }
+
+  75% {
+    transform: rotate(-5deg);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes shimmer {
-  0% { left: -100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
 }
 
 @keyframes shine {
-  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
 }
 
 // Responsive Design
@@ -908,7 +1015,7 @@ ion-content {
     --background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
     --color: white;
     --border-radius: 25px;
-    --box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     font-family: 'Fredoka One', cursive;
     font-size: 20px;
     height: 60px;

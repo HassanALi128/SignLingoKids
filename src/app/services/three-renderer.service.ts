@@ -71,7 +71,7 @@ export class ThreeRenderer implements OnDestroy {
 
 
 
-  async loadModel(url: string): Promise<THREE.Object3D> {
+  async loadModel(url: string = 'assets/aslkidanimation/models/alsagirl_model.glb'): Promise<THREE.Object3D> {
     this.disposeCurrentModel();
 
     try {
@@ -143,8 +143,16 @@ export class ThreeRenderer implements OnDestroy {
   }
 
   play(clipName: string, fadeSeconds = 0.3): void {
+    console.log('🎬 Trying to play animation:', clipName);
+    console.log('📋 Available animations:', Array.from(this.actions.keys()));
+
     const next = this.actions.get(clipName);
-    if (!next) return;
+    if (!next) {
+      console.error('❌ Animation not found:', clipName);
+      return;
+    }
+
+    console.log('✅ Animation found, playing:', clipName);
 
     if (this.activeAction && this.activeAction !== next) {
       this.activeAction.fadeOut(fadeSeconds);
@@ -316,17 +324,25 @@ export class ThreeRenderer implements OnDestroy {
       throw new Error('Load the model first before actions');
     }
 
+    console.log('🔄 Loading actions from:', url);
     const gltf = await this.loader.loadAsync(url);
 
     if (!gltf.animations || gltf.animations.length === 0) {
+      console.warn('⚠️ No animations found in:', url);
       throw new Error('No animations found in action file');
     }
+
+    console.log('✅ Found animations:', gltf.animations.length);
 
     if (!this.mixer) {
       this.mixer = new THREE.AnimationMixer(this.currentModel);
     }
 
+    // Clear previous actions before loading new ones
+    this.actions.clear();
+
     for (const clip of gltf.animations) {
+      console.log('➕ Adding animation:', clip.name);
       const action = this.mixer.clipAction(clip, this.currentModel);
       action.clampWhenFinished = true;
       action.loop = THREE.LoopOnce;

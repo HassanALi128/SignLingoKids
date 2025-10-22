@@ -42,7 +42,8 @@
           <div class="categories-horizontal-scroll">
             <div class="categories-scroll-container">
               @for (cat of categories; track cat.id) {
-              <div class="category-card cartoon-card" (click)="selectCategory(cat)" [style.background]="cat.color || '#f0f0f0'">
+              <div class="category-card cartoon-card" (click)="selectCategory(cat)"
+                [style.background]="cat.color || '#f0f0f0'">
                 <!-- Fun Progress Counter -->
                 <div class="category-progress fun-progress">
                   <span class="progress-emoji">🎪</span>
@@ -54,7 +55,7 @@
                   <div class="category-icon">
                     @if (cat.thumbUrl) {
                     <!-- <ion-avatar class="cartoon-avatar"> -->
-                      <ion-img style="width: 7rem; margin-right: 15px;" [src]="cat.thumbUrl"></ion-img>
+                    <img style="" [src]="cat.thumbUrl" />
                     <!-- </ion-avatar> -->
                     } @else {
                     <div class="default-icon">🎪</div>
@@ -86,6 +87,13 @@
                 <ion-icon name="arrow-back"></ion-icon>
               </ion-button>
             </div>
+            @if (selectedSign) {
+            <div class="category-play">
+              <ion-button fill="solid" shape="round" class="cartoon-button play-btn" (click)="replayAnimation()">
+                <ion-icon name="play"></ion-icon>
+              </ion-button>
+            </div>
+            }
           </div>
 
           <!-- Progress Section -->
@@ -95,9 +103,7 @@
               Your Progress
               <span class="progress-emoji">🎯</span>
             </div>
-            <ion-progress-bar
-              [value]="getProgress()"
-              class="main-progress">
+            <ion-progress-bar [value]="getProgress()" class="main-progress">
             </ion-progress-bar>
             <div class="progress-text">{{ playedCount }}/{{ selectedCategory.signs.length }} signs learned!</div>
           </div>
@@ -112,7 +118,8 @@
               </ion-button>
             </div>
             <div class="sign-check">
-              <ion-checkbox color="success" class="cartoon-checkbox" [checked]="isSignPlayed(selectedSign)" (ionChange)="toggleLearnedStatus(selectedSign!)">
+              <ion-checkbox color="success" class="cartoon-checkbox" [checked]="isSignPlayed(selectedSign)"
+                (ionChange)="toggleLearnedStatus(selectedSign!)">
                 <span class="checkbox-text">I Learned!</span>
               </ion-checkbox>
             </div>
@@ -128,23 +135,21 @@
             </div>
             <div class="scroll-container">
               @for (sign of selectedCategory.signs; track sign.id) {
-                <div class="scroll-card fun-sign-card" #scrollCard (click)="playSign(sign)" [class.selected]="selectedSign?.id === sign.id">
-                  <div class="card-decoration">
-                    <span class="card-emoji">✨</span>
-                  </div>
-                  <!-- <ion-avatar class="sign-avatar"> -->
-                    <ion-img style="width: 7rem; margin-right: 15px; margin-top: 15px;" [src]="sign.thumbUrl"></ion-img>
-                  <!-- </ion-avatar> -->
-                  <h2 class="sign-label">{{ sign.label }}</h2>
-                  <div class="play-indicator">
-                    <span class="play-emoji">▶️</span>
-                  </div>
-                  @if (isSignPlayed(sign)) {
-                  <div class="learned-badge">
-                    <span class="badge-emoji">✅</span>
-                  </div>
-                  }
+              <div class="scroll-card fun-sign-card" #scrollCard (click)="playSign(sign)"
+                [class.selected]="selectedSign?.id === sign.id">
+                <div class="card-decoration">
+                  <span class="card-emoji">✨</span>
                 </div>
+                <img [src]="sign.thumbUrl" [alt]="sign.label" />
+                <h2 class="sign-label">{{ sign.label }}</h2>
+
+                @if (isSignPlayed(sign)) {
+                <div class="learned-badge">
+                  <ion-icon fill="#77bef0" name="checkmark-circle"></ion-icon>
+                  <!-- <span class="badge-emoji">✅</span> -->
+                </div>
+                }
+              </div>
               }
             </div>
           </div>

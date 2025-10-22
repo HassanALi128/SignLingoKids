@@ -16,7 +16,7 @@ import {IonicModule} from '@ionic/angular'
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { DataService } from 'src/app/services/data';
 import { addIcons } from 'ionicons';
-import { arrowBack, volumeHigh, school, home } from 'ionicons/icons';
+import { arrowBack, volumeHigh, school, home, play, checkmark, checkmarkCircle } from 'ionicons/icons';
 
 interface AslSign {
   id: string;
@@ -71,7 +71,7 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
     private data: DataService,
     private router: Router
   ) {
-    addIcons({volumeHigh,arrowBack,school,home});
+    addIcons({volumeHigh,arrowBack,school,home,play,checkmark,checkmarkCircle});
   }
 
   goToLanding(): void {
@@ -101,8 +101,8 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
 
       this.three.initialize(this.canvasRef, width, height);
 
-      // Load the main character model
-      await this.three.loadModel('assets/aslkidanimation/models/alsagirl_model.glb');
+      // Load the main character model - BUBU
+      await this.three.loadModel('assets/aslkidanimation/models/asl_new_modle.glb');
 
       // Load default actions (if any)
       await this.three.loadActions('assets/aslkidanimation/actions/alsagirl_model_animation.glb');
@@ -197,6 +197,14 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
     this.selectedSign = undefined;
     this.playedCount = 0;
     this.learnedSigns = []; // Reset learned signs when going back
+  }
+
+  // 🔥 Replay Animation - Play the current selected sign animation again
+  replayAnimation(): void {
+    if (this.selectedSign) {
+      console.log('🔄 Replaying animation for:', this.selectedSign.label);
+      this.three.play(this.selectedSign.actionName);
+    }
   }
 
   // 🔥 Navigate to Quiz

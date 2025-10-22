@@ -2,116 +2,160 @@
   {
     "id": "animals",
     "label": "Animals",
-    "thumbUrl": "../../assets/images/objects/catanimals.svg",
+    "thumbUrl": "../../assets/images/categories/animals.png",
     "color": "#ff6b6b",
     "audioUrl": "assets/audio/animals.m4a",
-      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Animals.glb",
     "signs": [
       {
         "id": "cat",
         "label": "Cat",
-        "thumbUrl": "assets/images/objects/cat.svg",
+        "thumbUrl": "assets/images/categories/animals/cat.png",
         "audioUrl": "assets/audio/cat.m4a",
         "actionName": "cat"
       },
       {
         "id": "dog",
         "label": "Dog",
-        "thumbUrl": "assets/images/objects/dog.svg",
+        "thumbUrl": "assets/images/categories/animals/dog.png",
         "audioUrl": "assets/audio/dog.m4a",
         "actionName": "dog"
       },
       {
         "id": "bird",
         "label": "Bird",
-        "thumbUrl": "assets/images/objects/bird.svg",
+        "thumbUrl": "assets/images/categories/animals/bird.png",
         "audioUrl": "assets/audio/bird.m4a",
         "actionName": "bird"
       },
       {
         "id": "fish",
         "label": "Fish",
-        "thumbUrl": "assets/images/objects/fish.svg",
+        "thumbUrl": "assets/images/categories/animals/fish.png",
         "audioUrl": "assets/audio/fish.m4a",
         "actionName": "fish"
+      },
+      {
+        "id": "butterfly",
+        "label": "Butterfly",
+        "thumbUrl": "assets/images/categories/animals/butterfly.png",
+        "audioUrl": "assets/audio/butterfly.m4a",
+        "actionName": "butterfly"
+      },
+      {
+        "id": "horse",
+        "label": "Horse",
+        "thumbUrl": "assets/images/categories/animals/horse.png",
+        "audioUrl": "assets/audio/horse.m4a",
+        "actionName": "horse"
+      },
+
+      {
+        "id": "lion",
+        "label": "Lion",
+        "thumbUrl": "assets/images/categories/animals/lion.png",
+        "audioUrl": "assets/audio/lion.m4a",
+        "actionName": "lion"
+      },
+      {
+        "id": "owl",
+        "label": "Owl",
+        "thumbUrl": "assets/images/categories/animals/owl.png",
+        "audioUrl": "assets/audio/owl.m4a",
+        "actionName": "owl"
+      },
+      {
+        "id": "panda",
+        "label": "Panda",
+        "thumbUrl": "assets/images/categories/animals/panda.png",
+        "audioUrl": "assets/audio/panda.m4a",
+        "actionName": "panda"
+      },
+      {
+        "id": "deer",
+        "label": "Deer",
+        "thumbUrl": "assets/images/categories/animals/deer.png",
+        "audioUrl": "assets/audio/deer.m4a",
+        "actionName": "deer"
       }
+
     ]
   },
   {
     "id": "basics",
     "label": "Basics",
-    "thumbUrl": "../../assets/images/objects/car.svg",
+    "thumbUrl": "../../assets/images/categories/basics.png",
     "color": "#4ecdc4",
-    "audioUrl": "assets/audio/food.m4a",
-      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+
+      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Extra.glb",
     "signs": [
       {
         "id": "bath",
         "label": "Bath",
-        "thumbUrl": "assets/images/objects/bath.svg",
+        "thumbUrl": "assets/images/categories/basic/bath.png",
         "audioUrl": "assets/audio/bath.m4a",
         "actionName": "bath"
       },
       {
         "id": "boat",
         "label": "Boat",
-        "thumbUrl": "assets/images/objects/boat.svg",
+        "thumbUrl": "assets/images/categories/basic/boat.png",
         "audioUrl": "assets/audio/boat.m4a",
         "actionName": "boat"
       },
       {
         "id": "book",
         "label": "Book",
-        "thumbUrl": "assets/images/objects/book.svg",
+        "thumbUrl": "assets/images/categories/basic/book.png",
         "audioUrl": "assets/audio/book.m4a",
         "actionName": "book"
       },
       {
         "id": "candy",
         "label": "Candy",
-        "thumbUrl": "assets/images/objects/candy.svg",
+        "thumbUrl": "assets/images/categories/basic/candy.png",
         "audioUrl": "assets/audio/candy.m4a",
         "actionName": "candy"
       },
       {
         "id": "car",
         "label": "Car",
-        "thumbUrl": "assets/images/objects/car.svg",
+        "thumbUrl": "assets/images/categories/basic/car.png",
         "audioUrl": "assets/audio/car.m4a",
         "actionName": "car"
       },
       {
         "id": "subway",
         "label": "Subway",
-        "thumbUrl": "assets/images/objects/subway.svg",
+        "thumbUrl": "assets/images/categories/basic/subway.png",
         "audioUrl": "assets/audio/subway.m4a",
         "actionName": "subway"
       },
       {
         "id": "teacher",
         "label": "Teacher",
-        "thumbUrl": "assets/images/objects/teacher.svg",
+          "thumbUrl": "assets/images/categories/basic/teacher.png",
         "audioUrl": "assets/audio/teacher.m4a",
         "actionName": "teacher"
       },
       {
         "id": "thankyou",
         "label": "Thankyou",
-        "thumbUrl": "assets/images/objects/thankyou.svg",
+        "thumbUrl": "assets/images/categories/basic/thankyou.png",
         "audioUrl": "assets/audio/thankyou.m4a",
         "actionName": "thankyou"
       },
       {
         "id": "umbrella",
         "label": "Umbrella",
-        "thumbUrl": "assets/images/objects/umbrella.svg",
+        "thumbUrl": "assets/images/categories/basic/umbrella.png",
         "audioUrl": "assets/audio/umbrella.m4a",
         "actionName": "umbrella"
       },
       {
         "id": "underpants",
         "label": "Underpants",
-        "thumbUrl": "assets/images/objects/underpants.svg",
+        "thumbUrl": "assets/images/categories/basic/underpants.png",
         "audioUrl": "assets/audio/underpants.m4a",
         "actionName": "underpants"
       }
@@ -120,78 +164,78 @@
   {
     "id": "family&food",
     "label": "Family & Food",
-    "thumbUrl": "../../assets/images/objects/apple.svg",
+    "thumbUrl": "../../assets/images/categories/food-family.png",
     "color": "#45b7d1",
-    "audioUrl": "assets/audio/food.m4a",
-      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+
+      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_familyandfood.glb",
     "signs": [
       {
         "id": "grandpa",
         "label": "Grandpa",
-        "thumbUrl": "assets/images/objects/grandpa.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/grandpa.png",
         "audioUrl": "assets/audio/grandpa.m4a",
         "actionName": "grandpa"
       },
       {
         "id": "brother",
         "label": "Brother",
-        "thumbUrl": "assets/images/objects/brother.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/brother.png",
         "audioUrl": "assets/audio/brother.m4a",
         "actionName": "brother"
       },
       {
         "id": "daddy",
         "label": "Daddy",
-        "thumbUrl": "assets/images/objects/daddy.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/daddy.png",
         "audioUrl": "assets/audio/daddy.m4a",
         "actionName": "daddy"
       },
       {
         "id": "mommy",
         "label": "Mommy",
-        "thumbUrl": "assets/images/objects/mommy.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/mommy.png",
         "audioUrl": "assets/audio/mommy.m4a",
         "actionName": "mommy"
       },
       {
         "id": "sister",
         "label": "Sister",
-        "thumbUrl": "assets/images/objects/sister.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/sister.png",
         "audioUrl": "assets/audio/sister.m4a",
         "actionName": "sister"
       },
       {
         "id": "grandma",
         "label": "Grandma",
-        "thumbUrl": "assets/images/objects/grandma.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/grandma.png",
         "audioUrl": "assets/audio/grandma.m4a",
         "actionName": "grandma"
       },
       {
         "id": "apple",
         "label": "Apple",
-        "thumbUrl": "assets/images/objects/apple.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/apple.png",
         "audioUrl": "assets/audio/apple.m4a",
         "actionName": "apple"
       },
       {
         "id": "bread",
         "label": "Banana",
-        "thumbUrl": "assets/images/objects/bread.svg",
+          "thumbUrl": "assets/images/categories/family-and-food/bread.png",
         "audioUrl": "assets/audio/bread.m4a",
         "actionName": "bread"
       },
       {
         "id": "cake",
         "label": "Cake",
-        "thumbUrl": "assets/images/objects/cake.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/cake.png",
         "audioUrl": "assets/audio/cake.m4a",
         "actionName": "cake"
       },
       {
         "id": "drink",
         "label": "Drink",
-        "thumbUrl": "assets/images/objects/drink.svg",
+        "thumbUrl": "assets/images/categories/family-and-food/drink.png",
         "audioUrl": "assets/audio/drink.m4a",
         "actionName": "drink"
       }
@@ -201,57 +245,57 @@
   {
     "id": "emotions&colors",
     "label": "Emotions & Colors",
-    "thumbUrl": "../../assets/images/objects/catemotions.svg",
+    "thumbUrl": "../../assets/images/categories/emotional-color.png",
     "color": "#96ceb4",
     "audioUrl": "assets/audio/colors.m4a",
-      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_emotionandcolor.glb",
     "signs": [
       {
         "id": "red",
         "label": "Red",
-        "thumbUrl": "assets/images/objects/red.svg",
+        "thumbUrl": "assets/images/categories/expression-and-color/red.png",
         "audioUrl": "assets/audio/red.m4a",
         "actionName": "red"
       },
       {
-        "id": "blue",
-        "label": "Blue",
-        "thumbUrl": "assets/images/objects/blue.svg",
-        "audioUrl": "assets/audio/blue.m4a",
-        "actionName": "blue"
+        "id": "white",
+        "label": "White",
+        "thumbUrl": "assets/images/categories/expression-and-color/white.png",
+        "audioUrl": "assets/audio/white.m4a",
+        "actionName": "white"
       },
       {
         "id": "black",
         "label": "Black",
-        "thumbUrl": "assets/images/objects/black.svg",
+        "thumbUrl": "assets/images/categories/expression-and-color/black.png",
         "audioUrl": "assets/audio/black.m4a",
         "actionName": "black"
       },
       {
         "id": "yellow",
         "label": "Yellow",
-        "thumbUrl": "assets/images/objects/yellow.svg",
+        "thumbUrl": "assets/images/categories/expression-and-color/yellow.png",
         "audioUrl": "assets/audio/yellow.m4a",
         "actionName": "yellow"
       },
       {
         "id": "crying",
         "label": "Crying",
-        "thumbUrl": "assets/images/objects/crying.svg",
+        "thumbUrl": "assets/images/categories/expression-and-color/crying.png",
         "audioUrl": "assets/audio/crying.m4a",
         "actionName": "crying"
       },
       {
         "id": "happy",
         "label": "Happy",
-        "thumbUrl": "assets/images/objects/happy.svg",
+        "thumbUrl": "assets/images/categories/expression-and-color/happy.png",
         "audioUrl": "assets/audio/happy.m4a",
         "actionName": "happy"
       },
       {
         "id": "angry",
         "label": "Angry",
-        "thumbUrl": "assets/images/objects/angry.svg",
+        "thumbUrl": "assets/images/categories/expression-and-color/angry.png",
         "audioUrl": "assets/audio/angry.m4a",
         "actionName": "angry"
       }
@@ -260,57 +304,57 @@
   {
     "id": "nature",
     "label": "Nature",
-    "thumbUrl": "assets/images/objects/catnature.svg",
+    "thumbUrl": "assets/images/categories/nature.png",
     "color": "#feca57",
     "audioUrl": "assets/audio/nature.m4a",
-      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Nature.glb",
     "signs": [
       {
         "id": "autumn",
         "label": "Autumn",
-        "thumbUrl": "assets/images/objects/autumn.svg",
+          "thumbUrl": "assets/images/categories/nature/autumn.png",
         "audioUrl": "assets/audio/autumn.m4a",
         "actionName": "autumn"
       },
       {
         "id": "beach",
         "label": "Beach",
-        "thumbUrl": "assets/images/objects/beach.svg",
+        "thumbUrl": "assets/images/categories/nature/beach.png",
         "audioUrl": "assets/audio/beach.m4a",
         "actionName": "beach"
       },
       {
         "id": "forest",
         "label": "Forest",
-        "thumbUrl": "assets/images/objects/forest.svg",
+        "thumbUrl": "assets/images/categories/nature/forest.png",
         "audioUrl": "assets/audio/forest.m4a",
         "actionName": "forest"
       },
       {
         "id": "cloud",
         "label": "Cloud",
-        "thumbUrl": "assets/images/objects/cloud.svg",
+        "thumbUrl": "assets/images/categories/nature/cloud.png",
         "audioUrl": "assets/audio/cloud.m4a",
         "actionName": "cloud"
       },
       {
         "id": "freezing",
         "label": "Freeze",
-        "thumbUrl": "assets/images/objects/freezing.svg",
+        "thumbUrl": "assets/images/categories/nature/freezing.png",
         "audioUrl": "assets/audio/freezing.m4a",
         "actionName": "freezing"
       },
       {
         "id": "grass",
         "label": "Grass",
-        "thumbUrl": "assets/images/objects/grass.svg",
+        "thumbUrl": "assets/images/categories/nature/grass.png",
         "audioUrl": "assets/audio/grass.m4a",
         "actionName": "grass"
       },
       {
         "id": "dry",
         "label": "Dry",
-        "thumbUrl": "assets/images/objects/dry.svg",
+        "thumbUrl": "assets/images/categories/nature/dry.png",
         "audioUrl": "assets/audio/dry.m4a",
         "actionName": "dry"
       }
@@ -319,64 +363,64 @@
   {
     "id": "playtime",
     "label": "Playtime",
-    "thumbUrl": "assets/images/objects/catplaytime.svg",
+    "thumbUrl": "assets/images/categories/playtime.png",
     "color": "#ff9ff3",
     "audioUrl": "assets/audio/playtime.m4a",
-      "actionFile": "assets/aslkidanimation/actions/alsagirl_model_animation.glb",
+      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_playtime.glb",
     "signs": [
       {
         "id": "ball",
         "label": "Ball",
-        "thumbUrl": "assets/images/objects/ball.svg",
+        "thumbUrl": "assets/images/categories/playtime/ball.png",
         "audioUrl": "assets/audio/ball.m4a",
         "actionName": "ball"
       },
       {
         "id": "balloon",
         "label": "Balloon",
-        "thumbUrl": "assets/images/objects/balloon.svg",
+        "thumbUrl": "assets/images/categories/playtime/balloon.png",
         "audioUrl": "assets/audio/balloon.m4a",
         "actionName": "balloon"
       },
       {
         "id": "bicycle",
         "label": "Bicycle",
-        "thumbUrl": "assets/images/objects/bicycle.svg",
+        "thumbUrl": "assets/images/categories/playtime/bicycle.png",
         "audioUrl": "assets/audio/bicycle.m4a",
         "actionName": "bicycle"
       },
       {
         "id": "blocks",
         "label": "Blocks",
-        "thumbUrl": "assets/images/objects/blocks.svg",
+        "thumbUrl": "assets/images/categories/playtime/blocks.png",
         "audioUrl": "assets/audio/blocks.m4a",
         "actionName": "blocks"
       },
       {
         "id": "blow",
         "label": "Blow",
-        "thumbUrl": "assets/images/objects/blow.svg",
+          "thumbUrl": "assets/images/categories/playtime/blow.png",
         "audioUrl": "assets/audio/blow.m4a",
         "actionName": "blow"
       },
       {
         "id": "candle",
         "label": "Candle",
-        "thumbUrl": "assets/images/objects/candle.svg",
+        "thumbUrl": "assets/images/categories/playtime/candle.png",
         "audioUrl": "assets/audio/candle.m4a",
         "actionName": "candle"
       },
       {
         "id": "clown",
         "label": "Clown",
-        "thumbUrl": "assets/images/objects/clown.svg",
+        "thumbUrl": "assets/images/categories/playtime/clown.png",
         "audioUrl": "assets/audio/clown.m4a",
         "actionName": "clown"
       },
       {
         "id": "decorating",
         "label": "Decorating",
-        "thumbUrl": "assets/images/objects/decorating.svg",
+        "thumbUrl": "assets/images/categories/playtime/decorating.png",
         "audioUrl": "assets/audio/decorating.m4a",
         "actionName": "decorating"
       }
