@@ -102,7 +102,7 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
       this.three.initialize(this.canvasRef, width, height);
 
       // Load the main character model - BUBU
-      await this.three.loadModel('assets/aslkidanimation/models/asl_new_modle.glb');
+      await this.three.loadModel('assets/aslkidanimation/models/asl_new_Modle.glb');
 
       // Load default actions (if any)
       await this.three.loadActions('assets/aslkidanimation/actions/alsagirl_model_animation.glb');

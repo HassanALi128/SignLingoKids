@@ -39,8 +39,8 @@ export class ThreeRenderer implements OnDestroy {
     this.scene.background = new THREE.Color(0xffffff);
 
     // Camera
-    this.camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    this.camera.position.set(0, 1.2, 2.5); // Moved back and up for zoom out
+    this.camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    this.camera.position.set(1.0, 2.2, 5.5); // Moved back and up for zoom out
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -51,7 +51,7 @@ export class ThreeRenderer implements OnDestroy {
     this.renderer.setSize(width, height, false);
 
     // Lights
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 4.0);
     this.scene.add(hemi);
 
     // Controls
@@ -95,8 +95,8 @@ export class ThreeRenderer implements OnDestroy {
 
 
       // Lights (bright & warm)
-      const ambient = new THREE.AmbientLight(0xfff7e6, 0.9);
-      const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+      const ambient = new THREE.AmbientLight(0xfff7e6, 0.8);
+      const dir = new THREE.DirectionalLight(0xffffff, 0.8);
       dir.position.set(3, 6, 4);
       this.scene.add(ambient, dir);
       this.camera.position.set(0, 1.2, 1.8); // Consistent zoom out position
