@@ -9,6 +9,16 @@
          (error)="onError()">
     <source src="assets/splash.mp4" type="video/mp4" />
   </video>
+
+  <div class="video-gradient"></div>
+
+  <div class="brand-overlay fade-in">
+    <img class="brand-logo" src="assets/icon/favicon.png" alt="SignLingoKids" />
+    <div class="brand-title">SignLingoKids</div>
+    <div class="brand-tagline">Learn signs. Play. Grow.</div>
+  </div>
+
+  <button class="skip-btn" *ngIf="showSkip" (click)="skip()">Skip</button>
 </ion-content>
 
 

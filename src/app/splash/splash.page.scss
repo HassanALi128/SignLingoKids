@@ -11,4 +11,67 @@
   object-fit: cover;
 }
 
+.video-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+}
+
+.brand-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+}
+
+.brand-logo {
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  margin-bottom: 14px;
+}
+
+.brand-title {
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+}
+
+.brand-tagline {
+  margin-top: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.fade-in {
+  animation: fadeInUp 900ms ease both;
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translate(-50%, calc(-50% + 12px)); }
+  100% { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.skip-btn {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.9);
+  color: #111;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
 

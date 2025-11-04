@@ -13,6 +13,7 @@ import { IonicModule } from '@ionic/angular';
 export class SplashPage implements OnInit, OnDestroy {
   @ViewChild('videoRef', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
   private navigationTimeoutId: any;
+  showSkip = false;
 
   constructor(private router: Router) {}
 
@@ -21,6 +22,11 @@ export class SplashPage implements OnInit, OnDestroy {
     this.navigationTimeoutId = setTimeout(() => {
       this.navigateToLanding();
     }, 8000);
+
+    // Show skip after a short delay
+    setTimeout(() => {
+      this.showSkip = true;
+    }, 1800);
   }
 
   ngOnDestroy(): void {
@@ -52,6 +58,10 @@ export class SplashPage implements OnInit, OnDestroy {
       this.navigationTimeoutId = null;
     }
     this.router.navigateByUrl('/landing');
+  }
+
+  skip(): void {
+    this.navigateToLanding();
   }
 }
 
