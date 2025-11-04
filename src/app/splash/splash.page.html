@@ -1,0 +1,14 @@
+<ion-content fullscreen class="splash-content">
+  <video #videoRef
+         class="splash-video"
+         autoplay
+         muted
+         playsinline
+         (ended)="onEnded()"
+         (canplay)="onCanPlay()"
+         (error)="onError()">
+    <source src="assets/splash.mp4" type="video/mp4" />
+  </video>
+</ion-content>
+
+

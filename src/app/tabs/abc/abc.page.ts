@@ -163,7 +163,7 @@ export class AbcPage implements OnInit {
   }
 
   goToLanding(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/landing']);
   }
 
   ngOnInit() {

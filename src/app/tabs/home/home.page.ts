@@ -75,7 +75,7 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
   }
 
   goToLanding(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/landing']);
   }
 
   async ngOnInit(): Promise<void> {

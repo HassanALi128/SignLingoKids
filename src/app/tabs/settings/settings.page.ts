@@ -102,7 +102,7 @@ export class SettingsPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/landing']);
   }
 
   // Load saved settings
