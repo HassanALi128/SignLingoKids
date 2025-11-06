@@ -57,7 +57,19 @@ export class SplashPage implements OnInit, OnDestroy {
       clearTimeout(this.navigationTimeoutId);
       this.navigationTimeoutId = null;
     }
-    this.router.navigateByUrl('/landing');
+    const completed = (() => {
+      try {
+        return localStorage.getItem('onboardingCompleted') === 'true';
+      } catch (e) {
+        return true; // if storage not available, skip onboarding
+      }
+    })();
+
+    if (completed) {
+      this.router.navigateByUrl('/landing');
+    } else {
+      this.router.navigateByUrl('/onboarding');
+    }
   }
 
   skip(): void {

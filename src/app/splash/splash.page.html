@@ -1,19 +1,18 @@
 <ion-content fullscreen class="splash-content">
-  <video #videoRef
-         class="splash-video"
-         autoplay
-         muted
-         playsinline
-         (ended)="onEnded()"
-         (canplay)="onCanPlay()"
-         (error)="onError()">
-    <source src="assets/splash.mp4" type="video/mp4" />
-  </video>
-
-  <div class="video-gradient"></div>
-
   <div class="brand-overlay fade-in">
-    <img class="brand-logo" src="assets/icon/favicon.png" alt="SignLingoKids" />
+    <div class="logo-wrap">
+      <video #videoRef
+             class="logo-video"
+             autoplay
+             muted
+             loop
+             playsinline
+             (ended)="onEnded()"
+             (canplay)="onCanPlay()"
+             (error)="onError()">
+        <source src="assets/splash.mp4" type="video/mp4" />
+      </video>
+    </div>
     <div class="brand-title">SignLingoKids</div>
     <div class="brand-tagline">Learn signs. Play. Grow.</div>
   </div>

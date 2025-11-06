@@ -1,0 +1,73 @@
+.onboarding-content {
+  --background: #FFE8E1; /* soft peach like the reference */
+}
+
+.card {
+  // background: #ffe9df;
+  width: calc(100% - 32px);
+  max-width: 420px;
+  margin: 24px auto 80px;
+  border-radius: 22px;
+  padding: 28px 20px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  // box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.illustration {
+  width: min(320px, 80vw);
+  height: auto;
+}
+
+.title {
+  margin: 16px 0 6px;
+  font-weight: 800;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ion-color-medium);
+}
+
+.top-actions {
+  position: absolute;
+  top: env(safe-area-inset-top, 8px);
+  right: 10px;
+  z-index: 2;
+}
+
+/* Pager dot colors for Swiper */
+.onboarding-content .swiper-pagination-bullet {
+  background: #f6a68b;
+  opacity: 0.5;
+}
+.onboarding-content .swiper-pagination-bullet-active {
+  background: #f06a3f;
+  opacity: 1;
+}
+
+.cta-bar {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  // opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.cta-bar.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta {
+  --background: #f06a3f;
+  --border-radius: 16px;
+  --box-shadow: 0 8px 18px rgba(240,106,63,0.35);
+  color: white;
+}
+
+

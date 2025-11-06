@@ -5,6 +5,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./splash/splash.page').then((m) => m.SplashPage),
   },
+  { path: 'onboarding', loadComponent: () => import('./onboarding/onboarding.page').then(m => m.OnboardingPage) },
   { path: 'landing', loadComponent: () => import('./tabs/landing/landing.page').then(m => m.LandingPage) },
   { path: 'home', loadComponent: () => import('./tabs/home/home.page').then(m => m.HomePage) },
   { path: 'quiz', loadComponent: () => import('./tabs/quiz/quiz.page').then(m => m.QuizPage) },
