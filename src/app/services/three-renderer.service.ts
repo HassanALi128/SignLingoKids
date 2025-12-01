@@ -39,7 +39,7 @@ export class ThreeRenderer implements OnDestroy {
     this.scene.background = new THREE.Color(0xffffff);
 
     // Camera
-    this.camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 1000);
     this.camera.position.set(1.0, 2.2, 5.5); // Moved back and up for zoom out
 
     // Renderer
@@ -68,10 +68,9 @@ export class ThreeRenderer implements OnDestroy {
     this.ngZone.runOutsideAngular(() => this.animate());
   }
 
-
-
-
-  async loadModel(url: string = 'assets/aslkidanimation/models/alsagirl_model.glb'): Promise<THREE.Object3D> {
+  async loadModel(
+    url: string = 'assets/aslkidanimation/models/alsagirl_model.glb'
+  ): Promise<THREE.Object3D> {
     this.disposeCurrentModel();
 
     try {
@@ -91,15 +90,17 @@ export class ThreeRenderer implements OnDestroy {
         model.scale.setScalar(scale);
       }
 
-
-
-
       // Lights (bright & warm)
       const ambient = new THREE.AmbientLight(0xfff7e6, 0.8);
       const dir = new THREE.DirectionalLight(0xffffff, 0.8);
       dir.position.set(3, 6, 4);
       this.scene.add(ambient, dir);
-      this.camera.position.set(0, 1.2, 1.8); // Consistent zoom out position
+
+      // 🎥 Camera Position Adjustment
+      // X (0): Center
+      // Y (1.6): Height (Higher value = Camera moves UP)
+      // Z (3.8): Zoom (Higher value = Camera moves BACK/Zooms Out)
+      this.camera.position.set(0, 1.6, 3.8); // Adjusted to see full face/upper body
       // Handle animations
       this.actions.clear();
       this.mixer = undefined;
@@ -126,7 +127,6 @@ export class ThreeRenderer implements OnDestroy {
       this.currentModel = model;
 
       // 🔥 Add shadow under model (PUBG style)
-
 
       // Check for animations after loading
       this.listModelAnimations();

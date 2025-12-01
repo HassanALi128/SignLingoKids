@@ -1,23 +1,14 @@
 <ion-content fullscreen class="splash-content">
-  <div class="brand-overlay fade-in">
-    <div class="logo-wrap">
-      <video #videoRef
-             class="logo-video"
-             autoplay
-             muted
-             loop
-             playsinline
-             (ended)="onEnded()"
-             (canplay)="onCanPlay()"
-             (error)="onError()">
-        <source src="assets/splash.mp4" type="video/mp4" />
-      </video>
+  <div class="splash-container">
+    <!-- Dolphins Section -->
+    <div class="characters-container">
+      <ion-img src="assets/splash-screen.png"></ion-img>
     </div>
-    <div class="brand-title">SignLingoKids</div>
-    <div class="brand-tagline">Learn signs. Play. Grow.</div>
+
+    <!-- Brand Title -->
+    <div class="brand-title">
+      <ion-img src="assets/logo/logo.png"></ion-img>
+    </div>
+
   </div>
-
-  <button class="skip-btn" *ngIf="showSkip" (click)="skip()">Skip</button>
 </ion-content>
-
-

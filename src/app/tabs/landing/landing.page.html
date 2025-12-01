@@ -1,35 +1,231 @@
-<ion-header class="cartoon-header">
-  <ion-toolbar class="custom-toolbar">
-
+<ion-header>
+  <ion-toolbar>
+    <div class="header-content">
+      <div class="greeting">
+        <h2>Hello, {{userName}}!</h2>
+        <p>Ready to Learn Today?</p>
+      </div>
+      @if(userAvatar){
+      <div class="user-avatar">
+        <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
+      </div>
+      }
+    </div>
   </ion-toolbar>
-  </ion-header>
+</ion-header>
 
-<ion-content class="kids-content landing-content">
+<ion-content class="landing-content">
+  <!-- Premium Banner -->
+  <div class="premium-banner" (click)="goToPremium()">
+    <div class="premium-content">
+      <div class="premium-text">
+        <h3>Buy Premium</h3>
+        <p>Unlock all features</p>
+        <ion-button class="premium-btn" expand="block">
+          Buy Now
+        </ion-button>
+      </div>
+      <div class="premium-characters">
+        <ion-img src="assets/landing/landing.png" alt="Characters" class="characters-img"></ion-img>
+      </div>
+    </div>
 
-  <div class="menu-list">
-    <button class="menu-card" (click)="goToHandSign()">
-      <img src="assets/landing/hand-sign.png" class="menu-art" alt="Hand Sign" />
-
-    </button>
-    <button class="menu-card" (click)="goToAbc()">
-      <img src="assets/landing/abc-learning.png" class="menu-art" alt="ABC Learn" />
-
-    </button>
-    <button class="menu-card" (click)="goToQuiz()">
-      <img src="assets/landing/sign-quiz.png" class="menu-art" alt="Sign Quiz" />
-
-    </button>
   </div>
 
-  <div class="corner-buttons">
-    <ion-button fill="clear" class="corner-btn left" (click)="goToSettings()">
-     <img src="assets/landing/setting.png" alt="Parent" class="corner-btn-img">
-
-    </ion-button>
-    <ion-button fill="clear" class="corner-btn right" routerLink="/quiz">
-  <img src="assets/landing/app.png" alt="Star" class="corner-btn-img">
-    </ion-button>
+  <!-- Categories Section -->
+  <div class="section-header">
+    <h3>Category</h3>
   </div>
+  <div class="categories-scroll">
+    <div class="categories-container">
+      @for(category of categories; track $index){
+      <div class="category-item" (click)="selectCategory(category)">
+        <div class="category-circle">
+          <img [src]="category.thumbUrl" [alt]="category.label">
+        </div>
+        <p class="category-label">{{category.label}}</p>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Favourite Section -->
+  <div class="section-header">
+    <h3>Favourite</h3>
+    <a class="see-all">See All</a>
+  </div>
+  @if(featuredItems.length === 0){
+  <div class="empty-message">
+    Your Favourite Will Show There.
+  </div>
+  }
+  @if(featuredItems.length > 0){
+  <div class="featured-grid">
+    @for(item of featuredItems; track $index){
+    <div class="featured-card" (click)="openFeatured(item)">
+      <div class="card-container" [style.background-color]="item.bgColor">
+        <ion-icon [name]="item.isFavorite ? 'heart' : 'heart-outline'" class="favorite-icon"
+          [class.active]="item.isFavorite" (click)="toggleFavorite(item, $event)">
+        </ion-icon>
+
+        <div class="featured-image">
+          <img [src]="item.image" [alt]="item.name">
+        </div>
+      </div>
+
+      <p class="featured-label">{{ item.name }}</p>
+    </div>
+    }
+  </div>
+  }
+
+
+  <!-- Recent Learning Section -->
+  @if(recentLearning) {
+  <div class="section-header">
+    <h3>Recent Learning</h3>
+  </div>
+  <div class="recent-learning-card" (click)="selectCategory(recentLearning.category)">
+    <div class="recent-learning-content">
+      <div class="recent-learning-icon">
+        <img [src]="recentLearning.category.thumbUrl" [alt]="recentLearning.category.label">
+      </div>
+      <div class="recent-learning-info">
+        <h4>{{recentLearning.category.label}}</h4>
+        <p>Continue your progress</p>
+      </div>
+    </div>
+    <div class="recent-learning-progress">
+      <svg class="progress-ring" width="60" height="60">
+        <circle class="progress-ring-circle-bg" stroke="#E8E8E8" stroke-width="6" fill="transparent" r="24" cx="30"
+          cy="30" />
+        <circle class="progress-ring-circle" [attr.stroke]="recentLearning.category.color || '#FF6B6B'" stroke-width="6"
+          fill="transparent" r="24" cx="30" cy="30" [style.stroke-dasharray]="progressCircumference"
+          [style.stroke-dashoffset]="progressCircumference - (recentLearning.progress / 100) * progressCircumference" />
+      </svg>
+      <span class="progress-text">{{recentLearning.progress}}%</span>
+    </div>
+  </div>
+  }
+
+  <!-- Certificate Learning Section -->
+  <div class="section-header">
+    <h3>Certificate Learning</h3>
+    <a class="see-all">See All</a>
+  </div>
+  <div class="certificate-card" (click)="openCertificate()">
+    <div class="certificate-content">
+      <div class="certificate-icon">
+        <!-- <img src="assets/images/logo.svg" alt="ABCD"> -->
+        <ion-icon name="school"></ion-icon>
+      </div>
+      <div class="certificate-info">
+        <h4>ABC Learning</h4>
+        <p>{{abcLearnedCount}}/{{totalABCLetters}} Letters Learned</p>
+      </div>
+    </div>
+    <div class="certificate-progress">
+      <svg class="progress-ring" width="60" height="60">
+        <circle class="progress-ring-circle-bg" stroke="#E8E8E8" stroke-width="6" fill="transparent" r="24" cx="30"
+          cy="30" />
+        <circle class="progress-ring-circle" stroke="#FF6B6B" stroke-width="6" fill="transparent" r="24" cx="30" cy="30"
+          [style.stroke-dasharray]="progressCircumference" [style.stroke-dashoffset]="progressOffset" />
+      </svg>
+      <span class="progress-text">{{certificateProgress}}%</span>
+    </div>
+  </div>
+
+  <!-- Category Detail Overlay -->
+  @if(selectedCategory) {
+
+  <div class="category-detail-view">
+
+
+
+    <div class="detail-content">
+      <div class="character-container">
+        <!-- Loading Overlay -->
+        @if(isLoading3D) {
+        <div class="loading-overlay">
+          <ion-spinner name="crescent" color="primary"></ion-spinner>
+          <p>Loading Character...</p>
+        </div>
+        }
+        <!-- 3D Character Canvas -->
+        <canvas #canvas class="character-3d-canvas"></canvas>
+      </div>
+
+      <div class="action-buttons">
+
+        <div class="action-btn-wrapper">
+          <button class="action-btn expand">
+            <ion-icon name="resize"></ion-icon>
+          </button>
+        </div>
+        <div class="action-btn-wrapper">
+          <button class="action-btn rotate" (click)="toggleRotate()">
+            <ion-icon name="refresh"></ion-icon>
+          </button>
+        </div>
+        <div class="action-btn-wrapper center">
+          <button class="action-btn play" (click)="playAnimation()">
+            <ion-icon name="play"></ion-icon>
+          </button>
+        </div>
+        <div class="action-btn-wrapper">
+          <button class="action-btn sound" (click)="playSound()">
+            <ion-icon name="volume-high"></ion-icon>
+          </button>
+        </div>
+        <div class="action-btn-wrapper">
+          <button class="action-btn hat" (click)="markAsLearned()">
+            <ion-icon name="school"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-sheet">
+      <div class="sheet-header">
+        <div class="sheet-actions">
+          <div class="detail-header">
+            <ion-button fill="clear" (click)="closeCategoryDetail()" class="back-btn">
+              <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+              <span class="back-text">back to category</span>
+            </ion-button>
+          </div>
+        </div>
+        <h3>{{selectedCategory.label}}</h3>
+      </div>
+
+      <div class="swiper-wrapper">
+        <swiper-container effect="coverflow" grab-cursor="true" centered-slides="true" slides-per-view="auto"
+          coverflow-effect-rotate="0" coverflow-effect-stretch="0" coverflow-effect-depth="100"
+          coverflow-effect-modifier="2.5" coverflow-effect-slide-shadows="false" initial-slide="1">
+
+          @for(item of categoryItems; track $index) {
+          <swiper-slide>
+            <div class="item-card" [style.background-color]="selectedCategory.color || '#ffffff'"
+              (click)="playSign(item)">
+              <div class="item-favorite-wrapper" (click)="toggleItemFavorite(item, $event)">
+                <ion-icon [name]="isItemFavorite(item) ? 'heart' : 'heart-outline'"
+                  [class.active]="isItemFavorite(item)"></ion-icon>
+              </div>
+              @if(isItemLearned(item)) {
+              <div class="item-learned-badge">
+                <ion-icon name="star"></ion-icon>
+              </div>
+              }
+              <div class="item-image-container">
+                <img [src]="item.thumbUrl" [alt]="item.label">
+              </div>
+              <p class="item-name">{{item.label}}</p>
+            </div>
+          </swiper-slide>
+          }
+        </swiper-container>
+      </div>
+    </div>
+  </div>
+  }
 </ion-content>
-
-

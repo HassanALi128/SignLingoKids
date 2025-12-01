@@ -17,7 +17,9 @@ export class OnboardingPage {
 
   constructor(private router: Router) {
     // Ensure swiper web components are registered once
-    try { register(); } catch {}
+    try {
+      register();
+    } catch {}
   }
 
   goNext(slides: any) {
@@ -47,8 +49,6 @@ export class OnboardingPage {
     } catch (e) {
       // ignore storage errors
     }
-    this.router.navigateByUrl('/landing');
+    this.router.navigateByUrl('/profile-setup');
   }
 }
-
-

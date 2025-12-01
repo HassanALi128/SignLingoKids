@@ -1,5 +1,10 @@
+<ion-header>
+  <ion-toolbar>
+
+  </ion-toolbar>
+</ion-header>
 <ion-content [fullscreen]="true" class="onboarding-content">
-  <swiper-container style="margin-top: 150px;" pagination="true" #slides (slidechange)="onSlideDidChange(slides)">
+  <swiper-container pagination="true" #slides (slidechange)="onSlideDidChange(slides)">
     <swiper-slide>
       <div class="card">
         <img class="illustration" src="assets/on-boarding/simple-learning.png" alt="Learn ABC in Sign" />
@@ -23,13 +28,15 @@
     </swiper-slide>
   </swiper-container>
 
-  <div class="top-actions">
-    <ion-button fill="clear" color="medium" (click)="skip()">Skip</ion-button>
-  </div>
 
-  <div class="cta-bar" [class.visible]="currentIndex === 2">
-    <ion-button expand="block" shape="round" class="cta" (click)="getStarted()">Let’s Learn</ion-button>
-  </div>
+  <!-- <div class="cta-bar" [class.visible]="currentIndex === 2"> -->
+  <!-- <ion-button expand="block" shape="round" class="cta" (click)="getStarted()">Let’s Learn</ion-button> -->
+  <!-- </div> -->
+
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-img src="assets/buttons/lets-learn.png" (click)="getStarted()"></ion-img>
 
-
+  </ion-toolbar>
+</ion-footer>

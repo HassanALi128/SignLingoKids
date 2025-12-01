@@ -35,3 +35,47 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import '@ionic/angular/css/palettes/dark.system.css';
+/* Safe Area Utilities */
+.safe-area-bottom {
+    padding-bottom: var(--ion-safe-area-bottom);
+}
+
+.safe-area-top {
+    padding-top: var(--ion-safe-area-top);
+}
+
+/* Ensure headers respect safe areas */
+ion-header {
+    --ion-safe-area-top: 20px;
+}
+
+ion-toolbar {
+    --ion-safe-area-top: 20px;
+}
+
+/* Ensure footers and tab bars respect safe areas */
+ion-footer,
+ion-tab-bar {
+    --ion-safe-area-bottom: 30px;
+}
+
+/* For pages with fullscreen content that need bottom padding */
+.has-footer {
+    --padding-bottom: calc(56px + var(--ion-safe-area-bottom));
+}
+
+
+/* Headers respect safe areas */
+ion-header {
+    --ion-safe-area-top: 20px;
+}
+
+ion-toolbar {
+    --ion-safe-area-top: 20px;
+}
+
+/* Tab bars respect safe areas */
+ion-tab-bar {
+    --ion-safe-area-bottom: 30px;
+    z-index: 10;
+}

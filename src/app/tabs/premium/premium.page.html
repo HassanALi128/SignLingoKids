@@ -5,42 +5,28 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-title>Buy Premium</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="premium-content">
-  <div class="premium-container">
-    <!-- Main Content -->
-    <div class="main-content">
-      <h1 class="premium-title">Premium Feature is<br>Still in progress</h1>
-
-      <!-- Features List -->
-      <div class="features-list">
-        <div class="feature-item">
-          <span class="bullet">•</span>
-          <span class="feature-text">200+ Sign</span>
-        </div>
-        <div class="feature-item">
-          <span class="bullet">•</span>
-          <span class="feature-text">More Model to interact</span>
-        </div>
-        <div class="feature-item">
-          <span class="bullet">•</span>
-          <span class="feature-text">More Emotes</span>
-        </div>
+<ion-content class="premium-content ion-padding">
+  <div class="premium-banner">
+    <div class="premium-content">
+      <div class="premium-text">
+        <h3>SLK School</h3>
+        <p>Unlock 200+ signs and premium features.</p>
+        <ion-button class="premium-btn" expand="block">
+          1000 Rs
+        </ion-button>
       </div>
-
-      <!-- Buy Premium Button -->
-      <ion-button class="buy-premium-button" expand="block" (click)="buyPremium()">
-        <span class="button-text">Buy Premium</span>
-      </ion-button>
-    </div>
-
-    <!-- Character Illustration -->
-    <div class="character-section">
-      <div class="character">
-   <img src="assets/images/permium-page.png" alt="">
+      <div class="premium-characters">
+        <ion-img src="assets/landing/landing.png" alt="Characters" class="characters-img"></ion-img>
       </div>
     </div>
+
   </div>
+
+  <ion-button class="restore-premium-btn" expand="block">
+    Restore Purchase
+  </ion-button>
 </ion-content>

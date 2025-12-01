@@ -1,105 +1,47 @@
-<ion-header class="cartoon-header">
-  <ion-toolbar class="rainbow-toolbar">
-    <ion-buttons slot="start">
-      <ion-button fill="clear" class="corner-btn left" (click)="goToLanding()">
-        <ion-icon name="home"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title class="bouncy-title">
-      <span class="title-emoji">🔤</span>
-      ABC Learning
-      <span class="title-emoji">📚</span>
-    </ion-title>
+<ion-header>
+  <ion-toolbar>
+    <div class="header-content">
+      <div class="greeting">
+        <h2>Hello, {{userName}}!</h2>
+        <p>Let's Start ABC's Learning!</p>
+      </div>
+      @if(userAvatar){
+      <div class="user-avatar">
+        <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
+      </div>
+      }
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="kids-content">
-  <!-- Fun Background Elements -->
-  <div class="floating-shapes">
-    <div class="shape shape-1">⭐</div>
-    <div class="shape shape-2">🌈</div>
-    <div class="shape shape-3">🎈</div>
-    <div class="shape shape-4">🎨</div>
-    <div class="shape shape-5">🎪</div>
-  </div>
-
-  <!-- Progress Section -->
-  <div class="progress-section">
-    <div class="progress-label">
-      <span class="progress-emoji">📊</span>
-      Your progress: {{ learnedCount }}/{{ totalLetters }}
-      <span class="progress-emoji">🎯</span>
+<ion-content class="abc-content">
+  <!-- Main Hand Sign Display -->
+  <div class="main-display">
+    <div class="hand-sign-container">
+      <img [src]="currentLetter.handSignUrl" [alt]="currentLetter.letter + ' sign'" class="main-hand-sign">
     </div>
-    <ion-progress-bar
-      [value]="getProgress()"
-      class="main-progress">
-    </ion-progress-bar>
+
+    <!-- Graduation Cap Button -->
+    <button class="graduation-btn" (click)="markCurrentAsLearned()">
+      <ion-icon name="school"></ion-icon>
+    </button>
   </div>
 
   <!-- ABC Letters Grid -->
-  <div class="abc-container">
+  <div class="letters-section">
     <div class="letters-grid">
-      <div
-        *ngFor="let letter of letters; let i = index"
-        class="letter-card"
-        [class.learned]="isLetterLearned(letter.id)"
+      <div *ngFor="let letter of letters; let i = index" class="letter-card"
+        [class.active]="currentLetter.id === letter.id" [class.learned]="isLetterLearned(letter.id)"
         (click)="selectLetter(letter)">
 
-        <!-- Checkmark for learned letters -->
-        <div *ngIf="isLetterLearned(letter.id)" class="learned-checkmark">
-          <ion-icon name="checkmark-circle" class="check-icon"></ion-icon>
-        </div>
+        <!-- Letter Image -->
+        <!-- <div class="letter-image">
+          <img [src]="letter.handSignUrl" [alt]="letter.letter">
+        </div> -->
 
-        <!-- Letter Content -->
-        <div class="letter-content">
-          <!-- ASL Hand Sign -->
-          <div class="hand-sign">
-            <img [src]="letter.handSignUrl" [alt]="letter.letter + ' sign'" class="sign-image">
-          </div>
-          <!-- Letter Display -->
-          <div class="letter-display">
-            <span class="letter-text">{{ letter.letter }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Letter Detail Modal -->
-  <div *ngIf="selectedLetter" class="letter-modal-overlay" (click)="closeLetterModal()">
-    <div class="letter-modal" (click)="$event.stopPropagation()">
-      <!-- Close Button -->
-      <div class="modal-header">
-        <ion-button fill="clear" (click)="closeLetterModal()" class="close-button">
-          <ion-icon name="close-circle"></ion-icon>
-        </ion-button>
-      </div>
-
-      <!-- Letter Content -->
-      <div class="modal-content">
-        <!-- ASL Hand Sign -->
-        <div class="modal-hand-sign">
-          <img [src]="selectedLetter.handSignUrl" [alt]="selectedLetter.letter + ' sign'" class="modal-sign-image">
-        </div>
-
-        <!-- Letter Display -->
-        <div class="modal-letter-display">
-          <span class="modal-letter-text">{{ selectedLetter.letter }}</span>
-        </div>
-
-        <!-- Learn Button -->
-        <div class="learn-button-container">
-          <ion-button
-            (click)="toggleLearnedStatus(selectedLetter)"
-            class="learn-button"
-            [class.learned]="isLetterLearned(selectedLetter.id)"
-            expand="block">
-            <ion-icon
-              [name]="isLetterLearned(selectedLetter.id) ? 'checkmark' : 'book'"
-              slot="start">
-            </ion-icon>
-            {{ isLetterLearned(selectedLetter.id) ? 'Learned!' : 'Not learned yet' }}
-          </ion-button>
+        <!-- Letter Label -->
+        <div class="letter-label">
+          <img [src]="letter.letter" [alt]="letter.id">
         </div>
       </div>
     </div>

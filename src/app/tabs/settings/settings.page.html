@@ -1,57 +1,180 @@
-<ion-header class="settings-header">
-  <ion-toolbar class="header-toolbar">
- <ion-buttons slot="start">
-  <ion-button fill="clear" (click)="goBack()" class="back-button">
-    <ion-icon name="home"></ion-icon>
-  </ion-button>
- </ion-buttons>
-    <ion-title class="header-title">Setting</ion-title>
+<ion-header>
+  <ion-toolbar>
+    <div class="header-content">
+      <div class="greeting">
+        <h2>Hello, {{userName}}!</h2>
+        <p>Manage your learning settings below.</p>
+      </div>
+      @if(userAvatar){
+      <div class="user-avatar">
+        <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
+      </div>
+      }
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="settings-content">
-  <div class="settings-container">
-    <!-- More Section -->
-    <div class="more-section">
-      <h2 class="more-title">More</h2>
+<ion-content class="settings-content ion-padding">
 
-      <div class="settings-list">
-        <div class="setting-item" (click)="openPremium()">
-          <div class="setting-icon">
-            <ion-icon name="card" class="dollar-icon"></ion-icon>
-          </div>
-          <span class="setting-label">Premium</span>
-          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
-        </div>
 
-        <div class="setting-item" (click)="restorePurchase()">
-          <div class="setting-icon">
-            <ion-icon name="refresh-circle" class="restore-icon"></ion-icon>
-          </div>
-          <span class="setting-label">Restore purchase</span>
-          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
-        </div>
+  <div class="settings-list">
 
-        <div class="setting-item" (click)="restoreProgress()">
-          <div class="setting-icon">
-            <ion-icon name="time" class="clock-icon"></ion-icon>
-          </div>
-          <span class="setting-label">Restore Progress</span>
-          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
-        </div>
+    <div class="setting-card" (click)="openPremium()">
+      <div class="icon-box buy">
+        <svg width="27" height="21" viewBox="0 0 27 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M0 17.6591C0 18.5452 0.355579 19.3949 0.988515 20.0215C1.62145 20.648 2.47989 21 3.375 21H23.625C24.5201 21 25.3786 20.648 26.0115 20.0215C26.6444 19.3949 27 18.5452 27 17.6591V8.47159H0V17.6591ZM3.97768 13.125C3.97768 12.6503 4.16817 12.1951 4.50724 11.8594C4.84631 11.5238 5.30619 11.3352 5.78571 11.3352H8.67857C9.15809 11.3352 9.61797 11.5238 9.95705 11.8594C10.2961 12.1951 10.4866 12.6503 10.4866 13.125V14.3182C10.4866 14.7929 10.2961 15.2481 9.95705 15.5837C9.61797 15.9194 9.15809 16.108 8.67857 16.108H5.78571C5.30619 16.108 4.84631 15.9194 4.50724 15.5837C4.16817 15.2481 3.97768 14.7929 3.97768 14.3182V13.125ZM23.625 0H3.375C2.47989 0 1.62145 0.351988 0.988515 0.97853C0.355579 1.60507 0 2.45484 0 3.34091V4.89205H27V3.34091C27 2.45484 26.6444 1.60507 26.0115 0.97853C25.3786 0.351988 24.5201 0 23.625 0Z"
+            fill="url(#paint0_linear_34581_1040)" />
+          <defs>
+            <linearGradient id="paint0_linear_34581_1040" x1="-4.78471e-07" y1="-0.760869" x2="17.4673" y2="30.8207"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#EF8D1B" />
+              <stop offset="0.448937" stop-color="#F34F27" />
+              <stop offset="1" stop-color="#6E1664" />
+            </linearGradient>
+          </defs>
+        </svg>
 
-        <div class="setting-item" (click)="openPrivacyPolicy()">
-          <div class="setting-icon">
-            <ion-icon name="document-text" class="document-icon"></ion-icon>
-          </div>
-          <span class="setting-label">Privacy Policy</span>
-          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
-        </div>
       </div>
-
-      <div class="version-info">
-        <span class="version-text">v 1.1</span>
+      <div class="text-box">
+        <h3 class="item-title">Buy Subscription</h3>
+        <p class="item-desc">Add 200+ Sign and much more.</p>
       </div>
+      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <defs>
+          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#EF8D1B" />
+            <stop offset="0.448937" stop-color="#F34F27" />
+            <stop offset="1" stop-color="#6E1664" />
+          </linearGradient>
+        </defs>
+      </svg>
+
     </div>
+
+    <div class="setting-card" (click)="restorePurchase()">
+      <div class="icon-box restore">
+        <svg width="27" height="24" viewBox="0 0 27 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M15.4286 0C12.3596 0 9.4164 1.26428 7.24634 3.51471C5.07627 5.76513 3.85714 8.81737 3.85714 12H0L5.00143 17.1866L5.09143 17.3733L10.2857 12H6.42857C6.42857 9.52461 7.37678 7.15065 9.06461 5.40032C10.7524 3.64998 13.0416 2.66666 15.4286 2.66666C17.8155 2.66666 20.1047 3.64998 21.7925 5.40032C23.4804 7.15065 24.4286 9.52461 24.4286 12C24.4286 14.4753 23.4804 16.8493 21.7925 18.5996C20.1047 20.3499 17.8155 21.3333 15.4286 21.3333C12.9471 21.3333 10.6971 20.2799 9.07714 18.5866L7.25143 20.4799C8.32064 21.6005 9.59443 22.4889 10.9984 23.0933C12.4024 23.6977 13.9084 24.0059 15.4286 23.9999C18.4975 23.9999 21.4407 22.7356 23.6108 20.4852C25.7809 18.2348 27 15.1825 27 12C27 8.81737 25.7809 5.76513 23.6108 3.51471C21.4407 1.26428 18.4975 0 15.4286 0Z"
+            fill="url(#paint0_linear_34585_1064)" />
+          <defs>
+            <linearGradient id="paint0_linear_34585_1064" x1="-4.78471e-07" y1="-0.869565" x2="21.288" y2="32.8086"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#EF8D1B" />
+              <stop offset="0.448937" stop-color="#F34F27" />
+              <stop offset="1" stop-color="#6E1664" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+      </div>
+      <div class="text-box">
+        <h3 class="item-title">Restore purchase</h3>
+        <p class="item-desc">Recover your previous subscription.</p>
+      </div>
+      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <defs>
+          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#EF8D1B" />
+            <stop offset="0.448937" stop-color="#F34F27" />
+            <stop offset="1" stop-color="#6E1664" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+    </div>
+
+    <div class="setting-card" (click)="restoreProgress()">
+      <div class="icon-box restart">
+        <svg width="26" height="32" viewBox="0 0 26 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.0649 5.61785C16.4925 5.61785 19.7569 6.9397 22.2052 9.41816C27.2649 14.5403 27.2649 22.9671 22.2052 28.0893C19.2672 31.2286 15.1868 32.3853 11.2695 31.8896L12.0856 28.5849C14.8603 28.9154 17.7983 27.924 19.9201 25.776C23.6741 21.9757 23.6741 15.6969 19.9201 11.7314C18.1247 9.91385 15.5132 8.92247 13.0649 8.92247V16.5231L4.90398 8.26155L13.0649 0V5.61785ZM3.76145 28.0893C-0.482237 23.7932 -1.13511 17.184 1.80282 12.0619L4.25111 14.5403C2.4557 18.1754 3.10857 22.8019 6.20973 25.776C7.02582 26.6022 8.00514 27.2631 9.14767 27.7588L8.16835 31.0634C6.53617 30.4025 5.0672 29.4111 3.76145 28.0893Z"
+            fill="url(#paint0_linear_34585_1075)" />
+          <defs>
+            <linearGradient id="paint0_linear_34585_1075" x1="-4.6075e-07" y1="-1.15942" x2="31.1458" y2="34.4271"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#EF8D1B" />
+              <stop offset="0.448937" stop-color="#F34F27" />
+              <stop offset="1" stop-color="#6E1664" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+      </div>
+      <div class="text-box">
+        <h3 class="item-title">Restart Progress</h3>
+        <p class="item-desc">Reset all learning progress.</p>
+      </div>
+      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <defs>
+          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#EF8D1B" />
+            <stop offset="0.448937" stop-color="#F34F27" />
+            <stop offset="1" stop-color="#6E1664" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+    </div>
+
+    <div class="setting-card" (click)="openPrivacyPolicy()">
+      <div class="icon-box privacy">
+        <svg width="29" height="32" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M23.7506 15.2191V6.33075C23.7507 6.21851 23.7286 6.10736 23.6857 6.00366C23.6428 5.89996 23.5798 5.80576 23.5004 5.72644L19.0242 1.25026C18.8643 1.09021 18.6475 1.0002 18.4213 1H1.85315C1.62688 1 1.40988 1.08989 1.24988 1.24988C1.08989 1.40988 1 1.62688 1 1.85315V28.5851C1 28.8114 1.08989 29.0284 1.24988 29.1884C1.40988 29.3484 1.62688 29.4383 1.85315 29.4383H13.7972M6.68765 12.3753H18.063M6.68765 6.68765H12.3753M6.68765 18.063H10.9534"
+            stroke="url(#paint0_linear_34585_1091)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M18.063 1V5.83451C18.063 6.06077 18.1529 6.27778 18.3129 6.43777C18.4729 6.59777 18.6899 6.68765 18.9161 6.68765H23.7506M23.7393 19.6626L27.3737 20.5854C27.7519 20.6821 28.0178 21.0262 28.0064 21.4158C27.7619 29.6032 23.0397 30.8602 23.0397 30.8602C23.0397 30.8602 18.3175 29.6032 18.0729 21.4158C18.0691 21.2263 18.1295 21.041 18.2444 20.8902C18.3593 20.7394 18.5219 20.632 18.7057 20.5854L22.3401 19.6626C22.7994 19.546 23.28 19.546 23.7393 19.6626Z"
+            stroke="url(#paint1_linear_34585_1091)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <defs>
+            <linearGradient id="paint0_linear_34585_1091" x1="1" y1="-0.0303717" x2="28.7328" y2="31.169"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#EF8D1B" />
+              <stop offset="0.448937" stop-color="#F34F27" />
+              <stop offset="1" stop-color="#6E1664" />
+            </linearGradient>
+            <linearGradient id="paint1_linear_34585_1091" x1="18.063" y1="-0.0818903" x2="40.5861" y2="10.4656"
+              gradientUnits="userSpaceOnUse">
+              <stop stop-color="#EF8D1B" />
+              <stop offset="0.448937" stop-color="#F34F27" />
+              <stop offset="1" stop-color="#6E1664" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+      </div>
+      <div class="text-box">
+        <h3 class="item-title">Privacy Policy</h3>
+        <p class="item-desc">Read how we protect your data.</p>
+      </div>
+      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <defs>
+          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#EF8D1B" />
+            <stop offset="0.448937" stop-color="#F34F27" />
+            <stop offset="1" stop-color="#6E1664" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+    </div>
+
+  </div>
+
+  <div class="version-info">
+    Version 1.1 Signlingokid
   </div>
 </ion-content>

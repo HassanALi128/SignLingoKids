@@ -88,7 +88,7 @@ ion-content {
   }
 }
 
-// �� Fixed Model Viewer - Full Width, No Background
+//  Fixed Model Viewer - Full Width, No Background
 .cartoon-viewer {
   position: fixed; // Changed from relative to fixed
   top: 56px; // Below header
@@ -291,11 +291,14 @@ ion-content {
             -webkit-overflow-scrolling: touch;
 
             // Hide scrollbar
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE and Edge */
 
             &::-webkit-scrollbar {
-              display: none; /* Chrome, Safari, Opera */
+              display: none;
+              /* Chrome, Safari, Opera */
             }
           }
 
@@ -760,11 +763,14 @@ ion-content {
     -webkit-overflow-scrolling: touch;
 
     // Hide scrollbar
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
 
     &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
+      display: none;
+      /* Chrome, Safari, Opera */
     }
   }
 
@@ -802,12 +808,13 @@ ion-content {
       }
     }
 
-    .sign-avatar {
-      margin: 20px auto 10px;
+    // Image container with fixed dimensions
+    img {
       width: 80px;
       height: 80px;
-      border: 3px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      object-fit: contain;
+      margin: 10px auto;
+      display: block;
     }
 
     .sign-label {
@@ -815,13 +822,18 @@ ion-content {
       font-size: 16px;
       font-weight: bold;
       color: white;
-      margin: 10px 0;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      position: absolute;
+      bottom: 15px;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 0 10px;
     }
 
     .play-indicator {
       position: absolute;
-      bottom: 10px;
+      bottom: 40px;
       right: 10px;
 
       .play-emoji {
@@ -829,196 +841,50 @@ ion-content {
         animation: pulse 2s infinite;
       }
     }
+
+    .learned-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+
+      .badge-emoji {
+        font-size: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        padding: 4px;
+      }
+    }
+
+    // Selected state
+    &.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 4px #fff, 0 15px 35px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+
+      .sign-label {
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+    }
   }
 }
 
-// Fun Back Button
-.back-button {
-  margin: 20px;
-  --background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  --color: white;
-  --border-radius: 25px;
-  font-family: 'Fredoka One', cursive;
-  font-size: 18px;
-  font-weight: 700;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+// 🔥 Modal Styles
+ion-modal.category-modal {
+  --border-radius: 30px 30px 0 0;
+  --background: #f8f9fa;
+  --box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
 
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  &::part(backdrop) {
+    background: rgba(0, 0, 0, 0.3);
   }
 
-  .button-emoji {
-    font-size: 20px;
-    margin: 0 8px;
-    animation: bounce 2s infinite;
-  }
-}
-
-// Fun Animations
-@keyframes rainbow {
-  0% {
-    background-position: 0% 50%;
+  &::part(content) {
+    border-radius: 30px 30px 0 0;
   }
 
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes bounce {
-
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0);
-  }
-
-  40% {
-    transform: translateY(-10px);
-  }
-
-  60% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes wiggle {
-
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  25% {
-    transform: rotate(5deg);
-  }
-
-  75% {
-    transform: rotate(-5deg);
-  }
-}
-
-@keyframes pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-  }
-}
-
-@keyframes twinkle {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-
-  100% {
-    left: 100%;
-  }
-}
-
-@keyframes shine {
-  0% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-  }
-
-  100% {
-    transform: translateX(100%) translateY(100%) rotate(45deg);
-  }
-}
-
-// Responsive Design
-@media (max-width: 768px) {
-  .bouncy-title {
-    font-size: 20px;
-  }
-
-  .section-title {
-    font-size: 24px;
-  }
-
-  .fun-sign-card {
-    width: 120px;
-    height: 160px;
-  }
-
-  // Mobile adjustments for horizontal categories
-  .cartoon-card {
-    flex: 0 0 250px;
-    width: 250px;
-    height: 180px;
-  }
-
-  // 🔥 Mobile model adjustments
-  .cartoon-viewer {
-    height: calc(100vh - 56px);
-  }
-
-  .content-container {
-    display: none; // Hidden since everything is now inside canvas
-  }
-}
-
-// Quiz Section
-.quiz-section {
-  margin: 20px;
-  padding: 20px;
-  background: transparent;
-  border-radius: 20px;
-
-  .quiz-button {
-    --background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-    --color: white;
-    --border-radius: 25px;
-    --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    font-family: 'Fredoka One', cursive;
-    font-size: 20px;
-    height: 60px;
-    animation: pulse 2s infinite;
+  .modal-content {
+    --background: #f8f9fa;
+    --padding-top: 20px;
   }
 }

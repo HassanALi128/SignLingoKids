@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { addCircle, book, checkmark, checkmarkCircle, close, closeCircle, home } from 'ionicons/icons';
+import { school } from 'ionicons/icons';
 import { Router } from '@angular/router';
 
 interface Letter {
@@ -15,212 +15,205 @@ interface Letter {
   selector: 'app-abc',
   templateUrl: './abc.page.html',
   styleUrls: ['./abc.page.scss'],
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, CommonModule],
 })
 export class AbcPage implements OnInit {
+  userName: string = 'Babu';
+  userAvatar: string = '';
+
   // ABC Data
   letters: Letter[] = [
     {
       id: 'A',
-      letter: 'A',
-      handSignUrl: 'assets/images/spelling/a.svg'
+      letter: 'assets/images/abc-learn/a.png',
+      handSignUrl: 'assets/images/spelling/a.svg',
     },
     {
       id: 'B',
-      letter: 'B',
-      handSignUrl: 'assets/images/spelling/b.svg'
+      letter: 'assets/images/abc-learn/b.png',
+      handSignUrl: 'assets/images/spelling/b.svg',
     },
     {
       id: 'C',
-      letter: 'C',
-      handSignUrl: 'assets/images/spelling/c.svg'
+      letter: 'assets/images/abc-learn/c.png',
+      handSignUrl: 'assets/images/spelling/c.svg',
     },
     {
       id: 'D',
-      letter: 'D',
-      handSignUrl: 'assets/images/spelling/d.svg'
+      letter: 'assets/images/abc-learn/d.png',
+      handSignUrl: 'assets/images/spelling/d.svg',
     },
     {
       id: 'E',
-      letter: 'E',
-      handSignUrl: 'assets/images/spelling/e.svg'
+      letter: 'assets/images/abc-learn/e.png',
+      handSignUrl: 'assets/images/spelling/e.svg',
     },
     {
       id: 'F',
-      letter: 'F',
-      handSignUrl: 'assets/images/spelling/f.svg'
+      letter: 'assets/images/abc-learn/f.png',
+      handSignUrl: 'assets/images/spelling/f.svg',
     },
     {
       id: 'G',
-      letter: 'G',
-      handSignUrl: 'assets/images/spelling/g.svg'
+      letter: 'assets/images/abc-learn/g.png',
+      handSignUrl: 'assets/images/spelling/g.svg',
     },
     {
       id: 'H',
-      letter: 'H',
-      handSignUrl: 'assets/images/spelling/h.svg'
+      letter: 'assets/images/abc-learn/h.png',
+      handSignUrl: 'assets/images/spelling/h.svg',
     },
     {
       id: 'I',
-      letter: 'I',
-      handSignUrl: 'assets/images/spelling/i.svg'
+      letter: 'assets/images/abc-learn/i.png',
+      handSignUrl: 'assets/images/spelling/i.svg',
     },
     {
       id: 'J',
-      letter: 'J',
-      handSignUrl: 'assets/images/spelling/j.svg'
+      letter: 'assets/images/abc-learn/j.png',
+      handSignUrl: 'assets/images/spelling/j.svg',
     },
     {
       id: 'K',
-      letter: 'K',
-      handSignUrl: 'assets/images/spelling/k.svg'
+      letter: 'assets/images/abc-learn/k.png',
+      handSignUrl: 'assets/images/spelling/k.svg',
     },
     {
       id: 'L',
-      letter: 'L',
-      handSignUrl: 'assets/images/spelling/l.svg'
+      letter: 'assets/images/abc-learn/l.png',
+      handSignUrl: 'assets/images/spelling/l.svg',
     },
     {
       id: 'M',
-      letter: 'M',
-      handSignUrl: 'assets/images/spelling/m.svg'
+      letter: 'assets/images/abc-learn/m.png',
+      handSignUrl: 'assets/images/spelling/m.svg',
     },
     {
       id: 'N',
-      letter: 'N',
-      handSignUrl: 'assets/images/spelling/n.svg'
+      letter: 'assets/images/abc-learn/n.png',
+      handSignUrl: 'assets/images/spelling/n.svg',
     },
     {
       id: 'O',
-      letter: 'O',
-      handSignUrl: 'assets/images/spelling/o.svg'
+      letter: 'assets/images/abc-learn/o.png',
+      handSignUrl: 'assets/images/spelling/o.svg',
     },
     {
       id: 'P',
-      letter: 'P',
-      handSignUrl: 'assets/images/spelling/p.svg'
+      letter: 'assets/images/abc-learn/p.png',
+      handSignUrl: 'assets/images/spelling/p.svg',
     },
     {
       id: 'Q',
-      letter: 'Q',
-      handSignUrl: 'assets/images/spelling/q.svg'
+      letter: 'assets/images/abc-learn/q.png',
+      handSignUrl: 'assets/images/spelling/q.svg',
     },
     {
       id: 'R',
-      letter: 'R',
-      handSignUrl: 'assets/images/spelling/r.svg'
+      letter: 'assets/images/abc-learn/r.png',
+      handSignUrl: 'assets/images/spelling/r.svg',
     },
     {
       id: 'S',
-      letter: 'S',
-      handSignUrl: 'assets/images/spelling/s.svg'
+      letter: 'assets/images/abc-learn/s.png',
+      handSignUrl: 'assets/images/spelling/s.svg',
     },
     {
       id: 'T',
-      letter: 'T',
-      handSignUrl: 'assets/images/spelling/t.svg'
+      letter: 'assets/images/abc-learn/t.png',
+      handSignUrl: 'assets/images/spelling/t.svg',
     },
     {
       id: 'U',
-      letter: 'U',
-      handSignUrl: 'assets/images/spelling/u.svg'
+      letter: 'assets/images/abc-learn/u.png',
+      handSignUrl: 'assets/images/spelling/u.svg',
     },
     {
       id: 'V',
-      letter: 'V',
-      handSignUrl: 'assets/images/spelling/v.svg'
+      letter: 'assets/images/abc-learn/v.png',
+      handSignUrl: 'assets/images/spelling/v.svg',
     },
     {
       id: 'W',
-      letter: 'W',
-      handSignUrl: 'assets/images/spelling/w.svg'
+      letter: 'assets/images/abc-learn/w.png',
+      handSignUrl: 'assets/images/spelling/w.svg',
     },
     {
       id: 'X',
-      letter: 'X',
-      handSignUrl: 'assets/images/spelling/x.svg'
+      letter: 'assets/images/abc-learn/x.png',
+      handSignUrl: 'assets/images/spelling/x.svg',
     },
     {
       id: 'Y',
-      letter: 'Y',
-      handSignUrl: 'assets/images/spelling/y.svg'
+      letter: 'assets/images/abc-learn/y.png',
+      handSignUrl: 'assets/images/spelling/y.svg',
     },
     {
       id: 'Z',
-      letter: 'Z',
-      handSignUrl: 'assets/images/spelling/z.svg'
-    }
+      letter: 'assets/images/abc-learn/z.png',
+      handSignUrl: 'assets/images/spelling/z.svg',
+    },
   ];
 
   // State
-  selectedLetter: Letter | null = null;
+  currentLetter: Letter;
   learnedLetters: string[] = [];
-  learnedCount = 0;
-  totalLetters = 26;
 
   constructor(private router: Router) {
-    addIcons({closeCircle,checkmarkCircle,book,checkmark,home})
-  }
-
-  goToLanding(): void {
-    this.router.navigate(['/landing']);
+    addIcons({ school });
+    this.currentLetter = this.letters[0]; // Default to 'A'
   }
 
   ngOnInit() {
+    // Load user profile from localStorage
+    try {
+      const profile = localStorage.getItem('userProfile');
+      if (profile) {
+        const userData = JSON.parse(profile);
+        this.userName = userData.name || 'Babu';
+        this.userAvatar = userData.avatar || '';
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+    }
+
     // Load learned letters from localStorage
     this.loadLearnedLetters();
-    this.updateLearnedCount();
   }
 
-  // 🔥 Select Letter
+  // Select Letter
   selectLetter(letter: Letter): void {
-    this.selectedLetter = letter;
+    this.currentLetter = letter;
     console.log('Selected letter:', letter.letter);
   }
 
-  // 🔥 Close Letter Modal
-  closeLetterModal(): void {
-    this.selectedLetter = null;
-  }
-
-  // 🔥 Toggle Learned Status
-  toggleLearnedStatus(letter: Letter): void {
-    if (this.isLetterLearned(letter.id)) {
+  // Mark Current Letter as Learned
+  markCurrentAsLearned(): void {
+    if (this.isLetterLearned(this.currentLetter.id)) {
       // Remove from learned letters
-      this.learnedLetters = this.learnedLetters.filter(id => id !== letter.id);
+      this.learnedLetters = this.learnedLetters.filter(
+        (id) => id !== this.currentLetter.id
+      );
     } else {
       // Add to learned letters
-      this.learnedLetters.push(letter.id);
+      this.learnedLetters.push(this.currentLetter.id);
     }
 
-    this.updateLearnedCount();
     this.saveLearnedLetters();
-
-    console.log('Toggled learned status for:', letter.letter);
-    console.log('Learned letters:', this.learnedLetters);
+    console.log('Toggled learned status for:', this.currentLetter.letter);
   }
 
-  // 🔥 Check if Letter is Learned
+  // Check if Letter is Learned
   isLetterLearned(letterId: string): boolean {
     return this.learnedLetters.includes(letterId);
   }
 
-  // 🔥 Update Learned Count
-  updateLearnedCount(): void {
-    this.learnedCount = this.learnedLetters.length;
-  }
-
-  // 🔥 Get Progress
-  getProgress(): number {
-    return this.learnedCount / this.totalLetters;
-  }
-
-  // 🔥 Save Learned Letters to localStorage
+  // Save Learned Letters to localStorage
   saveLearnedLetters(): void {
     localStorage.setItem('learnedLetters', JSON.stringify(this.learnedLetters));
   }
 
-  // 🔥 Load Learned Letters from localStorage
+  // Load Learned Letters from localStorage
   loadLearnedLetters(): void {
     const saved = localStorage.getItem('learnedLetters');
     if (saved) {

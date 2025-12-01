@@ -1,366 +1,126 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
-
-// Settings Header
-.settings-header {
-  .header-toolbar {
-    --background: #77bef0;
-    --color: #000000;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  }
-
-  .header-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 24px;
-    font-weight: bold;
-    color: #000000;
-    text-align: center;
-  }
-}
-
-// Settings Content
 .settings-content {
-  --background: #ffffff;
-  font-family: 'Comic Neue', cursive;
-}
-
-// Main container styling
-.settings-container {
-  padding: 20px;
-  font-family: 'Comic Neue', cursive;
-}
-
-// More Section
-.more-section {
-  background: white;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  margin-top: 20px;
-
-  .more-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: bold;
-  }
-
-  .settings-list {
-    .setting-item {
-      display: flex;
-      align-items: center;
-      padding: 15px 0;
-      border-bottom: 1px solid #f0f0f0;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        margin: 0 -10px;
-        padding: 15px 10px;
-      }
-
-      .setting-icon {
-        margin-right: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-
-        ion-icon {
-          font-size: 20px;
-        }
-
-        .dollar-icon {
-          color: #77bef0;
-        }
-
-        .restore-icon {
-          color: #77bef0;
-        }
-
-        .clock-icon {
-          color: #77bef0;
-        }
-
-        .document-icon {
-          color: #77bef0;
-        }
-      }
-
-      .setting-label {
-        flex: 1;
-        font-size: 16px;
-        color: #333;
-        font-weight: 500;
-      }
-
-      .arrow-icon {
-        color: #999;
-        font-size: 16px;
-      }
-    }
-  }
-
-  .version-info {
-    text-align: center;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #f0f0f0;
-
-    .version-text {
-      font-size: 14px;
-      color: #999;
-      font-weight: 500;
-    }
-  }
-}
-
-// Section styling
-.settings-section {
-  margin-bottom: 24px;
-  background: white;
-  border-radius: 20px;
+  --background: #F7F1E5;
   padding: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  overflow: hidden;
-  position: relative;
 }
 
-// Section title
-.section-title {
-  font-family: 'Fredoka One', cursive;
+// Header
+ion-header {
+  ion-toolbar {
+    --background: #F7F1E5;
+    --border-width: 0;
+  }
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+}
+
+.greeting {
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  p {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: #666;
+  }
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #FF6B6B;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.user-title {
   font-size: 20px;
-  color: #333;
-  margin-bottom: 16px;
+  font-weight: 600;
+
+  .highlight {
+    color: #d9532c;
+  }
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: #8a7463;
+}
+
+.settings-list {
+  margin-top: 20px;
+}
+
+.setting-card {
   display: flex;
   align-items: center;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
 
-  .title-icon {
-    font-size: 24px;
-    margin-right: 10px;
-    animation: bounce 2s infinite;
-  }
-}
-
-// Account section
-.account-status {
-  .account-info {
-    margin-bottom: 20px;
-
-    .account-message {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 12px;
-    }
-
-    .premium-features {
-      list-style: none;
-      padding-left: 10px;
-
-      li {
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-
-        ion-icon {
-          color: #4caf50;
-          margin-right: 8px;
-          font-size: 18px;
-        }
-      }
-    }
-  }
-
-  .google-login-btn {
-    --background: #4285F4;
-    --color: white;
-    --border-radius: 20px;
-    --box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    margin: 16px 0;
-    height: 48px;
-
-    ion-icon {
-      font-size: 20px;
-      margin-right: 8px;
-    }
-  }
-
-  .user-profile {
+  .icon-box {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
     display: flex;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
-
-    .profile-image {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 16px;
-      border: 3px solid #96ceb4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      ion-icon {
-        font-size: 48px;
-        color: #96ceb4;
-      }
-    }
-
-    .profile-info {
-      h3 {
-        font-size: 18px;
-        font-weight: bold;
-        margin: 0 0 4px 0;
-        color: #333;
-      }
-
-      p {
-        font-size: 14px;
-        color: #666;
-        margin: 0 0 8px 0;
-      }
-
-      ion-badge {
-        padding: 6px 10px;
-        border-radius: 12px;
-      }
-    }
-  }
-
-  .logout-btn {
-    --background: #f44336;
-    --color: white;
-    --border-radius: 20px;
-    --box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    height: 48px;
+    margin-right: 14px;
 
     ion-icon {
-      font-size: 20px;
-      margin-right: 8px;
+      color: white;
+      font-size: 24px;
     }
+
+
   }
-}
 
-// Premium section
-.premium-status {
-  .premium-info {
-    margin-bottom: 16px;
+  .text-box {
+    flex: 1;
 
-    h3 {
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-      margin: 0 0 8px 0;
-    }
-
-    p {
-      font-size: 14px;
-      color: #666;
+    .item-title {
+      font-weight: 600;
       margin: 0;
+      font-size: 1rem;
+    }
+
+    .item-desc {
+      font-size: 13px;
+      margin: 2px 0 0;
+      color: #7c6d63;
     }
   }
 
-  .premium-btn {
-    --background: linear-gradient(45deg, #FFD700, #FFA500);
-    --color: white;
-    --border-radius: 20px;
-    --box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    height: 48px;
-
-    ion-icon {
-      font-size: 20px;
-      margin-right: 8px;
-      animation: twinkle 2s infinite;
-    }
-
-    &[disabled] {
-      --background: linear-gradient(45deg, #FFD700, #FFA500);
-      opacity: 0.7;
-    }
+  .arrow {
+    font-size: 22px;
+    color: #b29e91;
   }
 }
 
-// App settings section
-ion-list {
-  background: transparent;
-  padding: 0;
-
-  ion-item {
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    --background: transparent;
-    --border-color: rgba(0,0,0,0.08);
-
-    ion-icon[slot="start"] {
-      color: #96ceb4;
-      margin-right: 16px;
-    }
-
-    ion-toggle {
-      --background: #ddd;
-      --background-checked: #96ceb4;
-      --handle-background: white;
-      --handle-background-checked: white;
-    }
-  }
+.version-info {
+  text-align: center;
+  margin-top: 40px;
+  color: #a48f7c;
+  font-size: 14px;
 }
 
-// About section
-ion-item[button] {
-  --ripple-color: rgba(150, 206, 180, 0.1);
-
-  &:active {
-    --background: rgba(150, 206, 180, 0.1);
-  }
-}
-
-// Animations
-@keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-6px); }
-  60% { transform: translateY(-3px); }
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-// Responsive design
-@media (max-width: 576px) {
-  .settings-section {
-    padding: 12px;
-  }
-
-  .section-title {
-    font-size: 18px;
-  }
-
-  .user-profile {
-    .profile-image {
-      width: 60px;
-      height: 60px;
-    }
-  }
+.header-md {
+  box-shadow: none !important;
 }

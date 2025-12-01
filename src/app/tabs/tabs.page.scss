@@ -1,1 +1,35 @@
+ion-tab-bar {
+    --background: white;
+    border-top: 1px solid #E8E8E8;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
 
+ion-tab-button {
+    --color: #87837B;
+    --color-selected: #DB4827;
+
+    ion-label {
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 4px;
+    }
+
+    // Default state - gray icons
+    svg path {
+        stroke: #87837B;
+        transition: stroke 0.3s ease;
+    }
+
+    // Active state - orange icons and label
+    &.tab-selected {
+        ion-label {
+            color: #DB4827;
+            font-weight: 600;
+        }
+
+        svg path {
+            stroke: #DB4827;
+        }
+    }
+}

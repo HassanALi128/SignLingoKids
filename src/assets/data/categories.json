@@ -78,7 +78,6 @@
         "audioUrl": "assets/audio/deer.m4a",
         "actionName": "deer"
       }
-
     ]
   },
   {
@@ -87,7 +86,7 @@
     "thumbUrl": "../../assets/images/categories/basics.png",
     "color": "#4ecdc4",
 
-      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Extra.glb",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Extra.glb",
     "signs": [
       {
         "id": "bath",
@@ -134,7 +133,7 @@
       {
         "id": "teacher",
         "label": "Teacher",
-          "thumbUrl": "assets/images/categories/basic/teacher.png",
+        "thumbUrl": "assets/images/categories/basic/teacher.png",
         "audioUrl": "assets/audio/teacher.m4a",
         "actionName": "teacher"
       },
@@ -167,7 +166,7 @@
     "thumbUrl": "../../assets/images/categories/food-family.png",
     "color": "#45b7d1",
 
-      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_familyandfood.glb",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_familyandfood.glb",
     "signs": [
       {
         "id": "grandpa",
@@ -221,7 +220,7 @@
       {
         "id": "bread",
         "label": "Banana",
-          "thumbUrl": "assets/images/categories/family-and-food/bread.png",
+        "thumbUrl": "assets/images/categories/family-and-food/bread.png",
         "audioUrl": "assets/audio/bread.m4a",
         "actionName": "bread"
       },
@@ -239,7 +238,6 @@
         "audioUrl": "assets/audio/drink.m4a",
         "actionName": "drink"
       }
-
     ]
   },
   {
@@ -248,7 +246,7 @@
     "thumbUrl": "../../assets/images/categories/emotional-color.png",
     "color": "#96ceb4",
     "audioUrl": "assets/audio/colors.m4a",
-      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_emotionandcolor.glb",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_emotionandcolor.glb",
     "signs": [
       {
         "id": "red",
@@ -307,12 +305,12 @@
     "thumbUrl": "assets/images/categories/nature.png",
     "color": "#feca57",
     "audioUrl": "assets/audio/nature.m4a",
-      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Nature.glb",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Nature.glb",
     "signs": [
       {
         "id": "autumn",
         "label": "Autumn",
-          "thumbUrl": "assets/images/categories/nature/autumn.png",
+        "thumbUrl": "assets/images/categories/nature/autumn.png",
         "audioUrl": "assets/audio/autumn.m4a",
         "actionName": "autumn"
       },
@@ -366,7 +364,7 @@
     "thumbUrl": "assets/images/categories/playtime.png",
     "color": "#ff9ff3",
     "audioUrl": "assets/audio/playtime.m4a",
-      "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_playtime.glb",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_playtime.glb",
     "signs": [
       {
         "id": "ball",
@@ -399,7 +397,7 @@
       {
         "id": "blow",
         "label": "Blow",
-          "thumbUrl": "assets/images/categories/playtime/blow.png",
+        "thumbUrl": "assets/images/categories/playtime/blow.png",
         "audioUrl": "assets/audio/blow.m4a",
         "actionName": "blow"
       },
