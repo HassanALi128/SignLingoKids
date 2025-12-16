@@ -155,18 +155,14 @@
         <canvas #canvas class="character-3d-canvas"></canvas>
       </div>
 
-      <div class="action-buttons">
+      <div class="action-buttons" [class.lowered]="isFullscreen">
 
         <div class="action-btn-wrapper">
-          <button class="action-btn expand">
+          <button class="action-btn expand" (click)="toggleFullscreen()">
             <ion-icon name="resize"></ion-icon>
           </button>
         </div>
-        <div class="action-btn-wrapper">
-          <button class="action-btn rotate" (click)="toggleRotate()">
-            <ion-icon name="refresh"></ion-icon>
-          </button>
-        </div>
+
         <div class="action-btn-wrapper center">
           <button class="action-btn play" (click)="playAnimation()">
             <ion-icon name="play"></ion-icon>
@@ -185,7 +181,7 @@
       </div>
     </div>
 
-    <div class="bottom-sheet">
+    <div class="bottom-sheet" [class.hidden]="isFullscreen">
       <div class="sheet-header">
         <div class="sheet-actions">
           <div class="detail-header">
@@ -199,14 +195,15 @@
       </div>
 
       <div class="swiper-wrapper">
-        <swiper-container effect="coverflow" grab-cursor="true" centered-slides="true" slides-per-view="auto"
-          coverflow-effect-rotate="0" coverflow-effect-stretch="0" coverflow-effect-depth="100"
-          coverflow-effect-modifier="2.5" coverflow-effect-slide-shadows="false" initial-slide="1">
+        <swiper-container #swiper effect="coverflow" grab-cursor="true" centered-slides="true"
+          centered-slides-bounds="false" slides-per-view="auto" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
+          coverflow-effect-depth="100" coverflow-effect-modifier="2.5" coverflow-effect-slide-shadows="false"
+          initial-slide="0">
 
           @for(item of categoryItems; track $index) {
           <swiper-slide>
             <div class="item-card" [style.background-color]="selectedCategory.color || '#ffffff'"
-              (click)="playSign(item)">
+              (click)="playSign(item, $index)">
               <div class="item-favorite-wrapper" (click)="toggleItemFavorite(item, $event)">
                 <ion-icon [name]="isItemFavorite(item) ? 'heart' : 'heart-outline'"
                   [class.active]="isItemFavorite(item)"></ion-icon>

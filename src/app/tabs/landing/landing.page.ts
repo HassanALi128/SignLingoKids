@@ -7,7 +7,7 @@ import {
   ElementRef,
   CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule, NavController, ToastController } from '@ionic/angular';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
 import { Subscription } from 'rxjs';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
@@ -58,6 +58,7 @@ interface Category {
 })
 export class LandingPage implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('swiper') swiperRef!: ElementRef;
 
   userName: string = 'User';
   userAvatar: string = '';
@@ -83,13 +84,15 @@ export class LandingPage implements OnInit, OnDestroy {
   recentLearning: { category: Category; progress: number } | null = null;
 
   isLoading3D: boolean = false;
+  isFullscreen: boolean = false;
 
   constructor(
     private navController: NavController,
     private favoritesService: FavoritesService,
     private three: ThreeRenderer,
     private dataService: DataService,
-    private learningService: LearningService
+    private learningService: LearningService,
+    private toastController: ToastController
   ) {
     addIcons({
       arrowBack,
@@ -155,11 +158,16 @@ export class LandingPage implements OnInit, OnDestroy {
       }));
   }
 
+  ionViewWillLeave() {
+    this.stopAudio();
+    this.three.dispose();
+  }
+
   ngOnDestroy() {
     if (this.favoritesSubscription) {
       this.favoritesSubscription.unsubscribe();
     }
-    // Cleanup 3D renderer if needed
+    this.three.dispose();
   }
 
   goToPremium(): void {
@@ -169,6 +177,9 @@ export class LandingPage implements OnInit, OnDestroy {
   async selectCategory(category: Category): Promise<void> {
     this.selectedCategory = category;
     this.categoryItems = category.signs || [];
+
+    // Show tooltip when entering category
+    this.showToast('Select an item to see the animation');
 
     // Give time for the view to render the canvas
     setTimeout(async () => {
@@ -246,9 +257,22 @@ export class LandingPage implements OnInit, OnDestroy {
     }
   }
 
-  async playSign(item: AslSign): Promise<void> {
+  async playSign(item: AslSign, index: number = -1): Promise<void> {
     console.log('Playing sign:', item);
     this.currentSign = item;
+
+    // Slide to the selected item if index is provided
+    // Slide to the selected item if index is provided
+    if (index >= 0 && this.swiperRef && this.swiperRef.nativeElement) {
+      const swiperEl = this.swiperRef.nativeElement;
+      if (swiperEl.swiper) {
+        swiperEl.swiper.slideTo(index, 500, true);
+      } else {
+        console.warn('Swiper instance not ready yet');
+      }
+    } else {
+      console.warn('Swiper element not found or index invalid');
+    }
 
     // Play Animation
     if (item.actionName) {
@@ -258,6 +282,10 @@ export class LandingPage implements OnInit, OnDestroy {
     // Play Audio
     if (item.audioUrl) {
       this.playAudio(item.audioUrl);
+    } else if (this.categoryItems.length > 0) {
+      // If no current sign is selected, play the first one
+      const firstItem = this.categoryItems[0];
+      this.playSign(firstItem, 0);
     }
   }
 
@@ -388,23 +416,37 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   // Action Button Handlers
-  toggleRotate() {
-    // Implement rotation toggle logic if supported by ThreeRenderer
-    console.log('Toggle Rotate');
+  toggleFullscreen() {
+    this.isFullscreen = !this.isFullscreen;
   }
 
   playAnimation() {
-    // Play a random animation
-    const animations = this.three.getClipNames();
-    if (animations && animations.length > 0) {
-      const randomAnim =
-        animations[Math.floor(Math.random() * animations.length)];
-      this.three.play(randomAnim);
-      console.log('Playing:', randomAnim);
+    // Play the animation of the current sign
+    if (this.currentSign && this.currentSign.actionName) {
+      this.three.play(this.currentSign.actionName);
+      console.log('Playing current sign:', this.currentSign.actionName);
+    } else {
+      // Show tooltip if no item is selected
+      this.showToast('Select the item to play the animation');
     }
   }
 
+  async showToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+      color: 'dark',
+      cssClass: 'custom-toast',
+    });
+    await toast.present();
+  }
+
   playSound() {
-    console.log('Play Sound');
+    if (this.currentSign && this.currentSign.audioUrl) {
+      this.playAudio(this.currentSign.audioUrl);
+    } else {
+      this.showToast('No audio available for this item');
+    }
   }
 }

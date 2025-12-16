@@ -1,534 +1,515 @@
-// Kids-friendly Quiz Design - Same as Home Page
+// Quiz Page Styles - New Start Screen + 3D Quiz View
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
 
-// Global Kids Theme - Same background everywhere
-ion-content {
-  --background: #f8f9fa; // Light background for better contrast
+// Global
+.quiz-content {
+  --background: #FDF8F0;
   font-family: 'Comic Neue', cursive;
 }
 
-// Make sure all sections use the same background
-.quiz-start-container,
-.quiz-question-container,
-.quiz-results-container {
-  background: transparent;
-}
+// 🌟 NEW START SCREEN (Before Quiz Starts)
+.start-screen {
+  padding: 20px;
+  min-height: 100vh;
+  background: #FDF8F0;
 
-// Fun Header - Same as Home
-.cartoon-header {
-  .rainbow-toolbar {
-    --background: #77bef0;
-    --background-size: 400% 400%;
-    text-align: center;
-    // animation: rainbow 3s ease infinite; // Disabled since using solid color
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  }
+  .header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 
-  .bouncy-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 24px;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    animation: bounce 2s infinite;
-  }
+    .greeting-text {
+      flex: 1;
 
-  .back-button {
-    --color: white;
-    font-family: 'Comic Neue', cursive;
-    font-weight: 700;
+      h2 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a1a;
+        font-family: 'Comic Neue', cursive;
+      }
 
-    .back-icon {
-      font-size: 20px;
-      margin-right: 5px;
+      p {
+        margin: 4px 0 0 0;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .sub-text {
+        font-size: 12px;
+        color: #999;
+      }
     }
 
-    .back-text {
-      font-size: 16px;
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #FF6B6B;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      ion-icon {
+        font-size: 45px;
+        color: #FF6B6B;
+      }
+    }
+  }
+
+  .quiz-banner {
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #0F6D4E 0%, #0A4D37 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .banner-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+
+      .banner-text {
+        flex: 1;
+
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 700;
+          color: white;
+          font-family: 'Fredoka One', cursive;
+        }
+
+        p {
+          margin: 0 0 12px 0;
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .start-btn {
+          --background: linear-gradient(to bottom, #D13D32, #6D1A65);
+          background: linear-gradient(to bottom, #D13D32, #6D1A65);
+          --border-radius: 24px;
+          --padding-top: 10px;
+          --padding-bottom: 10px;
+          font-weight: 700;
+          font-size: 14px;
+          text-transform: none;
+          color: white;
+          border-radius: 24px;
+        }
+
+        .resume-btn {
+          --background: #FF6B6B;
+          background: #FF6B6B;
+          --border-radius: 24px;
+          --padding-top: 10px;
+          --padding-bottom: 10px;
+          font-weight: 700;
+          font-size: 14px;
+          text-transform: none;
+          color: white;
+          border-radius: 24px;
+        }
+
+        .resume-text {
+          font-size: 11px !important;
+          color: rgba(255, 255, 255, 0.8) !important;
+          margin-top: 4px !important;
+        }
+      }
+
+      .banner-image {
+        img {
+          width: 120px;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .view-all {
+      font-size: 14px;
+      color: #FF6B6B;
+      cursor: pointer;
+    }
+  }
+
+  .results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .result-item {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+      .item-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #FFE8D6;
+
+        img {
+          width: 35px;
+          height: 35px;
+          object-fit: contain;
+        }
+      }
+
+      .item-content {
+        flex: 1;
+
+        h4 {
+          margin: 0 0 4px 0;
+          font-size: 16px;
+          font-weight: 700;
+          color: #1a1a1a;
+        }
+
+        p {
+          margin: 0;
+          font-size: 13px;
+          color: #666;
+        }
+      }
+
+      .item-progress {
+        .progress-circle {
+          position: relative;
+          width: 50px;
+          height: 50px;
+
+          .circular-chart {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+
+            .circle-bg {
+              fill: none;
+              stroke: #E8E8E8;
+              stroke-width: 3;
+            }
+
+            .circle {
+              fill: none;
+              stroke: var(--progress-color, #FF6B6B);
+              stroke-width: 3;
+              stroke-linecap: round;
+              transition: stroke-dasharray 0.6s ease;
+            }
+          }
+
+          .percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--progress-color, #FF6B6B);
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-size: 14px;
     }
   }
 }
 
-// Floating Shapes - Same as Home
-.floating-shapes {
+// 🎮 3D QUIZ VIEW (When Quiz is Active)
+.cartoon-viewer {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-
-  .shape {
-    position: absolute;
-    font-size: 24px;
-    animation: float 6s ease-in-out infinite;
-    opacity: 0.7;
-  }
-
-  .shape-1 {
-    top: 10%;
-    left: 10%;
-    animation-delay: 0s;
-  }
-
-  .shape-2 {
-    top: 20%;
-    right: 15%;
-    animation-delay: 1s;
-  }
-
-  .shape-3 {
-    top: 60%;
-    left: 5%;
-    animation-delay: 2s;
-  }
-
-  .shape-4 {
-    top: 70%;
-    right: 10%;
-    animation-delay: 3s;
-  }
-
-  .shape-5 {
-    top: 40%;
-    left: 50%;
-    animation-delay: 4s;
-  }
-}
-
-// 🔥 Fixed Model Viewer - Same as Home Page
-.cartoon-viewer {
-  position: fixed;
-  top: 56px;
-  left: 0;
-  width: 100%;
-  height: calc(100vh - 56px);
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
+  background: #fdf8f0; // Match the cream background from design
+  overflow: hidden; // Disable scroll
+
+  &.hidden {
+    display: none;
+  }
+
+  // Header Overlay
+  .quiz-header {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 20;
+
+    ion-button {
+      --color: #333;
+      font-size: 24px;
+    }
+  }
 
   .viewer-border {
     width: 100%;
     height: 100%;
     overflow: hidden;
     position: relative;
-    background: #f8f9fa;
+    background: #fdf8f0;
 
     canvas {
       width: 100%;
-      height: 45%;
+      height: 100%; // Occupy full screen
       display: block;
     }
 
-    // 🔥 Canvas Content - Everything Below Model
     .canvas-content {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 55%;
-      background: #f8f9fa;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 5px 20px 20px 20px;
-      z-index: 5;
-      -webkit-overflow-scrolling: touch;
-    }
-  }
-
-  .viewer-decoration {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-
-    .decoration-emoji {
-      font-size: 32px;
-      animation: wiggle 2s ease-in-out infinite;
-    }
-  }
-}
-
-// Quiz Start Screen
-.quiz-start-container {
-  padding: 20px;
-flex-direction: column;
-  // min-height: 100vh;
-  display: flex;
-  // align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 2;
-}
-
-.quiz-welcome {
-  text-align: center;
-  max-width: 400px;
-  width: 100%;
-
-  .welcome-emoji {
-    font-size: 80px;
-    margin-bottom: 20px;
-    animation: bounce 2s infinite;
-  }
-
-  .welcome-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 32px;
-    color: #2c3e50;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
-  }
-
-  .welcome-subtitle {
-    font-size: 18px;
-    color: #34495e;
-    margin-bottom: 30px;
-    font-weight: 400;
-  }
-
-  .quiz-info {
-    background: rgba(255,255,255,0.9);
-    border-radius: 20px;
-    padding: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-
-    .info-item {
+      height: auto; // Auto height based on content
+      max-height: 60%; // Limit height to show character
+      background: white;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      padding: 24px 24px 40px 24px; // Extra padding at bottom for safe area
+      z-index: 20;
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
       display: flex;
-      align-items: center;
-      justify-content: center;
-      // margin-bottom: 15px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #2c3e50;
-
-      .info-emoji {
-        font-size: 20px;
-        margin-right: 10px;
-      }
-
-      .info-text {
-        font-family: 'Comic Neue', cursive;
-      }
+      flex-direction: column;
     }
-  }
-
-  .start-quiz-button {
-    --background: #efa047;
-    --color: white;
-    --border-radius: 25px;
-    --box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    font-family: 'Fredoka One', cursive;
-    font-size: 20px;
-    height: 60px;
-    animation: pulse 2s infinite;
   }
 }
 
-// Quiz Results Section
-.history-section {
-  margin-top: 30px;
+.quiz-question-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-  .quiz-results-header {
+  .question-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 
-    .results-title {
+    .question-title {
       font-family: 'Fredoka One', cursive;
-      font-size: 24px;
-      color: #2c3e50;
+      font-size: 18px;
+      color: #333;
       margin: 0;
     }
 
-    .total-badge {
-      background: #95a5a6;
+    // Play button inside header
+    .action-btn.play {
+      width: 45px; // Slightly smaller for header
+      height: 45px;
+      border-radius: 14px;
+      background: #EB5757;
       color: white;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-family: 'Comic Neue', cursive;
-      font-weight: 700;
-      font-size: 16px;
-    }
-  }
-
-  .results-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .result-card {
+      font-size: 24px;
+      box-shadow: 0 4px 0 #C0392B;
+      border: none;
       display: flex;
       align-items: center;
-      padding: 20px;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      justify-content: center;
+      transition: all 0.1s ease;
 
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      }
-
-      &.awesome {
-        background: #9c27b0;
-        color: white;
-      }
-
-      &.good {
-        background: #ff9800;
-        color: white;
-      }
-
-      &.fine {
-        background: #e91e63;
-        color: white;
-      }
-
-      .card-icon {
-        margin-right: 20px;
-        font-size: 28px;
-        display: flex;
-        align-items: center;
-
-        .emoji-icon {
-          font-size: 24px;
-        }
-      }
-
-      .card-text {
-        flex: 1;
-
-        .result-message {
-          font-family: 'Comic Neue', cursive;
-          font-size: 18px;
-          font-weight: 700;
-        }
+      &:active {
+        transform: translateY(2px);
+        box-shadow: 0 0px 0 #C0392B;
       }
     }
   }
-}
 
-// Quiz Question Screen
-.quiz-question-container {
-  padding: 20px;
-  // min-height: 70vh;
-  position: relative;
-  z-index: 2;
-}
-
-.quiz-progress {
-  margin-bottom: 30px;
-
-  .progress-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-family: 'Comic Neue', cursive;
-    font-weight: 600;
-    color: #2c3e50;
-
-    .progress-text {
-      font-size: 16px;
-    }
-
-    .progress-stars {
-      font-size: 18px;
-      color: #f39c12;
-    }
-  }
-
-  .quiz-progress-bar {
-    --background: rgba(255,255,255,0.3);
-    --progress-background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-    height: 8px;
-    border-radius: 10px;
-  }
-}
-
-.question-section {
-  text-align: center;
-  margin-bottom: 30px;
-
-  .question-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 28px;
-    color: #2c3e50;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
-  }
-
-  .media-container {
+  .answers-container {
     margin-bottom: 20px;
 
-    .play-button {
-      --color: #2c3e50;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.9);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      animation: pulse 2s infinite;
-
-      .play-icon {
-        font-size: 50px;
-        color: #ff6b6b;
-      }
-    }
-  }
-
-  .instruction-text {
-    font-family: 'Comic Neue', cursive;
-    font-size: 18px;
-    color: #34495e;
-    font-weight: 600;
-  }
-}
-
-.answers-container {
-  display: flex;
-justify-content: space-evenly;
-  margin-bottom: 30px;
-
-  // First row - 2 options side by side
-  .options-row {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-
-    &.single-option {
-      justify-content: center;
-    }
-  }
-
-  .answer-option {
-    background: rgba(255,255,255,0.9);
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    position: relative;
-    min-height: 120px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1;
-    max-width: 200px; // Limit width for better layout
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    .options-row {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
     }
 
-    &.selected {
-      background: linear-gradient(45deg, #4ecdc4, #44a08d);
-      color: white;
-      transform: scale(1.05);
-    }
-
-    &.correct {
-      background: linear-gradient(45deg, #2ecc71, #27ae60);
-      color: white;
-      animation: correctPulse 0.6s ease;
-    }
-
-    &.incorrect {
-      background: linear-gradient(45deg, #e74c3c, #c0392b);
-      color: white;
-      animation: incorrectShake 0.6s ease;
-    }
-
-    .option-content {
+    .answer-option {
+      flex: 1;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      min-height: 130px; // Ensure consistent height
+      justify-content: space-between;
 
-      .option-icon {
-        .option-image {
-          width: 50px;
-          height: 50px;
-          object-fit: contain;
+      // Card Colors
+      &.card-yellow {
+        background: #ffeaa7; // Light yellow
+        border-bottom: 4px solid #fdcb6e;
+      }
+
+      &.card-blue {
+        background: #74b9ff; // Light blue
+        border-bottom: 4px solid #0984e3;
+      }
+
+      &.card-green {
+        background: #55efc4; // Light green
+        border-bottom: 4px solid #00b894;
+      }
+
+      &.selected {
+        transform: translateY(2px);
+        border-bottom-width: 2px;
+        box-shadow: inset 0 0 0 2px #333;
+      }
+
+      &:active {
+        transform: translateY(2px);
+        border-bottom-width: 2px;
+      }
+
+      .option-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+
+        .option-image-container {
+          width: 100%;
+          height: 80px;
+          border-radius: 12px;
+          overflow: hidden;
+          margin-bottom: 8px;
+          background: rgba(255, 255, 255, 0.3); // Slight overlay behind image
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .option-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .option-text {
+          font-family: 'Fredoka One', cursive;
+          font-size: 14px;
+          color: #333;
         }
       }
 
-      .option-text {
-        font-family: 'Comic Neue', cursive;
-        font-size: 16px;
-        font-weight: 600;
-      }
-    }
-
-    .result-icon {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-
-      .correct-icon {
-        color: #2ecc71;
-        font-size: 24px;
-      }
-
-      .incorrect-icon {
-        color: #e74c3c;
-        font-size: 24px;
+      // Result Overlay
+      .result-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 40px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }
-}
 
-.check-button-container {
-  margin-top: 30px;
-
-  .check-button,
-  .next-button {
-    --background: #77bef0;
-    background: #77bef0;
-    --color: white;
-    --border-radius: 10px;
-    --box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    border-radius: 10px;
-    font-family: 'Fredoka One', cursive;
-    font-size: 18px;
-    height: 60px;
-
-    &[disabled] {
-      --background: #bdc3c7;
-      --color: #7f8c8d;
-    }
-  }
-
-  .result-info {
+  // Action Buttons
+  .action-buttons {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px;
-    background: rgba(46, 204, 113, 0.1);
-    border-radius: 25px;
-    border: 2px solid #2ecc71;
-    animation: pulse 1s infinite;
+    gap: 16px;
+    margin-top: auto; // Push to bottom if space allows
 
-    .result-icon {
-      font-size: 20px;
+    .action-btn-wrapper {
+      &.check-wrapper {
+        flex: 1; // Check button takes remaining space
+      }
     }
 
-    .result-text {
-      color: #2c3e50;
-      font-family: 'Comic Neue', cursive;
-      font-weight: 600;
-      font-size: 16px;
+    .action-btn {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      font-family: 'Fredoka One', cursive;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      &:active {
+        transform: translateY(4px);
+        box-shadow: 0 0px 0 !important;
+      }
+
+      &.check {
+        width: 100%;
+        height: 60px;
+        border-radius: 20px;
+        background: #6FCF97; // Green (matching expand button style)
+        color: white;
+        font-size: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 6px 0 #27AE60; // Darker Green
+
+        &:disabled {
+          background: #ccc;
+          box-shadow: 0 6px 0 #999;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
     }
   }
 }
 
-// Feedback Popup Modal
+// Feedback Popup
 .feedback-popup-overlay {
   position: fixed;
   top: 0;
@@ -544,9 +525,9 @@ justify-content: space-evenly;
 
   .feedback-popup {
     background: white;
-    border-radius: 25px;
+    border-radius: 20px;
     padding: 30px;
-    max-width: 350px;
+    max-width: 320px;
     width: 90%;
     text-align: center;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -554,41 +535,30 @@ justify-content: space-evenly;
 
     &.correct-popup {
       border: 4px solid #2ecc71;
-
-      .popup-emoji {
-        animation: correctBounce 0.8s ease;
-      }
     }
 
     &.incorrect-popup {
       border: 4px solid #e74c3c;
-
-      .popup-emoji {
-        animation: incorrectShake 0.8s ease;
-      }
     }
 
     .popup-content {
       .popup-emoji {
-        font-size: 80px;
-        margin-bottom: 20px;
-        display: block;
+        font-size: 60px;
+        margin-bottom: 16px;
       }
 
       .popup-title {
         font-family: 'Fredoka One', cursive;
-        font-size: 28px;
+        font-size: 24px;
         color: #2c3e50;
-        margin-bottom: 15px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 12px;
       }
 
       .popup-message {
         font-family: 'Comic Neue', cursive;
-        font-size: 16px;
+        font-size: 14px;
         color: #7f8c8d;
-        margin-bottom: 25px;
-        line-height: 1.5;
+        margin-bottom: 20px;
       }
 
       .popup-actions {
@@ -596,67 +566,48 @@ justify-content: space-evenly;
           --background: #efa047;
           background: #efa047;
           --color: white;
-          --border-radius: 25px;
+          --border-radius: 20px;
           font-family: 'Fredoka One', cursive;
-          font-size: 18px;
-          height: 50px;
-          box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
-        }
-
-        .try-again-button {
-          --background: #efa047;
-          background: #efa047;
-          --color: white;
-          --border-radius: 25px;
-          font-family: 'Fredoka One', cursive;
-          font-size: 18px;
-          height: 50px;
-          box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+          font-size: 16px;
+          height: 45px;
         }
       }
     }
   }
 }
 
-// Quiz Results Screen - Simple Progress View
+// Quiz Results Screen
 .quiz-results-container {
   padding: 20px;
-  // min-height: 100vh;
   display: flex;
-  // align-items: center;
   justify-content: center;
   position: relative;
   z-index: 2;
-}
 
-.results-content {
-  text-align: center;
-  max-width: 400px;
-  width: 100%;
-
-  .quiz-results-section {
-    margin-bottom: 0;
+  .results-content {
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
 
     .results-label {
-      font-family: 'Comic Neue', cursive;
-      font-size: 18px;
-      color: white;
-      text-align: left;
-      margin-bottom: 15px;
-      font-weight: 600;
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+      color: #2c3e50;
+      margin-bottom: 20px;
     }
 
     .progress-card {
       background: #3498db;
       border-radius: 15px;
-      padding: 20px;
+      padding: 16px;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      margin-bottom: 16px;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
       }
 
       .progress-content {
@@ -667,7 +618,6 @@ justify-content: space-evenly;
         .star-icon {
           color: white;
           font-size: 24px;
-          margin-right: 15px;
         }
 
         .progress-text {
@@ -677,6 +627,7 @@ justify-content: space-evenly;
           color: white;
           font-weight: 600;
           text-align: left;
+          margin-left: 12px;
         }
 
         .arrow-icon {
@@ -685,23 +636,21 @@ justify-content: space-evenly;
         }
       }
     }
-  }
 
-  .take-quiz-button {
-    --background: #efa047;
-    background: #efa047;
-    --color: white;
-    --border-radius: 25px;
-    --box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    font-family: 'Fredoka One', cursive;
-    font-size: 20px;
-    height: 60px;
-    animation: pulse 2s infinite;
-    margin-bottom: 10px;
+    .take-quiz-button {
+      --background: #efa047;
+      background: #efa047;
+      --color: white;
+      --border-radius: 20px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 18px;
+      height: 50px;
+      margin-bottom: 12px;
+    }
   }
 }
 
-// Quiz Result Modal
+// Result Modal
 .result-modal-overlay {
   position: fixed;
   top: 0;
@@ -718,26 +667,24 @@ justify-content: space-evenly;
 
 .result-modal {
   background: #77bef0;
-  border-radius: 30px;
-  padding: 40px;
-  max-width: 400px;
+  border-radius: 25px;
+  padding: 30px;
+  max-width: 380px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: modalSlideIn 0.3s ease;
-  position: relative;
 
   .modal-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 
     .modal-title {
       font-family: 'Fredoka One', cursive;
-      font-size: 28px;
+      font-size: 24px;
       color: white;
       margin: 0;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
   }
 
@@ -745,36 +692,32 @@ justify-content: space-evenly;
     text-align: center;
 
     .result-message {
-      margin-bottom: 30px;
+      margin-bottom: 24px;
 
       .congratulations-text {
         font-family: 'Comic Neue', cursive;
-        font-size: 20px;
+        font-size: 18px;
         color: white;
         font-weight: 700;
         margin: 0;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
       }
     }
 
     .progress-bar-section {
-      margin-bottom: 30px;
+      margin-bottom: 24px;
 
       .progress-bar-container {
         position: relative;
-        background: rgba(255,255,255,0.3);
-        border-radius: 15px;
-        height: 30px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        height: 28px;
         overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 
         .progress-bar-fill {
           height: 100%;
           background: #7fd657;
-          border-radius: 15px;
+          border-radius: 12px;
           transition: width 1s ease;
-          animation: progressFill 1.5s ease;
-          box-shadow: 0 2px 8px rgba(127, 214, 87, 0.3);
         }
 
         .progress-text {
@@ -785,59 +728,18 @@ justify-content: space-evenly;
           color: white;
           font-family: 'Comic Neue', cursive;
           font-weight: 700;
-          font-size: 18px;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+          font-size: 16px;
         }
       }
     }
 
     .celebration-character {
-      position: relative;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
 
       .character {
-        font-size: 80px;
-        animation: characterBounce 2s infinite;
-        position: relative;
-        z-index: 2;
-      }
-
-      .confetti {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-
-        .confetti-piece {
-          position: absolute;
-          font-size: 20px;
-          animation: confettiFloat 3s infinite ease-in-out;
-
-          &.yellow {
-            top: 20%;
-            left: 20%;
-            animation-delay: 0s;
-          }
-
-          &.blue {
-            top: 30%;
-            right: 20%;
-            animation-delay: 0.5s;
-          }
-
-          &.pink {
-            bottom: 30%;
-            left: 30%;
-            animation-delay: 1s;
-          }
-
-          &.green {
-            bottom: 20%;
-            right: 30%;
-            animation-delay: 1.5s;
-          }
+        img {
+          max-width: 150px;
+          height: auto;
         }
       }
     }
@@ -845,336 +747,138 @@ justify-content: space-evenly;
     .ok-button {
       --background: #efa047;
       --color: white;
-      --border-radius: 25px;
-      --box-shadow: 0 8px 25px rgba(255, 149, 0, 0.3);
-      font-family: 'Comic Neue', cursive;
-      font-size: 18px;
-      font-weight: 700;
-      height: 50px;
+      --border-radius: 20px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 16px;
+      height: 45px;
       text-transform: lowercase;
     }
   }
 }
 
-// Progress Popup Modal
-.progress-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
-  animation: fadeIn 0.3s ease;
-}
-
-.progress-popup {
-  background: white;
-  border-radius: 25px;
-  padding: 30px;
-  max-width: 400px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: popupSlideIn 0.3s ease;
-
-  .popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-
-    .popup-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 24px;
-      color: #2c3e50;
-      margin: 0;
-    }
-
-    .close-button {
-      --color: #7f8c8d;
-      font-size: 24px;
-    }
-  }
-
-  .popup-content {
-    text-align: center;
-
-    .trophy-container {
-      position: relative;
-      margin-bottom: 30px;
-
-      .trophy-emoji {
-        font-size: 80px;
-        animation: trophyBounce 2s infinite;
-        position: relative;
-        z-index: 2;
-      }
-
-      .trophy-glow {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 120px;
-        height: 120px;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
-        border-radius: 50%;
-        animation: trophyGlow 2s infinite;
-        z-index: 1;
-      }
-    }
-
-    .progress-section {
-      margin-bottom: 30px;
-
-      .progress-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-
-        .score-text {
-          font-family: 'Fredoka One', cursive;
-          font-size: 24px;
-          color: #2c3e50;
-        }
-
-        .percentage-text {
-          font-family: 'Comic Neue', cursive;
-          font-size: 20px;
-          font-weight: 700;
-          color: #efa047;
-        }
-      }
-
-      .progress-bar-container {
-        margin-bottom: 15px;
-
-        .progress-bar-bg {
-          width: 100%;
-          height: 20px;
-          background: #ecf0f1;
-          border-radius: 10px;
-          overflow: hidden;
-          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-
-          .progress-bar-fill {
-            height: 100%;
-            background: #7fd657;
-            border-radius: 10px;
-            transition: width 1s ease;
-            animation: progressFill 1.5s ease;
-            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
-          }
-        }
-      }
-
-      .progress-message {
-        .message-text {
-          font-family: 'Comic Neue', cursive;
-          font-size: 18px;
-          font-weight: 600;
-          color: #2c3e50;
-        }
-      }
-    }
-
-    .popup-actions {
-      display: flex;
-      justify-content: center;
-
-      .ok-button {
-        --background:#68a2ca;
-        background: #68a2ca;
-        --color: white;
-        --border-radius: 25px;
-        --box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-        font-family: 'Fredoka One', cursive;
-        font-size: 18px;
-        height: 50px;
-        width: 120px;
-      }
-    }
-  }
-}
-
 // Animations
-@keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(180deg); }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-@keyframes correctPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-@keyframes incorrectShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-@keyframes feedbackPop {
-  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-}
-
-@keyframes correctBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-}
-
-@keyframes incorrectWobble {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-10deg); }
-  75% { transform: rotate(10deg); }
-}
-
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes popupSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.8) translateY(-50px);
+    transform: scale(0.8) translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes trophyBounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-15px); }
-  60% { transform: translateY(-8px); }
-}
-
-@keyframes trophyGlow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-}
-
-@keyframes progressFill {
-  from { width: 0%; }
-  to { width: var(--progress-width, 0%); }
-}
-
-// Responsive Design
-@media (max-width: 768px) {
-  .answers-container {
-    grid-template-columns: 1fr;
-  }
-
-  .welcome-title,
-  .results-title {
-    font-size: 28px;
-  }
-
-  .question-title {
-    font-size: 24px;
-  }
-}
-
-// Additional Animations for Popup
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes popupSlideIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8) translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes correctBounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-20px); }
-  60% { transform: translateY(-10px); }
-}
-
-@keyframes incorrectShake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-  20%, 40%, 60%, 80% { transform: translateX(10px); }
-}
-
-@keyframes characterBounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-15px); }
-  60% { transform: translateY(-8px); }
-}
-
-@keyframes confettiFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(-20px) rotate(180deg);
-    opacity: 0.8;
   }
 }
 
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.8) translateY(-50px);
+    transform: scale(0.8) translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
 }
 
+@keyframes correctPulse {
+  0% {
+    transform: scale(1);
+  }
 
-.check-button {
-  --background:#77bef0;
-  background: #77bef0;
-  --color: white;
-  --border-radius: 25px;
-  --box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  font-family: 'Fredoka One', cursive;
-  font-size: 18px;
-  height: 60px;
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes incorrectShake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+// Loading Overlay
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(253, 248, 240, 0.95); // Cream background with high opacity
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+
+  .loading-content {
+    text-align: center;
+    padding: 30px;
+
+    ion-spinner {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 24px;
+      color: #FF6B6B;
+    }
+
+    h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 28px;
+      color: #2c3e50;
+      margin: 0 0 12px 0;
+      animation: bounceIn 0.5s ease;
+    }
+
+    p {
+      font-family: 'Comic Neue', cursive;
+      font-size: 18px;
+      color: #7f8c8d;
+      font-weight: 600;
+    }
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }

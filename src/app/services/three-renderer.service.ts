@@ -69,7 +69,7 @@ export class ThreeRenderer implements OnDestroy {
   }
 
   async loadModel(
-    url: string = 'assets/aslkidanimation/models/alsagirl_model.glb'
+    url: string = 'assets/aslkidanimation/models/asl_new_Modle.glb'
   ): Promise<THREE.Object3D> {
     this.disposeCurrentModel();
 
@@ -196,38 +196,103 @@ export class ThreeRenderer implements OnDestroy {
     this.renderer.render(this.scene, this.camera);
   };
 
+  /**
+   * 🧹 Robust Disposal to prevent Memory Leaks
+   */
+  dispose(): void {
+    console.log('🧹 Disposing Three.js Renderer & Scene...');
+
+    // 1. Stop Animation Loop
+    if (this.frameId !== null) {
+      cancelAnimationFrame(this.frameId);
+      this.frameId = null;
+    }
+
+    // 2. Stop & Clear Animations
+    this.stop();
+    this.actions.forEach((action) => action.stop());
+    this.actions.clear();
+    this.mixer?.stopAllAction();
+    this.mixer?.uncacheRoot(this.mixer.getRoot());
+    this.mixer = undefined;
+    this.activeAction = undefined;
+    this.globalActions.clear();
+    this.loadedFiles.clear();
+
+    // 3. Dispose Controls
+    if (this.controls) {
+      this.controls.dispose();
+      this.controls = undefined;
+    }
+
+    // 4. Dispose Scene Content (Recursive)
+    if (this.scene) {
+      this.scene.traverse((object) => {
+        this.disposeObject(object);
+      });
+      this.scene.clear();
+    }
+
+    // 5. Dispose Renderer
+    if (this.renderer) {
+      this.renderer.dispose();
+      this.renderer.forceContextLoss();
+      this.renderer.domElement.remove();
+      (this.renderer as any) = null;
+    }
+
+    console.log('✨ Three.js Disposed Successfully');
+  }
+
+  private disposeObject(object: any) {
+    if (!object) return;
+
+    // Dispose Geometry
+    if (object.geometry) {
+      object.geometry.dispose();
+    }
+
+    // Dispose Material(s)
+    if (object.material) {
+      if (Array.isArray(object.material)) {
+        object.material.forEach((mat: any) => this.disposeMaterial(mat));
+      } else {
+        this.disposeMaterial(object.material);
+      }
+    }
+
+    // Dispose Skeleton (if any)
+    if (object.skeleton) {
+      object.skeleton.dispose();
+    }
+  }
+
+  private disposeMaterial(material: any) {
+    if (!material) return;
+
+    // Dispose Textures in Material
+    for (const key of Object.keys(material)) {
+      const value = material[key];
+      if (value && typeof value === 'object' && 'minFilter' in value) {
+        // It's a texture
+        value.dispose();
+      }
+    }
+
+    // Dispose the material itself
+    material.dispose();
+  }
+
+  // Keep for internal partial cleanup if needed, but rely on dispose() for full cleanup
   private disposeCurrentModel(): void {
     if (!this.currentModel) return;
-
-    // stop animations
-    this.activeAction?.stop();
-    this.activeAction = undefined;
-    this.actions.forEach((a) => a.stop());
-    this.actions.clear();
-    this.mixer = undefined;
-
     this.scene.remove(this.currentModel);
-    this.currentModel.traverse((obj: THREE.Object3D) => {
-      const mesh = obj as THREE.Mesh;
-      if ((mesh as any).isMesh) {
-        mesh.geometry?.dispose?.();
-        const material = mesh.material as
-          | THREE.Material
-          | THREE.Material[]
-          | undefined;
-        if (Array.isArray(material)) material.forEach((m) => m.dispose?.());
-        else material?.dispose?.();
-      }
-    });
+    this.currentModel.traverse((obj) => this.disposeObject(obj));
     this.currentModel = undefined;
   }
 
   ngOnDestroy(): void {
-    if (this.frameId) cancelAnimationFrame(this.frameId);
-    this.controls?.dispose?.();
-    this.disposeCurrentModel();
-    this.renderer?.dispose?.();
-    this.scene?.clear?.();
+    this.dispose();
   }
 
   async loadActionAndPlay(actionUrl: string, fadeSeconds = 0.3): Promise<void> {
@@ -319,9 +384,25 @@ export class ThreeRenderer implements OnDestroy {
     this.scene.add(axesHelper);
   }
 
+  // Global cache for all loaded animations
+  private globalActions = new Map<string, THREE.AnimationClip>();
+  private loadedFiles = new Set<string>();
+
   async loadActions(url: string): Promise<void> {
     if (!this.currentModel) {
       throw new Error('Load the model first before actions');
+    }
+
+    // Ensure mixer exists (in case model had no animations)
+    if (!this.mixer) {
+      this.mixer = new THREE.AnimationMixer(this.currentModel);
+    }
+
+    // If file already loaded, just ensure actions are registered in current mixer
+    if (this.loadedFiles.has(url)) {
+      console.log('⚡ Actions from this file already cached:', url);
+      this.registerCachedActions();
+      return;
     }
 
     console.log('🔄 Loading actions from:', url);
@@ -334,21 +415,36 @@ export class ThreeRenderer implements OnDestroy {
 
     console.log('✅ Found animations:', gltf.animations.length);
 
-    if (!this.mixer) {
-      this.mixer = new THREE.AnimationMixer(this.currentModel);
-    }
-
-    // Clear previous actions before loading new ones
-    this.actions.clear();
-
+    // Store clips in global cache
     for (const clip of gltf.animations) {
-      console.log('➕ Adding animation:', clip.name);
-      const action = this.mixer.clipAction(clip, this.currentModel);
-      action.clampWhenFinished = true;
-      action.loop = THREE.LoopOnce;
-      this.actions.set(clip.name, action);
-      console.log('Action added:', clip.name);
+      if (!this.globalActions.has(clip.name)) {
+        this.globalActions.set(clip.name, clip);
+        console.log('💾 Cached animation:', clip.name);
+      }
     }
+
+    this.loadedFiles.add(url);
+    this.registerCachedActions();
+  }
+
+  // Register all cached animations to the current mixer
+  private registerCachedActions(): void {
+    if (!this.mixer || !this.currentModel) return;
+
+    this.globalActions.forEach((clip, name) => {
+      if (!this.actions.has(name)) {
+        const action = this.mixer!.clipAction(clip, this.currentModel);
+        action.clampWhenFinished = true;
+        action.loop = THREE.LoopOnce;
+        this.actions.set(name, action);
+      }
+    });
+  }
+
+  // Preload actions without playing (for Quiz)
+  async preloadActions(url: string): Promise<void> {
+    // Always call loadActions, it handles caching and registration internally
+    await this.loadActions(url);
   }
 
   getModelInfo(): any {

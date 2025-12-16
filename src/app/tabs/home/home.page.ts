@@ -12,11 +12,19 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import {IonicModule} from '@ionic/angular'
+import { IonicModule } from '@ionic/angular';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { DataService } from 'src/app/services/data';
 import { addIcons } from 'ionicons';
-import { arrowBack, volumeHigh, school, home, play, checkmark, checkmarkCircle } from 'ionicons/icons';
+import {
+  arrowBack,
+  volumeHigh,
+  school,
+  home,
+  play,
+  checkmark,
+  checkmarkCircle,
+} from 'ionicons/icons';
 
 interface AslSign {
   id: string;
@@ -41,14 +49,12 @@ interface Category {
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    IonicModule
-  ],
+  imports: [CommonModule, IonicModule],
 })
 export class HomePage implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChildren('scrollCard', { read: ElementRef }) scrollCards!: QueryList<ElementRef>;
+  @ViewChildren('scrollCard', { read: ElementRef })
+  scrollCards!: QueryList<ElementRef>;
 
   // Data properties
   categories: Category[] = [];
@@ -71,7 +77,15 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
     private data: DataService,
     private router: Router
   ) {
-    addIcons({volumeHigh,arrowBack,school,home,play,checkmark,checkmarkCircle});
+    addIcons({
+      volumeHigh,
+      arrowBack,
+      school,
+      home,
+      play,
+      checkmark,
+      checkmarkCircle,
+    });
   }
 
   goToLanding(): void {
@@ -80,7 +94,7 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-    this.categories = await this.data.loadCategories();
+      this.categories = await this.data.loadCategories();
       console.log('Loaded categories:', this.categories);
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -97,15 +111,20 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
 
       const canvas = this.canvasRef.nativeElement;
       const width = canvas.clientWidth || window.innerWidth;
-      const height = canvas.clientHeight || Math.round(window.innerHeight * 0.5);
+      const height =
+        canvas.clientHeight || Math.round(window.innerHeight * 0.5);
 
       this.three.initialize(this.canvasRef, width, height);
 
       // Load the main character model - BUBU
-      await this.three.loadModel('assets/aslkidanimation/models/asl_new_Modle.glb');
+      await this.three.loadModel(
+        'assets/aslkidanimation/models/asl_new_Modle.glb'
+      );
 
       // Load default actions (if any)
-      await this.three.loadActions('assets/aslkidanimation/actions/alsagirl_model_animation.glb');
+      await this.three.loadActions(
+        'assets/aslkidanimation/actions/alsagirl_model_animation.glb'
+      );
       this.three.centerModel();
 
       this.characterLoaded = true;
@@ -153,7 +172,6 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
 
       // ❌ Removed audio - audio will only play when user clicks Listen button
       // ❌ Removed progress update - progress will only update when user checks "I Learned"
-
     } catch (error) {
       console.error('Error playing sign:', error);
     }
@@ -169,7 +187,7 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
 
     try {
       this.currentAudio = new Audio(audioUrl);
-      this.currentAudio.play().catch(error => {
+      this.currentAudio.play().catch((error) => {
         console.warn('Could not play audio:', error);
       });
     } catch (error) {
@@ -230,7 +248,7 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
   toggleLearnedStatus(sign: AslSign): void {
     if (this.isSignPlayed(sign)) {
       // Remove from learned signs
-      this.learnedSigns = this.learnedSigns.filter(id => id !== sign.id);
+      this.learnedSigns = this.learnedSigns.filter((id) => id !== sign.id);
       this.playedCount--;
     } else {
       // Add to learned signs
@@ -238,7 +256,12 @@ export class HomePage implements AfterViewInit, OnDestroy, OnInit {
       this.playedCount++;
     }
     console.log('Learned signs:', this.learnedSigns);
-    console.log('Progress:', this.playedCount, '/', this.selectedCategory?.signs.length);
+    console.log(
+      'Progress:',
+      this.playedCount,
+      '/',
+      this.selectedCategory?.signs.length
+    );
   }
 
   //  Animation Controls

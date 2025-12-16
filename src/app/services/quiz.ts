@@ -32,9 +32,9 @@ export class QuizService {
 
   // Load questions from JSON and pick random 5
   getRandomQuiz(): Observable<QuizQuestion[]> {
-    return this.http.get<QuizQuestion[]>('assets/data/quiz-data.json').pipe(
-      map((questions) => this.shuffle(questions).slice(0, 5))
-    );
+    return this.http
+      .get<QuizQuestion[]>('assets/data/quiz-data.json')
+      .pipe(map((questions) => this.shuffle(questions).slice(0, 5)));
   }
 
   // Save quiz result (max 5)
@@ -59,5 +59,31 @@ export class QuizService {
       .map((value) => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
+  }
+
+  // --- New Methods for Quiz Limit & Premium ---
+
+  // Get current number of quiz attempts
+  getAttempts(): number {
+    const attempts = localStorage.getItem('quiz_attempts');
+    return attempts ? parseInt(attempts, 10) : 0;
+  }
+
+  // Increment quiz attempts count
+  incrementAttempts(): void {
+    let attempts = this.getAttempts();
+    attempts++;
+    localStorage.setItem('quiz_attempts', attempts.toString());
+  }
+
+  // Check if user is premium (Mock implementation)
+  isPremium(): boolean {
+    // In a real app, check user profile or subscription status
+    const profile = localStorage.getItem('userProfile');
+    if (profile) {
+      const userData = JSON.parse(profile);
+      return userData.isPremium === true;
+    }
+    return false;
   }
 }

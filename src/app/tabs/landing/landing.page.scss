@@ -442,16 +442,20 @@ ion-header {
   align-items: center;
   justify-content: center;
   position: relative;
-  padding-bottom: 160px; // Space for bottom sheet
+  width: 100%;
+  height: 100%;
 }
 
 .character-container {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 60%;
+  height: 100%;
+  z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 
   .loading-overlay {
     position: absolute;
@@ -465,7 +469,7 @@ ion-header {
     justify-content: center;
     background: rgba(255, 255, 255, 0.9);
     z-index: 10;
-    border-radius: 20px;
+    border-radius: 0;
 
     ion-spinner {
       width: 40px;
@@ -491,13 +495,27 @@ ion-header {
 }
 
 .action-buttons {
+  position: absolute;
+  bottom: 280px; // Adjust based on bottom sheet height
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 20px;
   width: 100%;
   padding: 0 20px;
+  z-index: 10;
+  pointer-events: none; // Allow clicks to pass through empty space
+  transition: bottom 0.3s ease-in-out;
+
+  &.lowered {
+    bottom: 40px;
+  }
+
+  .action-btn-wrapper {
+    pointer-events: auto; // Re-enable clicks on buttons
+  }
 }
 
 .action-btn-wrapper {
@@ -519,11 +537,12 @@ ion-header {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s ease;
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Removed generic shadow
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(4px);
+    box-shadow: 0 0px 0 !important; // Hide shadow on press
   }
 
   ion-icon {
@@ -533,10 +552,12 @@ ion-header {
 
   &.expand {
     background: #6FCF97; // Green
+    box-shadow: 0 6px 0 #27AE60; // Darker Green
   }
 
   &.rotate {
     background: #56CCF2; // Blue
+    box-shadow: 0 6px 0 #2D9CDB; // Darker Blue
   }
 
   &.play {
@@ -544,6 +565,7 @@ ion-header {
     height: 60px;
     background: #EB5757; // Red
     border-radius: 20px;
+    box-shadow: 0 6px 0 #C0392B; // Darker Red
 
     ion-icon {
       font-size: 32px;
@@ -552,11 +574,12 @@ ion-header {
 
   &.sound {
     background: #56CCF2; // Blue
+    box-shadow: 0 6px 0 #2D9CDB; // Darker Blue
   }
 
   &.hat {
-    background: #9B51E0; // Purple/Brownish
     background: #A0522D; // Sienna
+    box-shadow: 0 6px 0 #8B4513; // SaddleBrown
   }
 }
 
@@ -571,6 +594,11 @@ ion-header {
   // padding: 24px 0 30px;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
   z-index: 20;
+  transition: transform 0.3s ease-in-out;
+
+  &.hidden {
+    transform: translateY(100%);
+  }
 }
 
 .sheet-header {
