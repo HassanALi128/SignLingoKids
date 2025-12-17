@@ -210,6 +210,7 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
               this.quizStarted = false;
               this.hasIncompleteQuiz = true;
               this.loading = false; // Ensure loading is off
+              this.toggleTabBar(true);
             },
           },
         ],
@@ -271,6 +272,7 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private startNewQuiz() {
+    this.toggleTabBar(false);
     // Proceed to start quiz
     this.quizService.getRandomQuiz().subscribe(async (q) => {
       this.questions = q;
@@ -318,6 +320,7 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
   resumeQuiz(): void {
     this.quizStarted = true;
     this.loading = false;
+    this.toggleTabBar(false);
     // Don't reset question index or answers
   }
 
@@ -414,7 +417,7 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
       this.showResult = false;
 
       // Play media for next question automatically if desired, or let user click play
-      // this.playQuestionMedia();
+      this.playQuestionMedia();
     }
   }
 
@@ -442,6 +445,7 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
     this.quizStarted = false; // ✅ wapas start screen pe aayega
     this.showFeedback = false;
     this.hasIncompleteQuiz = false; // Reset incomplete flag
+    this.toggleTabBar(true);
   }
 
   getScorePercentage(): number {
@@ -498,9 +502,18 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
 
   ionViewWillLeave() {
     this.three.dispose();
+    this.toggleTabBar(true);
   }
 
   ngOnDestroy(): void {
     this.three.dispose();
+    this.toggleTabBar(true);
+  }
+
+  private toggleTabBar(show: boolean) {
+    const tabBar = document.querySelector('ion-tab-bar');
+    if (tabBar) {
+      tabBar.style.display = show ? 'flex' : 'none';
+    }
   }
 }

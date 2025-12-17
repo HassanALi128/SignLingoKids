@@ -189,6 +189,8 @@ export class ThreeRenderer implements OnDestroy {
   }
 
   private animate = (): void => {
+    if (!this.renderer || !this.scene || !this.camera) return;
+
     this.frameId = requestAnimationFrame(this.animate);
     const dt = this.clock.getDelta();
     if (this.mixer) this.mixer.update(dt);

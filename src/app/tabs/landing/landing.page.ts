@@ -161,6 +161,7 @@ export class LandingPage implements OnInit, OnDestroy {
   ionViewWillLeave() {
     this.stopAudio();
     this.three.dispose();
+    this.toggleTabBar(true);
   }
 
   ngOnDestroy() {
@@ -168,6 +169,7 @@ export class LandingPage implements OnInit, OnDestroy {
       this.favoritesSubscription.unsubscribe();
     }
     this.three.dispose();
+    this.toggleTabBar(true);
   }
 
   goToPremium(): void {
@@ -177,6 +179,7 @@ export class LandingPage implements OnInit, OnDestroy {
   async selectCategory(category: Category): Promise<void> {
     this.selectedCategory = category;
     this.categoryItems = category.signs || [];
+    this.toggleTabBar(false);
 
     // Show tooltip when entering category
     this.showToast('Select an item to see the animation');
@@ -227,6 +230,14 @@ export class LandingPage implements OnInit, OnDestroy {
     this.selectedCategory = null;
     this.categoryItems = [];
     this.stopAudio();
+    this.toggleTabBar(true);
+  }
+
+  private toggleTabBar(show: boolean) {
+    const tabBar = document.querySelector('ion-tab-bar');
+    if (tabBar) {
+      tabBar.style.display = show ? 'flex' : 'none';
+    }
   }
 
   openFeatured(item: FavoriteItem & { isFavorite: boolean }): void {
