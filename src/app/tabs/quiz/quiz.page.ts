@@ -58,6 +58,7 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
   totalQuestions = 0;
   showProgressModal = false;
   showResultModalFlag = false;
+  showHelpTooltip = false;
   selectedResult?: QuizResult;
 
   questions: QuizQuestion[] = [];
@@ -158,13 +159,25 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
     return '#FF8000'; // Orange
   }
 
-  async ngAfterViewInit(): Promise<void> {
+  ngAfterViewInit(): void {
+    // We moved initialization to ionViewWillEnter to handle page caching
+  }
+
+  async ionViewWillEnter() {
+    await this.initializeThree();
+  }
+
+  private async initializeThree(): Promise<void> {
     try {
       if (!this.canvasRef) {
         console.error('Canvas not found!');
         return;
       }
 
+      // Check if already initialized to avoid duplicates
+      // (Though we dispose on leave, so this should be fresh)
+
+      this.loading = true;
       const canvas = this.canvasRef.nativeElement;
       const width = canvas.clientWidth || window.innerWidth;
       const height = canvas.clientHeight || window.innerHeight;
@@ -485,6 +498,10 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
     }, 500);
   }
 
+  toggleHelpTooltip(): void {
+    this.showHelpTooltip = !this.showHelpTooltip;
+  }
+
   goBack(): void {
     this.navCtrl.back();
   }
@@ -502,6 +519,7 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
 
   ionViewWillLeave() {
     this.three.dispose();
+    this.characterLoaded = false; // Reset flag
     this.toggleTabBar(true);
   }
 

@@ -45,10 +45,12 @@ export class ThreeRenderer implements OnDestroy {
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvas.nativeElement,
-      antialias: true,
+      antialias: false, // 🚀 Disable antialias for performance
       alpha: true,
+      powerPreference: 'high-performance', // Hint to browser
     });
     this.renderer.setSize(width, height, false);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 🚀 Cap pixel ratio to 2
 
     // Lights
     const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 4.0);
@@ -238,7 +240,7 @@ export class ThreeRenderer implements OnDestroy {
     // 5. Dispose Renderer
     if (this.renderer) {
       this.renderer.dispose();
-      this.renderer.forceContextLoss();
+      // this.renderer.forceContextLoss(); // 🚀 Removed to prevent blocking freeze
       this.renderer.domElement.remove();
       (this.renderer as any) = null;
     }
@@ -275,7 +277,10 @@ export class ThreeRenderer implements OnDestroy {
     // Dispose Textures in Material
     for (const key of Object.keys(material)) {
       const value = material[key];
-      if (value && typeof value === 'object' && 'minFilter' in value) {
+      if (
+        value &&
+        (value.isTexture || (typeof value === 'object' && 'minFilter' in value))
+      ) {
         // It's a texture
         value.dispose();
       }
@@ -283,6 +288,21 @@ export class ThreeRenderer implements OnDestroy {
 
     // Dispose the material itself
     material.dispose();
+  }
+
+  /**
+   * 🗑️ Dispose of a GLTF scene that was only used for animations
+   */
+  private disposeGLTF(gltf: any): void {
+    if (!gltf || !gltf.scene) return;
+
+    // Traverse and dispose everything in the scene
+    gltf.scene.traverse((object: any) => {
+      this.disposeObject(object);
+    });
+
+    // Clear the scene
+    gltf.scene.clear();
   }
 
   // Keep for internal partial cleanup if needed, but rely on dispose() for full cleanup
@@ -361,6 +381,9 @@ export class ThreeRenderer implements OnDestroy {
       action.getMixer().addEventListener('finished', () => {
         console.log('Animation finished');
       });
+
+      // 🧹 Dispose of the loaded scene content since we only needed the animation
+      this.disposeGLTF(gltf);
     } catch (error) {
       console.error('Error loading action:', error);
       throw error;
@@ -427,6 +450,9 @@ export class ThreeRenderer implements OnDestroy {
 
     this.loadedFiles.add(url);
     this.registerCachedActions();
+
+    // 🧹 Dispose of the loaded scene content since we only needed the animation
+    this.disposeGLTF(gltf);
   }
 
   // Register all cached animations to the current mixer
@@ -567,6 +593,12 @@ export class ThreeRenderer implements OnDestroy {
           );
 
           resolve();
+
+          // 🧹 Dispose of the loaded scene content since we only needed the animation
+          // We do this AFTER resolving to ensure the animation is set up
+          setTimeout(() => {
+            this.disposeGLTF(gltf);
+          }, 100);
         },
         undefined,
         (err) => {

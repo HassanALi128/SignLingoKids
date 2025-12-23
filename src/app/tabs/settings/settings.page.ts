@@ -11,22 +11,47 @@ import {
   documentTextOutline,
   chevronForwardOutline,
   personCircleOutline,
+  person,
+  arrowBack,
+  pencil,
+  add,
 } from 'ionicons/icons';
+
+import { ProfileService, UserProfile } from '../../services/profile.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class SettingsPage implements OnInit {
   userName: string = 'User';
   userAvatar: string = '';
+  showEditModal = false;
+  editName = '';
+  editAvatar = '';
+
+  avatars: string[] = [
+    'assets/images/avaters/blode.webp',
+    'assets/images/avaters/cap.webp',
+    'assets/images/avaters/cold.webp',
+    'assets/images/avaters/girl.webp',
+    'assets/images/avaters/listner.webp',
+    'assets/images/avaters/muslim.webp',
+    'assets/images/avaters/ninja.webp',
+    'assets/images/avaters/nurse.webp',
+    'assets/images/avaters/singer.webp',
+    'assets/images/avaters/teenager.webp',
+  ];
+
   constructor(
     private router: Router,
     private toast: ToastController,
-    private alert: AlertController
+    private alert: AlertController,
+    public profileService: ProfileService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -35,24 +60,59 @@ export class SettingsPage implements OnInit {
       'document-text-outline': documentTextOutline,
       'chevron-forward-outline': chevronForwardOutline,
       'person-circle-outline': personCircleOutline,
+      person,
+      'arrow-back': arrowBack,
+      pencil,
+      add,
     });
   }
   ngOnInit(): void {
-    // Load user profile from localStorage
-    try {
-      const profile = localStorage.getItem('userProfile');
+    this.profileService.profile$.subscribe((profile) => {
       if (profile) {
-        const userData = JSON.parse(profile);
-        this.userName = userData.name || 'User';
-        this.userAvatar = userData.avatar || '';
+        this.userName = profile.name;
+        this.userAvatar = profile.avatar;
       }
-    } catch (error) {
-      console.error('Error loading profile:', error);
-    }
+    });
   }
 
   openPremium() {
     this.router.navigate(['/tabs/premium']);
+  }
+
+  editProfile() {
+    const profile = this.profileService.getProfile();
+    if (profile) {
+      this.editName = profile.name;
+      this.editAvatar = profile.avatar;
+    }
+    this.showEditModal = true;
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
+  }
+
+  selectAvatar(avatar: string) {
+    this.editAvatar = avatar;
+  }
+
+  async saveProfile() {
+    if (!this.editName || !this.editAvatar) return;
+
+    this.profileService.updateProfile({
+      name: this.editName,
+      avatar: this.editAvatar,
+    });
+
+    this.showEditModal = false;
+
+    const t = await this.toast.create({
+      message: 'Profile updated successfully!',
+      duration: 2000,
+      position: 'bottom',
+      color: 'success',
+    });
+    t.present();
   }
 
   async restorePurchase() {

@@ -272,7 +272,7 @@
   // Header Overlay
   .quiz-header {
     position: absolute;
-    top: 10px;
+    top: calc(10px + env(safe-area-inset-top));
     left: 0;
     width: 100%;
     display: flex;
@@ -283,6 +283,78 @@
     ion-button {
       --color: #333;
       font-size: 24px;
+    }
+
+    // Help Tooltip Styles
+    .help-tooltip-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.1); // Subtle dimming
+    }
+
+    .help-tooltip {
+      position: absolute;
+      top: 60px;
+      right: 16px;
+      background: #FFFAF0; // Cream color from image
+      border-radius: 30px; // Very rounded as in image
+      padding: 25px;
+      width: 280px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      z-index: 101;
+      animation: tooltipScaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+      // Speech bubble tail
+      &::after {
+        content: '';
+        position: absolute;
+        top: -12px;
+        right: 25px;
+        width: 30px;
+        height: 30px;
+        background: #FFFAF0;
+        clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+        transform: rotate(-45deg);
+      }
+
+      h3 {
+        margin: 0 0 15px 0;
+        font-family: 'Comic Neue', cursive;
+        font-weight: 700;
+        font-size: 20px;
+        color: #1a1a1a;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+          margin-bottom: 12px;
+          font-size: 15px;
+          color: #333;
+          position: relative;
+          padding-left: 18px;
+          line-height: 1.4;
+
+          &::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #1a1a1a;
+            font-weight: bold;
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
     }
   }
 
@@ -309,7 +381,7 @@
       background: white;
       border-top-left-radius: 30px;
       border-top-right-radius: 30px;
-      padding: 24px 24px 40px 24px; // Extra padding at bottom for safe area
+      padding: 24px 24px calc(24px + env(safe-area-inset-bottom)) 24px;
       z-index: 20;
       box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
       display: flex;
@@ -788,6 +860,20 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes tooltipScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateY(-20px);
+    transform-origin: top right;
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    transform-origin: top right;
   }
 }
 

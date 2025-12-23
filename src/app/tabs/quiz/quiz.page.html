@@ -40,7 +40,7 @@
         </div>
         <div class="banner-image">
           <!-- Using a placeholder or existing asset if available -->
-          <img src="assets/landing/landing.webp" alt="Family">
+          <img src="assets/landing/landing.png" alt="Family">
         </div>
       </div>
     </div>
@@ -92,9 +92,24 @@
       <ion-button fill="clear" class="back-btn" (click)="handleBackNavigation()">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" class="help-btn">
+      <ion-button fill="clear" class="help-btn" (click)="toggleHelpTooltip()">
         <ion-icon name="help-circle-outline"></ion-icon>
       </ion-button>
+
+      <!-- 💡 Help Tooltip -->
+      @if (showHelpTooltip) {
+      <div class="help-tooltip-overlay" (click)="toggleHelpTooltip()">
+        <div class="help-tooltip" (click)="$event.stopPropagation()">
+          <h3>How to play ?</h3>
+          <ul>
+            <li>See the Animation</li>
+            <li>Then Select the card you think is the animation</li>
+            <li>Then click on the check button</li>
+            <li>If you want to play animation deselect the Card then you can play animation</li>
+          </ul>
+        </div>
+      </div>
+      }
     </div>
 
     <div class="viewer-border">

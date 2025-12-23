@@ -153,9 +153,9 @@ ion-header {
 .category-circle {
   width: 70px;
   height: 70px;
-  border-radius: 50%;
+  // border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
 
   img {
@@ -654,7 +654,7 @@ ion-header {
   align-items: center;
   justify-content: space-between;
   position: relative;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  // box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease;
   // margin-right removed as it's inside swiper-slide
 
@@ -672,13 +672,13 @@ ion-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    backdrop-filter: blur(4px);
+    // background: rgba(255, 255, 255, 0.3);
+    // border-radius: 50%;
+    // backdrop-filter: blur(4px);
 
     ion-icon {
       font-size: 20px;
-      color: #fff;
+      color: black;
       opacity: 0.8;
       transition: all 0.3s ease;
 

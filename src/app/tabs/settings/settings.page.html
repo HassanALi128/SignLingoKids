@@ -1,24 +1,41 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <div class="header-content">
-      <div class="greeting">
-        <h2>Hello, {{userName}}!</h2>
-        <p>Manage your learning settings below.</p>
-      </div>
-      @if(userAvatar){
-      <div class="user-avatar">
-        <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
-      </div>
-      }
-    </div>
+    <ion-title>Setting</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="settings-content ion-padding">
-
-
   <div class="settings-list">
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="user-info">
+        <div class="user-avatar">
+          @if(userAvatar){
+          <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
+          } @else {
+          <ion-icon name="person-circle-outline" class="default-avatar"></ion-icon>
+          }
+        </div>
+        <div class="user-details">
+          <h2 class="user-name">{{userName}}</h2>
+        </div>
+      </div>
 
+      <div class="divider"></div>
+
+      <div class="setting-item" (click)="editProfile()">
+        <div class="icon-box profile">
+          <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="text-box">
+          <h3 class="item-title">Edit Profile</h3>
+          <p class="item-desc">Click to change Avatar and name</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Other Settings -->
     <div class="setting-card" (click)="openPremium()">
       <div class="icon-box buy">
         <svg width="27" height="21" viewBox="0 0 27 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,25 +51,12 @@
             </linearGradient>
           </defs>
         </svg>
-
       </div>
       <div class="text-box">
         <h3 class="item-title">Buy Subscription</h3>
         <p class="item-desc">Add 200+ Sign and much more.</p>
       </div>
-      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
-          stroke-linecap="round" stroke-linejoin="round" />
-        <defs>
-          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
-            gradientUnits="userSpaceOnUse">
-            <stop stop-color="#EF8D1B" />
-            <stop offset="0.448937" stop-color="#F34F27" />
-            <stop offset="1" stop-color="#6E1664" />
-          </linearGradient>
-        </defs>
-      </svg>
-
+      <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
 
     <div class="setting-card" (click)="restorePurchase()">
@@ -70,25 +74,12 @@
             </linearGradient>
           </defs>
         </svg>
-
       </div>
       <div class="text-box">
         <h3 class="item-title">Restore purchase</h3>
         <p class="item-desc">Recover your previous subscription.</p>
       </div>
-      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
-          stroke-linecap="round" stroke-linejoin="round" />
-        <defs>
-          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
-            gradientUnits="userSpaceOnUse">
-            <stop stop-color="#EF8D1B" />
-            <stop offset="0.448937" stop-color="#F34F27" />
-            <stop offset="1" stop-color="#6E1664" />
-          </linearGradient>
-        </defs>
-      </svg>
-
+      <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
 
     <div class="setting-card" (click)="restoreProgress()">
@@ -106,25 +97,12 @@
             </linearGradient>
           </defs>
         </svg>
-
       </div>
       <div class="text-box">
         <h3 class="item-title">Restart Progress</h3>
         <p class="item-desc">Reset all learning progress.</p>
       </div>
-      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
-          stroke-linecap="round" stroke-linejoin="round" />
-        <defs>
-          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
-            gradientUnits="userSpaceOnUse">
-            <stop stop-color="#EF8D1B" />
-            <stop offset="0.448937" stop-color="#F34F27" />
-            <stop offset="1" stop-color="#6E1664" />
-          </linearGradient>
-        </defs>
-      </svg>
-
+      <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
 
     <div class="setting-card" (click)="openPrivacyPolicy()">
@@ -151,30 +129,67 @@
             </linearGradient>
           </defs>
         </svg>
-
       </div>
       <div class="text-box">
         <h3 class="item-title">Privacy Policy</h3>
         <p class="item-desc">Read how we protect your data.</p>
       </div>
-      <svg width="16" height="28" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1.5 1.5L14 14L1.5 26.5" stroke="url(#paint0_linear_34581_1047)" stroke-width="3"
-          stroke-linecap="round" stroke-linejoin="round" />
-        <defs>
-          <linearGradient id="paint0_linear_34581_1047" x1="1.5" y1="0.594203" x2="24.6013" y2="16.8373"
-            gradientUnits="userSpaceOnUse">
-            <stop stop-color="#EF8D1B" />
-            <stop offset="0.448937" stop-color="#F34F27" />
-            <stop offset="1" stop-color="#6E1664" />
-          </linearGradient>
-        </defs>
-      </svg>
-
+      <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
-
   </div>
 
   <div class="version-info">
     Version 1.1 Signlingokid
   </div>
+
+  <!-- Edit Profile Modal -->
+  <ion-modal [isOpen]="showEditModal" (didDismiss)="closeEditModal()" class="edit-profile-modal">
+    <ng-template>
+      <div class="edit-modal">
+        <div class="modal-header">
+          <ion-button fill="clear" (click)="closeEditModal()" class="back-btn">
+            <ion-icon name="arrow-back"></ion-icon>
+          </ion-button>
+          <h2>Edit profile</h2>
+        </div>
+
+        <div class="modal-content">
+          <!-- Current Avatar with Add Icon -->
+          <div class="avatar-preview-section">
+            <div class="avatar-preview">
+              <ion-img [src]="editAvatar" class="preview-img"></ion-img>
+              <div class="add-icon">
+                <ion-icon name="add"></ion-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- Name Input -->
+          <div class="input-section">
+            <div class="input-wrapper">
+              <ion-input [(ngModel)]="editName" placeholder="Enter your name"></ion-input>
+              <ion-icon name="pencil" class="edit-icon"></ion-icon>
+            </div>
+          </div>
+
+          <!-- Avatar Selection Grid -->
+          <div class="avatar-selection">
+            <div class="avatar-grid">
+              @for(avatar of avatars; track avatar) {
+              <div class="avatar-item" [class.selected]="editAvatar === avatar" (click)="selectAvatar(avatar)">
+                <ion-img [src]="avatar"></ion-img>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="modal-actions">
+          <ion-button fill="clear" class="cancel-btn" (click)="closeEditModal()">Cancel</ion-button>
+          <ion-button fill="solid" class="save-btn" (click)="saveProfile()">Save</ion-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>
