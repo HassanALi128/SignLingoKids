@@ -17,7 +17,8 @@ import {
   add,
 } from 'ionicons/icons';
 
-import { ProfileService, UserProfile } from '../../services/profile.service';
+import { CommonService } from '../../core/services/common';
+import { ProfileService } from '../../services/profile.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -49,9 +50,8 @@ export class SettingsPage implements OnInit {
 
   constructor(
     private router: Router,
-    private toast: ToastController,
-    private alert: AlertController,
-    public profileService: ProfileService
+    public profileService: ProfileService,
+    private commonService: CommonService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -105,40 +105,36 @@ export class SettingsPage implements OnInit {
     });
 
     this.showEditModal = false;
-
-    const t = await this.toast.create({
-      message: 'Profile updated successfully!',
-      duration: 2000,
-      position: 'bottom',
-      color: 'success',
-    });
-    t.present();
+    this.commonService.messageWithToast(
+      'Profile updated successfully!',
+      2000,
+      'success',
+      'bottom'
+    );
   }
 
   async restorePurchase() {
-    const t = await this.toast.create({
-      message: 'Checking for previous purchases...',
-      duration: 2000,
-      position: 'bottom',
-    });
-    t.present();
+    this.commonService.messageWithToast(
+      'Checking for previous purchases...',
+      2000,
+      'primary',
+      'bottom'
+    );
   }
 
   async restoreProgress() {
-    const t = await this.toast.create({
-      message: 'Restoring your progress...',
-      duration: 2000,
-      position: 'bottom',
-    });
-    t.present();
+    this.commonService.messageWithToast(
+      'Restoring your progress...',
+      2000,
+      'primary',
+      'bottom'
+    );
   }
 
   async openPrivacyPolicy() {
-    const a = await this.alert.create({
-      header: 'Privacy Policy',
-      message: 'Visit www.signlingokids.com/privacy',
-      buttons: ['OK'],
-    });
-    a.present();
+    this.commonService.alertMessage(
+      'Privacy Policy',
+      'Visit www.signlingokids.com/privacy'
+    );
   }
 }
