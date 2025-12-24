@@ -10,11 +10,11 @@
         <p class="sub-text">Let's Start Your Learning Test!</p>
       </div>
       @if(userAvatar){
-      <div class="user-avatar">
+      <div class="user-avatar" (click)="goToProfile()">
         <img [src]="userAvatar" alt="User Avatar">
       </div>
       } @else {
-      <div class="user-avatar">
+      <div class="user-avatar" (click)="goToProfile()">
         <ion-icon name="person-circle-outline"></ion-icon>
       </div>
       }

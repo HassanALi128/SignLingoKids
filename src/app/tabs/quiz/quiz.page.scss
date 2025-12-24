@@ -454,20 +454,20 @@
       justify-content: space-between;
 
       // Card Colors
-      &.card-yellow {
-        background: #ffeaa7; // Light yellow
-        border-bottom: 4px solid #fdcb6e;
-      }
+      // &.card-yellow {
+      //   background: #ffeaa7;
+      //   border-bottom: 4px solid #fdcb6e;
+      // }
 
-      &.card-blue {
-        background: #74b9ff; // Light blue
-        border-bottom: 4px solid #0984e3;
-      }
+      // &.card-blue {
+      //   background: #74b9ff; 
+      //   border-bottom: 4px solid #0984e3;
+      // }
 
-      &.card-green {
-        background: #55efc4; // Light green
-        border-bottom: 4px solid #00b894;
-      }
+      // &.card-green {
+      //   background: #55efc4;
+      //   border-bottom: 4px solid #00b894;
+      // }
 
       &.selected {
         transform: translateY(2px);

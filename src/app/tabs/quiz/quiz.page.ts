@@ -29,6 +29,7 @@ import { QuizQuestion, QuizResult, QuizService } from 'src/app/services/quiz';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { DataService } from 'src/app/services/data';
 import { Router } from '@angular/router';
+import { CommonService } from 'src/app/core/services/common';
 
 interface ExtendedQuizResult extends QuizResult {
   image?: string;
@@ -74,7 +75,8 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
     private three: ThreeRenderer,
     private router: Router,
     private alertCtrl: AlertController, // Inject AlertController
-    private dataService: DataService // Inject DataService
+    private dataService: DataService, // Inject DataService
+    private commonService: CommonService
   ) {
     addIcons({
       star,
@@ -91,6 +93,10 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
       'arrow-back': arrowBack,
       'help-circle-outline': helpCircleOutline,
     });
+  }
+
+  goToProfile() {
+    this.commonService.goToPage('tabs/setting');
   }
 
   goToLanding(): void {

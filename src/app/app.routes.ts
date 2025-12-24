@@ -28,9 +28,4 @@ export const routes: Routes = [
         (m) => m.ProfileSetupPage
       ),
   },
-  {
-    path: 'home',
-    loadComponent: () =>
-      import('./tabs/home/home.page').then((m) => m.HomePage),
-  },
 ];

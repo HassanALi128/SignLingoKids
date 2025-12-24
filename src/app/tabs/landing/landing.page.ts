@@ -27,6 +27,7 @@ import {
   volumeHigh,
 } from 'ionicons/icons';
 import { register } from 'swiper/element/bundle';
+import { CommonService } from 'src/app/core/services/common';
 
 register();
 
@@ -92,7 +93,8 @@ export class LandingPage implements OnInit, OnDestroy {
     private three: ThreeRenderer,
     private dataService: DataService,
     private learningService: LearningService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private commonService: CommonService
   ) {
     addIcons({
       arrowBack,
@@ -106,6 +108,10 @@ export class LandingPage implements OnInit, OnDestroy {
       heart,
       star,
     });
+  }
+
+  goToProfile() {
+    this.commonService.goToPage('tabs/setting');
   }
 
   async ngOnInit() {
