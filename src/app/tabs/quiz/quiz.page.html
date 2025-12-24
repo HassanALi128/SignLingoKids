@@ -58,8 +58,8 @@
           <img [src]="res.image || 'assets/images/objects/apple.svg'" alt="Result Icon">
         </div>
         <div class="item-content">
-          <h4>{{res.title || 'Good Job'}}</h4>
-          <p>{{res.subtitle || 'Keep going!'}}</p>
+          <h4>{{res.title}}</h4>
+          <p>{{res.subtitle}}</p>
         </div>
         <div class="item-progress">
           <div class="progress-circle" [style.--progress-color]="res.color || '#FF6B6B'">
@@ -206,12 +206,12 @@
   <div class="result-modal-overlay" (click)="hideResultModal()">
     <div class="result-modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2 class="modal-title">Quiz Result</h2>
+        <h2 class="modal-title">{{ completionTitle }}</h2>
       </div>
 
       <div class="modal-content">
         <div class="result-message">
-          <p class="congratulations-text">You Really did a great job</p>
+          <p class="congratulations-text">{{ completionMessage }}</p>
         </div>
 
         <div class="progress-bar-section">
@@ -224,7 +224,7 @@
         </div>
 
         <div class="celebration-character">
-          <div class="character"><img src="assets/images/quiz-result.webp" alt=""></div>
+          <div class="character"><img [src]="completionImage" alt="Celebration"></div>
         </div>
 
         <ion-button (click)="hideResultModal()" expand="block" class="ok-button">

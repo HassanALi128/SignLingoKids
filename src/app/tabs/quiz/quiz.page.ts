@@ -61,6 +61,9 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
   showResultModalFlag = false;
   showHelpTooltip = false;
   selectedResult?: QuizResult;
+  completionTitle = '';
+  completionMessage = '';
+  completionImage = '';
 
   questions: QuizQuestion[] = [];
   resultsHistory: ExtendedQuizResult[] = [];
@@ -441,12 +444,41 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   completeQuiz(): void {
+    const percentage = this.getScorePercentage();
+
+    // Set motivational content based on performance
+    if (percentage >= 100) {
+      this.completionTitle = 'Perfect Score!';
+      this.completionMessage =
+        'Absolutely amazing! You have mastered this quiz. Keep up the incredible work!';
+      this.completionImage = 'assets/images/spelling/a.svg';
+    } else if (percentage >= 80) {
+      this.completionTitle = 'Almost Perfect!';
+      this.completionMessage =
+        'Great job! You are doing fantastic. Just a little more practice and you will be perfect!';
+      this.completionImage = 'assets/images/spelling/b.svg';
+    } else if (percentage >= 60) {
+      this.completionTitle = 'Good Effort!';
+      this.completionMessage =
+        'Well done! You have a good grasp of this. Keep practicing to reach the top!';
+      this.completionImage = 'assets/images/spelling/c.svg';
+    } else {
+      this.completionTitle = 'Keep Learning!';
+      this.completionMessage =
+        "Don't give up! Every mistake is a step towards learning. Try again and you'll get better!";
+      this.completionImage = 'assets/shapes.svg';
+    }
+
     // Save result in history
-    const result: QuizResult = {
+    const result: ExtendedQuizResult = {
       score: this.correctAnswers,
       total: this.totalQuestions,
-      percentage: this.getScorePercentage(),
+      percentage: percentage,
       date: new Date().toISOString(),
+      title: this.getResultTitle(percentage),
+      subtitle: this.getResultSubtitle(percentage),
+      image: this.completionImage,
+      color: this.getResultColor(percentage),
     };
 
     this.resultsHistory.unshift(result);
@@ -459,11 +491,15 @@ export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
     // Increment attempts count after completing a quiz
     this.quizService.incrementAttempts();
 
+    // Show the motivational modal
+    this.selectedResult = result;
+    this.showResultModalFlag = true;
+
     // Reset quiz flags
-    this.quizCompleted = false; // ✅ ab result screen pe nahi jayega
-    this.quizStarted = false; // ✅ wapas start screen pe aayega
+    this.quizCompleted = false;
+    this.quizStarted = false;
     this.showFeedback = false;
-    this.hasIncompleteQuiz = false; // Reset incomplete flag
+    this.hasIncompleteQuiz = false;
     this.toggleTabBar(true);
   }
 

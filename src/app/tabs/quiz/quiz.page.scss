@@ -735,24 +735,26 @@ ion-header {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.4s ease-out;
 }
 
 .result-modal {
-  background: #77bef0;
-  border-radius: 25px;
-  padding: 30px;
-  max-width: 380px;
+  background: linear-gradient(135deg, #77bef0 0%, #4a90e2 100%);
+  border-radius: 32px;
+  padding: 40px 30px;
+  max-width: 400px;
   width: 90%;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: modalSlideIn 0.3s ease;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 4px solid rgba(255, 255, 255, 0.3);
 
   .modal-header {
     text-align: center;
@@ -760,8 +762,9 @@ ion-header {
 
     .modal-title {
       font-family: 'Fredoka One', cursive;
-      font-size: 24px;
+      font-size: 28px;
       color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin: 0;
     }
   }
@@ -777,25 +780,27 @@ ion-header {
         font-size: 18px;
         color: white;
         font-weight: 700;
+        line-height: 1.4;
         margin: 0;
       }
     }
 
     .progress-bar-section {
-      margin-bottom: 24px;
+      margin-bottom: 32px;
 
       .progress-bar-container {
         position: relative;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 12px;
-        height: 28px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        height: 32px;
         overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 
         .progress-bar-fill {
           height: 100%;
-          background: #7fd657;
-          border-radius: 12px;
-          transition: width 1s ease;
+          background: linear-gradient(90deg, #7fd657 0%, #5cb85c 100%);
+          border-radius: 20px;
+          transition: width 1.5s cubic-bezier(0.1, 0.7, 1.0, 0.1);
         }
 
         .progress-text {
@@ -804,32 +809,41 @@ ion-header {
           left: 50%;
           transform: translate(-50%, -50%);
           color: white;
-          font-family: 'Comic Neue', cursive;
+          font-family: 'Fredoka One', cursive;
           font-weight: 700;
           font-size: 16px;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
       }
     }
 
     .celebration-character {
-      margin-bottom: 24px;
+      margin-bottom: 32px;
+      animation: bounceIn 0.8s ease;
 
       .character {
         img {
-          max-width: 150px;
+          max-width: 180px;
           height: auto;
+          filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
         }
       }
     }
 
     .ok-button {
-      --background: #efa047;
-      --color: white;
-      --border-radius: 20px;
+      --background: #ffffff;
+      --color: #4a90e2;
+      --border-radius: 24px;
       font-family: 'Fredoka One', cursive;
-      font-size: 16px;
-      height: 45px;
-      text-transform: lowercase;
+      font-size: 18px;
+      height: 54px;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:active {
+        transform: scale(0.95);
+      }
     }
   }
 }
