@@ -7,6 +7,13 @@
   font-family: 'Comic Neue', cursive;
 }
 
+ion-header {
+  ion-toolbar {
+    --background: #FDF8F0;
+    --border-width: 0;
+  }
+}
+
 // 🌟 NEW START SCREEN (Before Quiz Starts)
 .start-screen {
   padding: 20px;
@@ -17,17 +24,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 12px 10px;
 
     .greeting-text {
-      flex: 1;
+      // flex: 1;
 
       h2 {
         margin: 0;
         font-size: 20px;
         font-weight: 700;
         color: #1a1a1a;
-        font-family: 'Comic Neue', cursive;
       }
 
       p {

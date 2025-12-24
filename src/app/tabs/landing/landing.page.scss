@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
+
 .landing-content {
   --background: #FDF8F0;
   --padding-bottom: 80px;
@@ -24,6 +26,7 @@ ion-header {
     font-size: 20px;
     font-weight: 700;
     color: #1a1a1a;
+    font-family: 'Comic Neue', cursive;
   }
 
   p {
