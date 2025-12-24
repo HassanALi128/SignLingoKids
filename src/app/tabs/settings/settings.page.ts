@@ -15,11 +15,13 @@ import {
   arrowBack,
   pencil,
   add,
+  star,
 } from 'ionicons/icons';
 
 import { CommonService } from '../../core/services/common';
 import { ProfileService } from '../../services/profile.service';
 import { FormsModule } from '@angular/forms';
+import { QuizService } from '../../services/quiz';
 
 @Component({
   selector: 'app-settings',
@@ -34,6 +36,7 @@ export class SettingsPage implements OnInit {
   showEditModal = false;
   editName = '';
   editAvatar = '';
+  isPremium = false;
 
   avatars: string[] = [
     'assets/images/avaters/blode.webp',
@@ -51,7 +54,8 @@ export class SettingsPage implements OnInit {
   constructor(
     private router: Router,
     public profileService: ProfileService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private quizService: QuizService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -64,6 +68,7 @@ export class SettingsPage implements OnInit {
       'arrow-back': arrowBack,
       pencil,
       add,
+      star,
     });
   }
   ngOnInit(): void {
@@ -71,6 +76,7 @@ export class SettingsPage implements OnInit {
       if (profile) {
         this.userName = profile.name;
         this.userAvatar = profile.avatar;
+        this.isPremium = profile.isPremium || false;
       }
     });
   }
@@ -136,5 +142,23 @@ export class SettingsPage implements OnInit {
       'Privacy Policy',
       'Visit www.signlingokids.com/privacy'
     );
+  }
+
+  togglePremium() {
+    const currentProfile = this.profileService.getProfile();
+    if (currentProfile) {
+      const newStatus = !currentProfile.isPremium;
+      this.profileService.updateProfile({
+        ...currentProfile,
+        isPremium: newStatus,
+      });
+      this.quizService.refreshPremiumStatus();
+      this.commonService.messageWithToast(
+        `Premium Mode: ${newStatus ? 'Enabled' : 'Disabled'}`,
+        2000,
+        newStatus ? 'success' : 'warning',
+        'bottom'
+      );
+    }
   }
 }

@@ -44,4 +44,14 @@
             <ion-label>Settings</ion-label>
         </ion-tab-button>
     </ion-tab-bar>
+
+    <!-- Global Bottom Ad Placeholder -->
+    @if(!isPremium){
+    <div class="global-ad-container">
+        <div class="ad-placeholder">
+            <ion-icon name="megaphone-outline"></ion-icon>
+            <span>Advertisement</span>
+        </div>
+    </div>
+    }
 </ion-tabs>

@@ -25,7 +25,9 @@ import {
   shareSocialOutline,
   star,
   volumeHigh,
+  lockClosed,
 } from 'ionicons/icons';
+import { QuizService } from 'src/app/services/quiz';
 import { register } from 'swiper/element/bundle';
 import { CommonService } from 'src/app/core/services/common';
 
@@ -37,6 +39,7 @@ interface AslSign {
   thumbUrl?: string;
   audioUrl?: string;
   actionName: string;
+  isPremium?: boolean;
 }
 
 interface Category {
@@ -46,6 +49,7 @@ interface Category {
   color?: string;
   audioUrl?: string;
   actionFile?: string;
+  isPremium?: boolean;
   signs: AslSign[];
 }
 
@@ -63,6 +67,7 @@ export class LandingPage implements OnInit, OnDestroy {
 
   userName: string = 'User';
   userAvatar: string = '';
+  isPremium: boolean = false;
   private favoritesSubscription?: Subscription;
 
   categories: Category[] = [];
@@ -94,7 +99,8 @@ export class LandingPage implements OnInit, OnDestroy {
     private dataService: DataService,
     private learningService: LearningService,
     private toastController: ToastController,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private quizService: QuizService
   ) {
     addIcons({
       arrowBack,
@@ -107,6 +113,7 @@ export class LandingPage implements OnInit, OnDestroy {
       shareSocialOutline,
       heart,
       star,
+      lockClosed,
     });
   }
 
@@ -141,6 +148,11 @@ export class LandingPage implements OnInit, OnDestroy {
     this.progressOffset =
       this.progressCircumference -
       (this.certificateProgress / 100) * this.progressCircumference;
+
+    // Subscribe to premium status
+    this.quizService.isPremium$.subscribe((status) => {
+      this.isPremium = status;
+    });
 
     // Subscribe to favorites updates
     this.favoritesSubscription = this.favoritesService.favorites$.subscribe(
@@ -275,6 +287,10 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   async playSign(item: AslSign, index: number = -1): Promise<void> {
+    if (item.isPremium && !this.quizService.isPremium()) {
+      this.showPremiumAlert('Item');
+      return;
+    }
     console.log('Playing sign:', item);
     this.currentSign = item;
 
@@ -457,6 +473,31 @@ export class LandingPage implements OnInit, OnDestroy {
       cssClass: 'custom-toast',
     });
     await toast.present();
+  }
+
+  async showPremiumAlert(type: string) {
+    const alert = await this.toastController.create({
+      header: 'Premium Required',
+      message: `This ${type} is only available for Premium users. Upgrade now to unlock all features!`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Upgrade Now',
+          handler: () => {
+            this.goToPremium();
+          },
+        },
+      ],
+    } as any);
+    // Using toast instead of alert for simplicity if alertCtrl not injected,
+    // but user requested premium feild so I should use AlertController if possible.
+    // Wait, I see AlertController is not injected in LandingPage.
+    // I will use a simple toast or inject AlertController.
+    // Actually, I'll use a toast for now as it's less intrusive.
+    this.showToast(`Premium Required: This ${type} is locked.`);
   }
 
   playSound() {

@@ -136,6 +136,20 @@
       </div>
       <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
+
+    <!-- Testing Mode: Toggle Premium -->
+    <div class="setting-card testing-mode" (click)="togglePremium()">
+      <div class="icon-box premium-toggle" [class.active]="isPremium">
+        <ion-icon name="star"></ion-icon>
+      </div>
+      <div class="text-box">
+        <h3 class="item-title">Toggle Premium (Test)</h3>
+        <p class="item-desc">{{ isPremium ? 'Disable' : 'Enable' }} premium features for testing.</p>
+      </div>
+      <div class="toggle-status" [class.active]="isPremium">
+        {{ isPremium ? 'ON' : 'OFF' }}
+      </div>
+    </div>
   </div>
 
   <div class="version-info">

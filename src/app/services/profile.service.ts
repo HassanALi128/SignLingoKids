@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export interface UserProfile {
   name: string;
   avatar: string;
+  isPremium?: boolean;
   createdAt?: string;
 }
 

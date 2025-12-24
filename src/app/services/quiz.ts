@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 export interface QuizOption {
   id: string;
@@ -27,8 +27,21 @@ export interface QuizResult {
 @Injectable({ providedIn: 'root' })
 export class QuizService {
   private resultsKey = 'quiz_results';
+  private premiumSubject = new BehaviorSubject<boolean>(false);
+  public isPremium$ = this.premiumSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.checkInitialPremiumStatus();
+  }
+
+  private checkInitialPremiumStatus() {
+    this.premiumSubject.next(this.isPremium());
+  }
+
+  // Refresh premium status (call this after updating profile)
+  refreshPremiumStatus() {
+    this.premiumSubject.next(this.isPremium());
+  }
 
   // Load questions from JSON and pick random 5
   getRandomQuiz(): Observable<QuizQuestion[]> {
