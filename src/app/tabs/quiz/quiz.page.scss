@@ -106,7 +106,9 @@ ion-header {
         }
 
         .start-quiz-btn {
-            --background: linear-gradient(135deg, #d63384 0%, #c2185b 100%);
+            background: var(--primary-gradient);
+            --background: var(--primary-gradient);
+            border-radius: 12px;
             --border-radius: 12px;
             --padding-top: 12px;
             --padding-bottom: 12px;
@@ -115,6 +117,7 @@ ion-header {
             font-size: 15px;
             text-transform: none;
             max-width: 140px;
+            color: white;
             margin: 0;
         }
     }

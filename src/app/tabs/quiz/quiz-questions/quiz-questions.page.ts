@@ -1,11 +1,12 @@
 import {
   Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
   ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   IonHeader,
@@ -18,24 +19,33 @@ import {
   IonPopover,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowBack, helpCircleOutline, playCircle } from 'ionicons/icons';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  arrowBack,
+  helpCircleOutline,
+  play,
+  checkmarkCircle,
+  closeCircle,
+  arrowForward,
+} from 'ionicons/icons';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 import {
   QuizService,
   QuizQuestion,
   QuizOption,
   QuizResult,
-} from '../../../services/quiz';
-import { ThreeRenderer } from '../../../services/three-renderer.service';
+} from 'src/app/services/quiz';
+import { ThreeRenderer } from 'src/app/services/three-renderer.service';
+import { Haptics, NotificationType } from '@capacitor/haptics';
 
 interface QuizState {
   questions: QuizQuestion[];
   currentIndex: number;
   score: number;
-  selectedAnswerId: string | null;
+  selectedOption: QuizOption | null;
+  isChecked: boolean;
+  isCorrect: boolean | null;
   isLoading: boolean;
-  isAnswered: boolean;
 }
 
 @Component({
@@ -44,10 +54,11 @@ interface QuizState {
   styleUrls: ['./quiz-questions.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
+    IonContent,
     IonHeader,
     IonToolbar,
-    IonContent,
+    CommonModule,
+    FormsModule,
     IonButton,
     IonIcon,
     IonSpinner,
@@ -62,36 +73,22 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     questions: [],
     currentIndex: 0,
     score: 0,
-    selectedAnswerId: null,
+    selectedOption: null,
+    isChecked: false,
+    isCorrect: null,
     isLoading: true,
-    isAnswered: false,
   });
 
   private destroy$ = new Subject<void>();
 
   // Public Observables
-  quizState$: Observable<QuizState> = this.quizStateSubject.asObservable();
+  quizState$ = this.quizStateSubject.asObservable();
 
   // Derived observables for template
-  get currentQuestion$(): Observable<QuizQuestion | null> {
-    return new Observable((observer) => {
-      this.quizState$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
-        const question = state.questions[state.currentIndex] || null;
-        observer.next(question);
-      });
-    });
-  }
-
-  get isLoading$(): Observable<boolean> {
-    return new Observable((observer) => {
-      this.quizState$.pipe(takeUntil(this.destroy$)).subscribe((state) => {
-        observer.next(state.isLoading);
-      });
-    });
-  }
-
-  // Audio management
-  private currentAudio?: HTMLAudioElement;
+  isLoading$ = this.quizStateSubject.pipe(
+    takeUntil(this.destroy$),
+    map((s) => s.isLoading)
+  );
 
   constructor(
     private quizService: QuizService,
@@ -99,7 +96,14 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     private router: Router,
     private navController: NavController
   ) {
-    addIcons({ arrowBack, helpCircleOutline, playCircle });
+    addIcons({
+      arrowBack,
+      helpCircleOutline,
+      play,
+      checkmarkCircle,
+      closeCircle,
+      arrowForward,
+    });
   }
 
   async ngOnInit() {
@@ -110,7 +114,6 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-    this.stopAudio();
     this.threeRenderer.dispose();
     this.showTabBar();
   }
@@ -130,7 +133,6 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
 
       this.updateState({
         questions,
-        isLoading: false,
       });
 
       // Initialize 3D model after questions are loaded
@@ -167,112 +169,112 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
         'assets/aslkidanimation/actions/alsagirl_model_animation.glb'
       );
 
+      // Preload all question animations
+      const state = this.quizStateSubject.value;
+      const actionFiles = state.questions
+        .map((q) => q.actionFile)
+        .filter((f): f is string => !!f);
+
+      const uniqueFiles = [...new Set(actionFiles)];
+
+      if (uniqueFiles.length > 0) {
+        console.log('Preloading animations:', uniqueFiles);
+        await this.threeRenderer.preloadActionsBatch(uniqueFiles);
+      }
+
       this.threeRenderer.centerModel();
 
       console.log('3D model initialized successfully');
+
+      // Hide loader after model is ready
+      this.updateState({ isLoading: false });
     } catch (error) {
       console.error('Error initializing 3D model:', error);
+      this.updateState({ isLoading: false });
     }
   }
 
-  playQuestionAudio() {
+  playQuestionAnimation() {
     const state = this.quizStateSubject.value;
     const currentQuestion = state.questions[state.currentIndex];
 
     if (!currentQuestion) return;
 
-    // Stop any currently playing audio
-    this.stopAudio();
-
-    // Play audio if available
-    if (currentQuestion.mediaUrl) {
-      try {
-        this.currentAudio = new Audio(currentQuestion.mediaUrl);
-        this.currentAudio.play().catch((error) => {
-          console.warn('Could not play audio:', error);
-        });
-      } catch (error) {
-        console.warn('Error creating audio:', error);
+    // Play animation if available
+    if (currentQuestion.actionName) {
+      this.threeRenderer.play(currentQuestion.actionName);
+    } else {
+      // Fallback to generic animation
+      const animations = this.threeRenderer.getClipNames();
+      if (animations.length > 0) {
+        this.threeRenderer.play(animations[0]);
       }
-    }
-
-    // Play animation if available (you can customize this based on question)
-    // For now, we'll play a generic animation
-    const animations = this.threeRenderer.getClipNames();
-    if (animations.length > 0) {
-      // Play a random animation or the first one
-      this.threeRenderer.play(animations[0]);
-    }
-  }
-
-  private stopAudio() {
-    if (this.currentAudio) {
-      this.currentAudio.pause();
-      this.currentAudio.currentTime = 0;
-      this.currentAudio = undefined;
     }
   }
 
   selectAnswer(option: QuizOption) {
     const state = this.quizStateSubject.value;
+    if (state.isChecked) return; // Prevent changing after check
 
-    // Prevent selecting if already answered
-    if (state.isAnswered) return;
+    this.updateState({ selectedOption: option });
+  }
 
-    // Update selected answer
+  async checkAnswer() {
+    const state = this.quizStateSubject.value;
+    if (!state.selectedOption || state.isChecked) return;
+
+    const isCorrect = state.selectedOption.isCorrect;
+
+    // Update state
     this.updateState({
-      selectedAnswerId: option.id,
-      isAnswered: true,
+      isChecked: true,
+      isCorrect,
+      score: isCorrect ? state.score + 1 : state.score,
     });
 
-    // Update score if correct
-    if (option.isCorrect) {
-      this.updateState({
-        score: state.score + 1,
-      });
-    }
+    // Feedback
+    if (isCorrect) {
+      // Happy animation
+      // Try to find a happy animation, otherwise play generic
+      const happyAnims = ['Happy', 'Jump', 'Victory', 'Success'];
+      const available = this.threeRenderer.getClipNames();
+      const happyAnim = happyAnims.find((a) =>
+        available.some((av) => av.includes(a))
+      );
 
-    // Auto-advance to next question after a delay
-    setTimeout(() => {
-      this.nextQuestion();
-    }, 1000);
+      if (happyAnim) {
+        this.threeRenderer.play(happyAnim);
+      }
+
+      await Haptics.notification({ type: NotificationType.Success });
+    } else {
+      // Vibrate for wrong answer
+      await Haptics.notification({ type: NotificationType.Error });
+    }
   }
 
   nextQuestion() {
     const state = this.quizStateSubject.value;
-    const nextIndex = state.currentIndex + 1;
 
-    // Check if quiz is complete
-    if (nextIndex >= state.questions.length) {
+    if (state.currentIndex < state.questions.length - 1) {
+      this.updateState({
+        currentIndex: state.currentIndex + 1,
+        selectedOption: null,
+        isChecked: false,
+        isCorrect: null,
+      });
+    } else {
       this.finishQuiz();
-      return;
     }
-
-    // Move to next question
-    this.updateState({
-      currentIndex: nextIndex,
-      selectedAnswerId: null,
-      isAnswered: false,
-    });
-
-    // Stop audio when moving to next question
-    this.stopAudio();
   }
 
-  finishQuiz() {
+  private finishQuiz() {
     const state = this.quizStateSubject.value;
-
-    // Calculate results
-    const total = state.questions.length;
-    const score = state.score;
-    const percentage = Math.round((score / total) * 100);
-
-    // Save result
     const result: QuizResult = {
       date: new Date().toISOString(),
-      score,
-      total,
-      percentage,
+      score: state.score,
+      total: state.questions.length,
+      percentage: (state.score / state.questions.length) * 100,
     };
 
     this.quizService.saveResult(result);
@@ -292,19 +294,19 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
 
   isOptionSelected(option: QuizOption): boolean {
     const state = this.quizStateSubject.value;
-    return state.selectedAnswerId === option.id;
+    return state.selectedOption?.id === option.id;
   }
 
   isOptionCorrect(option: QuizOption): boolean {
     const state = this.quizStateSubject.value;
-    return state.isAnswered && option.isCorrect;
+    return state.isChecked && option.isCorrect;
   }
 
   isOptionWrong(option: QuizOption): boolean {
     const state = this.quizStateSubject.value;
     return (
-      state.isAnswered &&
-      state.selectedAnswerId === option.id &&
+      state.isChecked &&
+      state.selectedOption?.id === option.id &&
       !option.isCorrect
     );
   }

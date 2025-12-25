@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { DataService } from './data';
+import { Observable, BehaviorSubject, from } from 'rxjs';
 
 export interface QuizOption {
   id: string;
@@ -14,6 +14,8 @@ export interface QuizQuestion {
   id: string;
   question: string;
   mediaUrl?: string;
+  actionName?: string;
+  actionFile?: string;
   options: QuizOption[];
 }
 
@@ -30,7 +32,7 @@ export class QuizService {
   private premiumSubject = new BehaviorSubject<boolean>(false);
   public isPremium$ = this.premiumSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private dataService: DataService) {
     this.checkInitialPremiumStatus();
   }
 
@@ -43,11 +45,72 @@ export class QuizService {
     this.premiumSubject.next(this.isPremium());
   }
 
-  // Load questions from JSON and pick random 5
+  // Generate dynamic quiz from all categories
+  async generateDynamicQuiz(): Promise<QuizQuestion[]> {
+    try {
+      const categories = await this.dataService.loadCategories();
+      const allSigns: any[] = [];
+
+      // Flatten all signs with actionFile
+      categories.forEach((cat: any) => {
+        if (cat.signs) {
+          const signsWithAction = cat.signs.map((s: any) => ({
+            ...s,
+            actionFile: cat.actionFile,
+          }));
+          allSigns.push(...signsWithAction);
+        }
+      });
+
+      if (allSigns.length < 5) {
+        console.warn('Not enough signs to generate quiz');
+        return [];
+      }
+
+      // Shuffle and pick 5 correct answers
+      const correctAnswers = this.shuffle(allSigns).slice(0, 5);
+
+      const questions: QuizQuestion[] = correctAnswers.map((sign) => {
+        // Pick 2 distractors
+        const otherSigns = allSigns.filter((s) => s.id !== sign.id);
+        const distractors = this.shuffle(otherSigns).slice(0, 2);
+
+        // Create options
+        const options: QuizOption[] = [
+          {
+            id: sign.id,
+            text: sign.label,
+            imageUrl: sign.thumbUrl || 'assets/images/placeholder.png',
+            isCorrect: true,
+          },
+          ...distractors.map((d) => ({
+            id: d.id,
+            text: d.label,
+            imageUrl: d.thumbUrl || 'assets/images/placeholder.png',
+            isCorrect: false,
+          })),
+        ];
+
+        return {
+          id: sign.id,
+          question: 'Select the answer!',
+          mediaUrl: sign.audioUrl,
+          actionName: sign.actionName,
+          actionFile: sign.actionFile,
+          options: this.shuffle(options),
+        };
+      });
+
+      return questions;
+    } catch (error) {
+      console.error('Error generating quiz:', error);
+      return [];
+    }
+  }
+
+  // Load questions (now uses dynamic generation)
   getRandomQuiz(): Observable<QuizQuestion[]> {
-    return this.http
-      .get<QuizQuestion[]>('assets/data/quiz-data.json')
-      .pipe(map((questions) => this.shuffle(questions).slice(0, 5)));
+    return from(this.generateDynamicQuiz());
   }
 
   // Save quiz result (max 5)
@@ -60,13 +123,11 @@ export class QuizService {
     localStorage.setItem(this.resultsKey, JSON.stringify(results));
   }
 
-  // Load results
   getResults(): QuizResult[] {
     const stored = localStorage.getItem(this.resultsKey);
     return stored ? JSON.parse(stored) : [];
   }
 
-  // Utility: shuffle array
   private shuffle<T>(array: T[]): T[] {
     return array
       .map((value) => ({ value, sort: Math.random() }))
@@ -74,24 +135,18 @@ export class QuizService {
       .map(({ value }) => value);
   }
 
-  // --- New Methods for Quiz Limit & Premium ---
-
-  // Get current number of quiz attempts
   getAttempts(): number {
     const attempts = localStorage.getItem('quiz_attempts');
     return attempts ? parseInt(attempts, 10) : 0;
   }
 
-  // Increment quiz attempts count
   incrementAttempts(): void {
     let attempts = this.getAttempts();
     attempts++;
     localStorage.setItem('quiz_attempts', attempts.toString());
   }
 
-  // Check if user is premium (Mock implementation)
   isPremium(): boolean {
-    // In a real app, check user profile or subscription status
     const profile = localStorage.getItem('userProfile');
     if (profile) {
       const userData = JSON.parse(profile);

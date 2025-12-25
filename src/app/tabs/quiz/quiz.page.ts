@@ -144,7 +144,7 @@ export class QuizPage implements OnInit, OnDestroy {
     const isPremium = this.isPremiumSubject.value;
     const attempts = this.quizService.getAttempts();
 
-    if (!isPremium && attempts >= 3) {
+    if (!isPremium && attempts >= 5) {
       // Show premium modal or alert
       this.router.navigate(['/tabs/premium']);
       return;

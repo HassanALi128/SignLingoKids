@@ -26,27 +26,35 @@
 </ion-header>
 
 <ion-content class="quiz-questions-content">
+    <!-- Loader Overlay -->
     @if((isLoading$ | async)) {
-    <div class="loading-container">
-        <ion-spinner name="crescent" color="primary"></ion-spinner>
-        <p>Loading Quiz...</p>
+    <div class="custom-loader">
+        <div class="loader-content">
+            <ion-spinner name="bubbles" color="primary"></ion-spinner>
+            <h2>Are you ready for your quiz?</h2>
+            <p>Preparing 3D Model & Animations...</p>
+        </div>
     </div>
-    } @else {
+    }
+
     @if((quizState$ | async); as state) {
     <!-- 3D Character Section -->
-    <div class="character-section">
+    <div class="character-section" [style.visibility]="(isLoading$ | async) ? 'hidden' : 'visible'">
         <canvas #canvas class="character-canvas"></canvas>
 
-        <!-- Play Button Overlay -->
-        <button class="play-button" (click)="playQuestionAudio()">
-            <ion-icon name="play-circle"></ion-icon>
-        </button>
+
     </div>
 
     <!-- Question Section -->
     @if(state.questions[state.currentIndex]; as question) {
     <div class="question-section">
-        <h2 class="question-text">Select the answer!</h2>
+        <div class="question-header">
+            <h2 class="question-text">Select the answer!</h2>
+            <!-- Play Button Overlay -->
+            <button class="play-button" (click)="playQuestionAnimation()">
+                <ion-icon name="play"></ion-icon>
+            </button>
+        </div>
 
         <!-- Answer Options -->
         <div class="answers-grid">
@@ -62,6 +70,24 @@
             }
         </div>
 
+        <!-- Actions -->
+        <div class="actions-section">
+            @if(!state.isChecked && state.selectedOption) {
+            <ion-button expand="block" (click)="checkAnswer()" class="action-btn check-btn">
+                Check Answer
+                <ion-icon name="checkmark-circle" slot="end"></ion-icon>
+            </ion-button>
+            }
+
+            @if(state.isChecked) {
+            <ion-button expand="block" (click)="nextQuestion()" class="action-btn next-btn"
+                [color]="state.isCorrect ? 'success' : 'danger'">
+                {{ state.currentIndex < state.questions.length - 1 ? 'Next Question' : 'Finish Quiz' }} <ion-icon
+                    name="arrow-forward" slot="end"></ion-icon>
+            </ion-button>
+            }
+        </div>
+
         <!-- Progress Indicator -->
         <div class="progress-indicator">
             <span>{{ state.currentIndex + 1 }} / {{ state.questions.length }}</span>
@@ -69,5 +95,5 @@
     </div>
     }
     }
-    }
+
 </ion-content>
