@@ -524,6 +524,10 @@ export class ThreeRenderer implements OnDestroy {
     console.log('🧹 Disposed GLTF scene for:', url);
   }
 
+  isActionLoaded(url: string): boolean {
+    return this.loadedFiles.has(url);
+  }
+
   // Register all cached animations to the current mixer
   private registerCachedActions(): void {
     if (!this.mixer || !this.currentModel) return;

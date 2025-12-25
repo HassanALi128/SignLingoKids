@@ -2,8 +2,8 @@
   <ion-toolbar>
     <div class="header-content">
       <div class="greeting">
-        <h2>Hello, {{userName}}!</h2>
-        <p>Ready to Learn Today?</p>
+        <h2>Hi <span class="user-name">{{userName}}</span>, Ready to Learn Today?</h2>
+        <p>Let's Start Learning!</p>
       </div>
       @if(userAvatar){
       <div class="user-avatar" (click)="goToProfile()">
