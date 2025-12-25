@@ -61,7 +61,7 @@ ion-header {
             font-weight: 700;
             color: var(--ion-color-primary);
             margin: 0 0 8px 0;
-            font-family: 'Fredoka One', cursive;
+            // font-family: 'Fredoka One', cursive;
         }
 
         p {
@@ -311,7 +311,7 @@ ion-popover.help-popover {
 }
 
 .help-content {
-    font-family: 'Outfit', sans-serif;
+    // font-family: 'Outfit', sans-serif;
 
     h3 {
         margin: 0 0 12px 0;
@@ -348,7 +348,7 @@ ion-popover.help-popover {
         font-weight: 700;
         font-size: 18px;
         --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        font-family: 'Fredoka One', cursive;
+        // font-family: 'Fredoka One', cursive;
         letter-spacing: 0.5px;
 
         &.check-btn {

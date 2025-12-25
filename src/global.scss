@@ -10,6 +10,12 @@
  */
 :root {
     --primary-gradient: linear-gradient(to bottom, #EB333C, #6D1F60);
+    --ion-font-family: 'Rubik', sans-serif;
+}
+
+html,
+body {
+    font-family: 'Rubik', sans-serif;
 }
 
 /* Core CSS required for Ionic components to work properly */

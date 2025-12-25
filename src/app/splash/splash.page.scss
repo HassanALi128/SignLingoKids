@@ -4,7 +4,8 @@
   overflow: hidden;
 
   // Background circles effect
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     position: absolute;
     border-radius: 50%;
@@ -49,18 +50,19 @@
 
   .character-item {
     position: relative;
-    
+
     // Placeholder styles
     .img-placeholder {
       width: 80px;
       height: 80px;
-      background: rgba(0,0,0,0.1);
+      background: rgba(0, 0, 0, 0.1);
       border-radius: 50%;
       border: 2px dashed #ccc;
     }
 
     &.center {
       transform: translateY(-20px); // Slightly higher or larger
+
       .img-placeholder {
         width: 100px;
         height: 100px;
@@ -70,7 +72,7 @@
 }
 
 .brand-title {
-  font-family: 'Varela Round', sans-serif; // Assuming a rounded font, fallback to sans-serif
+  // font-family: 'Varela Round', sans-serif; // Removed to use global Rubik
   font-weight: 800;
   font-size: 36px;
   line-height: 1.2;
@@ -87,25 +89,77 @@
 
   // Colors
   .word-sign {
-    .char-s { color: #FF6B6B; } // Red
-    .char-i { color: #FFD93D; } // Yellow
-    .char-g { color: #6BCB77; } // Green
-    .char-n { color: #6BCB77; } // Green
+    .char-s {
+      color: #FF6B6B;
+    }
+
+    // Red
+    .char-i {
+      color: #FFD93D;
+    }
+
+    // Yellow
+    .char-g {
+      color: #6BCB77;
+    }
+
+    // Green
+    .char-n {
+      color: #6BCB77;
+    }
+
+    // Green
   }
 
   .word-lingo {
-    .char-l { color: #2A9D8F; } // Teal
-    .char-i { color: #2A9D8F; } // Teal
-    .char-n { color: #4D96FF; } // Blue
-    .char-g { color: #6EC1E4; } // Light Blue
-    .char-o { color: #6EC1E4; } // Light Blue
+    .char-l {
+      color: #2A9D8F;
+    }
+
+    // Teal
+    .char-i {
+      color: #2A9D8F;
+    }
+
+    // Teal
+    .char-n {
+      color: #4D96FF;
+    }
+
+    // Blue
+    .char-g {
+      color: #6EC1E4;
+    }
+
+    // Light Blue
+    .char-o {
+      color: #6EC1E4;
+    }
+
+    // Light Blue
   }
 
   .word-kids {
-    .char-k { color: #9B59B6; } // Purple
-    .char-i { color: #9B59B6; } // Purple
-    .char-d { color: #FF69B4; } // Pink
-    .char-s { color: #FF69B4; } // Pink
+    .char-k {
+      color: #9B59B6;
+    }
+
+    // Purple
+    .char-i {
+      color: #9B59B6;
+    }
+
+    // Purple
+    .char-d {
+      color: #FF69B4;
+    }
+
+    // Pink
+    .char-s {
+      color: #FF69B4;
+    }
+
+    // Pink
   }
 }
 
@@ -117,5 +171,3 @@
   letter-spacing: 0.5px;
   text-align: center;
 }
-
-

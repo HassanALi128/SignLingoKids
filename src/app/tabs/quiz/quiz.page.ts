@@ -14,6 +14,7 @@ import { personCircleOutline } from 'ionicons/icons';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QuizService, QuizResult } from '../../services/quiz';
+import { ProfileService } from '../../services/profile.service';
 
 interface UserProfile {
   name: string;
@@ -59,12 +60,16 @@ export class QuizPage implements OnInit, OnDestroy {
     this.recentResultsSubject.asObservable();
   isPremium$: Observable<boolean> = this.isPremiumSubject.asObservable();
 
-  constructor(private quizService: QuizService, private router: Router) {
+  constructor(
+    private quizService: QuizService,
+    private router: Router,
+    private profileService: ProfileService
+  ) {
     addIcons({ personCircleOutline });
   }
 
   ngOnInit() {
-    this.loadUserProfile();
+    this.subscribeToProfile();
     this.loadRecentResults();
     this.subscribeToPremiumStatus();
   }
@@ -74,18 +79,16 @@ export class QuizPage implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadUserProfile() {
-    const profileStr = localStorage.getItem('userProfile');
-    if (profileStr) {
-      try {
-        const profile: UserProfile = JSON.parse(profileStr);
-        this.userNameSubject.next(profile.name || 'User');
-        this.userAvatarSubject.next(profile.avatar || null);
-        this.isPremiumSubject.next(profile.isPremium || false);
-      } catch (error) {
-        console.error('Error parsing user profile:', error);
-      }
-    }
+  private subscribeToProfile() {
+    this.profileService.profile$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((profile) => {
+        if (profile) {
+          this.userNameSubject.next(profile.name || 'User');
+          this.userAvatarSubject.next(profile.avatar || null);
+          this.isPremiumSubject.next(profile.isPremium || false);
+        }
+      });
   }
 
   private subscribeToPremiumStatus() {

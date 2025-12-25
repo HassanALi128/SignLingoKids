@@ -30,6 +30,7 @@ import {
 import { QuizService } from 'src/app/services/quiz';
 import { register } from 'swiper/element/bundle';
 import { CommonService } from 'src/app/core/services/common';
+import { ProfileService } from 'src/app/services/profile.service';
 
 register();
 
@@ -100,7 +101,8 @@ export class LandingPage implements OnInit, OnDestroy {
     private learningService: LearningService,
     private toastController: ToastController,
     private commonService: CommonService,
-    private quizService: QuizService
+    private quizService: QuizService,
+    private profileService: ProfileService
   ) {
     addIcons({
       arrowBack,
@@ -122,17 +124,13 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    // Load user profile from localStorage
-    try {
-      const profile = localStorage.getItem('userProfile');
+    // Subscribe to profile updates
+    this.profileService.profile$.subscribe((profile) => {
       if (profile) {
-        const userData = JSON.parse(profile);
-        this.userName = userData.name || 'User';
-        this.userAvatar = userData.avatar || '';
+        this.userName = profile.name || 'User';
+        this.userAvatar = profile.avatar || '';
       }
-    } catch (error) {
-      console.error('Error loading profile:', error);
-    }
+    });
 
     // Load Categories
     try {
