@@ -32,12 +32,23 @@ export class QuizService {
   private premiumSubject = new BehaviorSubject<boolean>(false);
   public isPremium$ = this.premiumSubject.asObservable();
 
+  // RxJS for Results
+  private resultsSubject = new BehaviorSubject<QuizResult[]>([]);
+  public results$ = this.resultsSubject.asObservable();
+
   constructor(private http: HttpClient, private dataService: DataService) {
     this.checkInitialPremiumStatus();
+    this.loadInitialResults();
   }
 
   private checkInitialPremiumStatus() {
     this.premiumSubject.next(this.isPremium());
+  }
+
+  private loadInitialResults() {
+    const stored = localStorage.getItem(this.resultsKey);
+    const results = stored ? JSON.parse(stored) : [];
+    this.resultsSubject.next(results);
   }
 
   // Refresh premium status (call this after updating profile)
@@ -121,11 +132,13 @@ export class QuizService {
       results = results.slice(0, 5); // keep only 5
     }
     localStorage.setItem(this.resultsKey, JSON.stringify(results));
+
+    // Update the subject to notify subscribers
+    this.resultsSubject.next(results);
   }
 
   getResults(): QuizResult[] {
-    const stored = localStorage.getItem(this.resultsKey);
-    return stored ? JSON.parse(stored) : [];
+    return this.resultsSubject.value;
   }
 
   private shuffle<T>(array: T[]): T[] {

@@ -97,13 +97,16 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   private loadRecentResults() {
-    const results = this.quizService.getResults();
-    const displayResults: ResultDisplay[] = results
-      .slice(0, 3)
-      .map((result, index) => {
-        return this.mapResultToDisplay(result, index);
+    this.quizService.results$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((results) => {
+        const displayResults: ResultDisplay[] = results
+          .slice(0, 3)
+          .map((result, index) => {
+            return this.mapResultToDisplay(result, index);
+          });
+        this.recentResultsSubject.next(displayResults);
       });
-    this.recentResultsSubject.next(displayResults);
   }
 
   private mapResultToDisplay(result: QuizResult, index: number): ResultDisplay {

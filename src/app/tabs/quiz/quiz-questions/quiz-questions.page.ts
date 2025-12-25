@@ -46,6 +46,7 @@ interface QuizState {
   isChecked: boolean;
   isCorrect: boolean | null;
   isLoading: boolean;
+  isAnimationLoading: boolean; // New state for animation loading
 }
 
 @Component({
@@ -77,6 +78,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     isChecked: false,
     isCorrect: null,
     isLoading: true,
+    isAnimationLoading: false,
   });
 
   private destroy$ = new Subject<void>();
@@ -88,6 +90,11 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
   isLoading$ = this.quizStateSubject.pipe(
     takeUntil(this.destroy$),
     map((s) => s.isLoading)
+  );
+
+  isAnimationLoading$ = this.quizStateSubject.pipe(
+    takeUntil(this.destroy$),
+    map((s) => s.isAnimationLoading)
   );
 
   constructor(
@@ -177,32 +184,104 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
 
       const uniqueFiles = [...new Set(actionFiles)];
 
-      if (uniqueFiles.length > 0) {
-        console.log('Preloading animations:', uniqueFiles);
-        await this.threeRenderer.preloadActionsBatch(uniqueFiles);
+      // 🚀 FIX: Load the FIRST animation immediately and await it
+      // This prevents the "lag" on the first question
+      if (state.questions.length > 0 && state.questions[0].actionFile) {
+        const firstAnimFile = state.questions[0].actionFile;
+        console.log(
+          '🚀 Preloading FIRST animation immediately:',
+          firstAnimFile
+        );
+        try {
+          await this.threeRenderer.loadActions(firstAnimFile);
+        } catch (e) {
+          console.warn('Failed to preload first animation:', e);
+        }
       }
 
       this.threeRenderer.centerModel();
 
       console.log('3D model initialized successfully');
 
-      // Hide loader after model is ready
+      // Hide loader IMMEDIATELY after model is ready
       this.updateState({ isLoading: false });
+
+      // Start loading remaining question animations in the background
+      if (uniqueFiles.length > 0) {
+        console.log('Background preloading remaining animations:', uniqueFiles);
+        this.threeRenderer.preloadActionsBatch(uniqueFiles).catch((err) => {
+          console.warn('Background preload error (non-fatal):', err);
+        });
+      }
+
+      // Check and load the first question's animation immediately
+      this.checkAndLoadCurrentAnimation();
     } catch (error) {
       console.error('Error initializing 3D model:', error);
       this.updateState({ isLoading: false });
     }
   }
 
-  playQuestionAnimation() {
+  private async preloadQuestionAnimations() {
     const state = this.quizStateSubject.value;
+    const actionFiles = state.questions
+      .map((q) => q.actionFile)
+      .filter((f): f is string => !!f);
+
+    const uniqueFiles = [...new Set(actionFiles)];
+
+    if (uniqueFiles.length > 0) {
+      console.log('Background preloading animations:', uniqueFiles);
+      // We don't await this, let it run in background
+      this.threeRenderer.preloadActionsBatch(uniqueFiles).catch((err) => {
+        console.warn('Background preload error (non-fatal):', err);
+      });
+    }
+  }
+
+  private async checkAndLoadCurrentAnimation() {
+    const state = this.quizStateSubject.value;
+    const currentQuestion = state.questions[state.currentIndex];
+
+    if (!currentQuestion || !currentQuestion.actionFile) return;
+
+    // If animation is not yet loaded, show loading state on play button
+    // We can check if it's loaded by checking if the action exists in the renderer
+    // But since ThreeRenderer doesn't expose a "hasAction" method easily for files,
+    // we'll rely on the fact that loadActions caches.
+
+    // Ideally we would check `threeRenderer.isActionLoaded(currentQuestion.actionFile)`
+    // For now, we'll just ensure it's loaded before playing.
+  }
+
+  async playQuestionAnimation() {
+    const state = this.quizStateSubject.value;
+    if (state.isAnimationLoading) return;
+
     const currentQuestion = state.questions[state.currentIndex];
 
     if (!currentQuestion) return;
 
     // Play animation if available
     if (currentQuestion.actionName) {
-      this.threeRenderer.play(currentQuestion.actionName);
+      try {
+        // If it's a file-based animation, ensure it's loaded
+        if (currentQuestion.actionFile) {
+          // Check if we need to load it
+          // We set loading state just in case it takes a moment
+          this.updateState({ isAnimationLoading: true });
+
+          // This will use the cache if already loaded by preloadQuestionAnimations
+          await this.threeRenderer.loadActions(currentQuestion.actionFile);
+
+          this.updateState({ isAnimationLoading: false });
+        }
+
+        this.threeRenderer.play(currentQuestion.actionName);
+      } catch (error) {
+        console.error('Error playing animation:', error);
+        this.updateState({ isAnimationLoading: false });
+      }
     } else {
       // Fallback to generic animation
       const animations = this.threeRenderer.getClipNames();
@@ -263,6 +342,9 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
         isChecked: false,
         isCorrect: null,
       });
+
+      // Pre-check/load next animation
+      this.checkAndLoadCurrentAnimation();
     } else {
       this.finishQuiz();
     }

@@ -51,8 +51,12 @@
         <div class="question-header">
             <h2 class="question-text">Select the answer!</h2>
             <!-- Play Button Overlay -->
-            <button class="play-button" (click)="playQuestionAnimation()">
+            <button class="play-button" (click)="playQuestionAnimation()" [disabled]="(isAnimationLoading$ | async)">
+                @if((isAnimationLoading$ | async)) {
+                <ion-spinner name="crescent" color="light"></ion-spinner>
+                } @else {
                 <ion-icon name="play"></ion-icon>
+                }
             </button>
         </div>
 
@@ -72,14 +76,13 @@
 
         <!-- Actions -->
         <div class="actions-section">
-            @if(!state.isChecked && state.selectedOption) {
-            <ion-button expand="block" (click)="checkAnswer()" class="action-btn check-btn">
+            @if(!state.isChecked) {
+            <ion-button expand="block" (click)="checkAnswer()" class="action-btn check-btn"
+                [disabled]="!state.selectedOption">
                 Check Answer
                 <ion-icon name="checkmark-circle" slot="end"></ion-icon>
             </ion-button>
-            }
-
-            @if(state.isChecked) {
+            } @else {
             <ion-button expand="block" (click)="nextQuestion()" class="action-btn next-btn"
                 [color]="state.isCorrect ? 'success' : 'danger'">
                 {{ state.currentIndex < state.questions.length - 1 ? 'Next Question' : 'Finish Quiz' }} <ion-icon
