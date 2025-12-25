@@ -24,8 +24,27 @@ export class ThreeRenderer implements OnDestroy {
   private activeAction?: THREE.AnimationAction;
   private clock = new THREE.Clock();
 
+  // 🚀 Render control for performance
+  private isPaused = false;
+  private shouldRender = true;
+  private isMobile = false;
+
   constructor(private ngZone: NgZone) {
     this.loader.setPath('');
+    this.detectMobile();
+  }
+
+  /**
+   * 🚀 Detect if running on mobile device
+   */
+  private detectMobile(): void {
+    const userAgent =
+      navigator.userAgent || navigator.vendor || (window as any).opera;
+    this.isMobile =
+      /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+        userAgent.toLowerCase()
+      );
+    console.log('📱 Mobile device detected:', this.isMobile);
   }
 
   initialize(
@@ -45,12 +64,31 @@ export class ThreeRenderer implements OnDestroy {
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvas.nativeElement,
-      antialias: false, // 🚀 Disable antialias for performance
+      antialias: !this.isMobile, // 🚀 Disable antialias on mobile for performance
       alpha: true,
       powerPreference: 'high-performance', // Hint to browser
     });
     this.renderer.setSize(width, height, false);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 🚀 Cap pixel ratio to 2
+
+    // 🚀 Mobile-specific optimizations
+    const pixelRatio = this.isMobile
+      ? Math.min(window.devicePixelRatio, 1.5) // Cap at 1.5 on mobile
+      : Math.min(window.devicePixelRatio, 2); // Cap at 2 on desktop
+
+    this.renderer.setPixelRatio(pixelRatio);
+    console.log(
+      '🎨 Pixel ratio set to:',
+      pixelRatio,
+      '(Mobile:',
+      this.isMobile,
+      ')'
+    );
+
+    // 🚀 Additional mobile optimizations
+    if (this.isMobile) {
+      this.renderer.shadowMap.enabled = false; // Disable shadows on mobile
+      console.log('🚀 Mobile optimizations applied: shadows disabled');
+    }
 
     // Lights
     const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 4.0);
@@ -194,11 +232,33 @@ export class ThreeRenderer implements OnDestroy {
     if (!this.renderer || !this.scene || !this.camera) return;
 
     this.frameId = requestAnimationFrame(this.animate);
+
+    // 🚀 Skip rendering if paused
+    if (this.isPaused) {
+      return;
+    }
+
     const dt = this.clock.getDelta();
     if (this.mixer) this.mixer.update(dt);
     if (this.controls) this.controls.update();
     this.renderer.render(this.scene, this.camera);
   };
+
+  /**
+   * 🚀 Pause rendering to save GPU/CPU resources
+   */
+  pauseRendering(): void {
+    console.log('🛑 Pausing Three.js rendering');
+    this.isPaused = true;
+  }
+
+  /**
+   * 🚀 Resume rendering
+   */
+  resumeRendering(): void {
+    console.log('▶️ Resuming Three.js rendering');
+    this.isPaused = false;
+  }
 
   /**
    * 🧹 Robust Disposal to prevent Memory Leaks
@@ -220,8 +280,11 @@ export class ThreeRenderer implements OnDestroy {
     this.mixer?.uncacheRoot(this.mixer.getRoot());
     this.mixer = undefined;
     this.activeAction = undefined;
+
+    // 🧹 Clear animation caches to free memory
     this.globalActions.clear();
     this.loadedFiles.clear();
+    console.log('🧹 Cleared animation caches');
 
     // 3. Dispose Controls
     if (this.controls) {
@@ -431,10 +494,14 @@ export class ThreeRenderer implements OnDestroy {
     }
 
     console.log('🔄 Loading actions from:', url);
+
+    // 🚀 Load and immediately extract animations to minimize memory usage
     const gltf = await this.loader.loadAsync(url);
 
     if (!gltf.animations || gltf.animations.length === 0) {
       console.warn('⚠️ No animations found in:', url);
+      // 🧹 Dispose even if no animations found
+      this.disposeGLTF(gltf);
       throw new Error('No animations found in action file');
     }
 
@@ -451,8 +518,10 @@ export class ThreeRenderer implements OnDestroy {
     this.loadedFiles.add(url);
     this.registerCachedActions();
 
-    // 🧹 Dispose of the loaded scene content since we only needed the animation
+    // 🧹 CRITICAL: Dispose of the loaded scene IMMEDIATELY after extracting animations
+    // This prevents memory spikes on mobile devices
     this.disposeGLTF(gltf);
+    console.log('🧹 Disposed GLTF scene for:', url);
   }
 
   // Register all cached animations to the current mixer
@@ -473,6 +542,38 @@ export class ThreeRenderer implements OnDestroy {
   async preloadActions(url: string): Promise<void> {
     // Always call loadActions, it handles caching and registration internally
     await this.loadActions(url);
+  }
+
+  /**
+   * 🚀 Progressive batch loading for animations
+   * Loads animations in batches to prevent memory spikes on mobile
+   */
+  async preloadActionsBatch(
+    urls: string[],
+    batchSize: number = 3
+  ): Promise<void> {
+    console.log(
+      `🚀 Progressive loading ${urls.length} animation files in batches of ${batchSize}`
+    );
+
+    for (let i = 0; i < urls.length; i += batchSize) {
+      const batch = urls.slice(i, i + batchSize);
+      console.log(
+        `📦 Loading batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(
+          urls.length / batchSize
+        )}`
+      );
+
+      // Load batch in parallel
+      await Promise.all(batch.map((url) => this.preloadActions(url)));
+
+      // 🧹 Small delay between batches to allow garbage collection
+      if (i + batchSize < urls.length) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
+
+    console.log('✨ All animation batches loaded!');
   }
 
   getModelInfo(): any {

@@ -1,0 +1,73 @@
+<ion-header>
+    <ion-toolbar>
+        <div class="header-content">
+            <ion-button fill="clear" (click)="goBack()" class="back-btn">
+                <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" id="help-trigger" class="help-btn">
+                <ion-icon name="help-circle-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+            <ion-popover trigger="help-trigger" triggerAction="click" side="bottom" alignment="end"
+                class="help-popover">
+                <ng-template>
+                    <div class="help-content">
+                        <h3>How to play ?</h3>
+                        <ul>
+                            <li>See the Animation</li>
+                            <li>Then Select the card you thing is the animation</li>
+                            <li>Then click on the click button</li>
+                            <li>if you want to play animation deselect the Card then you can play animtion</li>
+                        </ul>
+                    </div>
+                </ng-template>
+            </ion-popover>
+        </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="quiz-questions-content">
+    @if((isLoading$ | async)) {
+    <div class="loading-container">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+        <p>Loading Quiz...</p>
+    </div>
+    } @else {
+    @if((quizState$ | async); as state) {
+    <!-- 3D Character Section -->
+    <div class="character-section">
+        <canvas #canvas class="character-canvas"></canvas>
+
+        <!-- Play Button Overlay -->
+        <button class="play-button" (click)="playQuestionAudio()">
+            <ion-icon name="play-circle"></ion-icon>
+        </button>
+    </div>
+
+    <!-- Question Section -->
+    @if(state.questions[state.currentIndex]; as question) {
+    <div class="question-section">
+        <h2 class="question-text">Select the answer!</h2>
+
+        <!-- Answer Options -->
+        <div class="answers-grid">
+            @for(option of question.options; track option.id) {
+            <div class="answer-option" [class.selected]="isOptionSelected(option)"
+                [class.correct]="isOptionCorrect(option)" [class.wrong]="isOptionWrong(option)"
+                (click)="selectAnswer(option)">
+                <div class="option-image">
+                    <img [src]="option.imageUrl" [alt]="option.text">
+                </div>
+                <p class="option-text">{{ option.text }}</p>
+            </div>
+            }
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <span>{{ state.currentIndex + 1 }} / {{ state.questions.length }}</span>
+        </div>
+    </div>
+    }
+    }
+    }
+</ion-content>

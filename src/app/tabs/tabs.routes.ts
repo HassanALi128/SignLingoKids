@@ -11,13 +11,21 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./landing/landing.page').then((m) => m.LandingPage),
       },
+
+      {
+        path: 'abc',
+        loadComponent: () => import('./abc/abc.page').then((m) => m.AbcPage),
+      },
       {
         path: 'quiz',
         loadComponent: () => import('./quiz/quiz.page').then((m) => m.QuizPage),
       },
       {
-        path: 'abc',
-        loadComponent: () => import('./abc/abc.page').then((m) => m.AbcPage),
+        path: 'quiz/quiz-questions',
+        loadComponent: () =>
+          import('./quiz/quiz-questions/quiz-questions.page').then(
+            (m) => m.QuizQuestionsPage
+          ),
       },
       {
         path: 'setting',

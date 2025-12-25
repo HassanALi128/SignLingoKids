@@ -1,247 +1,76 @@
+<ion-header>
+    <ion-toolbar>
+        <div class="header-content">
+            <div class="greeting">
+                <h2>Hi <span class="user-name">{{ (userName$ | async) }}</span>, Ready to Learn Today?</h2>
+                <p>Let's Start Your Learning Test!</p>
+            </div>
+            @if((userAvatar$ | async); as avatar) {
+            <div class="user-avatar" (click)="goToProfile()">
+                <ion-img [src]="avatar" class="avatar-img"></ion-img>
+            </div>
+            } @else {
+            <div class="user-avatar" (click)="goToProfile()">
+                <ion-icon name="person-circle-outline"></ion-icon>
+            </div>
+            }
+        </div>
+    </ion-toolbar>
+</ion-header>
+
 <ion-content class="quiz-content">
-  <!-- 🌟 New Start Screen -->
-  @if (!quizStarted && !quizCompleted) {
-  <div class="start-screen">
-    <!-- Header -->
-    <div class="header-section">
-      <div class="greeting-text">
-        <h2>Hi {{userName}},</h2>
-        <!-- <p>Ready to Learn Today?</p> -->
-        <p class="sub-text">Let's Start Your Learning Test!</p>
-      </div>
-      @if(userAvatar){
-      <div class="user-avatar" (click)="goToProfile()">
-        <img [src]="userAvatar" alt="User Avatar">
-      </div>
-      } @else {
-      <div class="user-avatar" (click)="goToProfile()">
-        <ion-icon name="person-circle-outline"></ion-icon>
-      </div>
-      }
-    </div>
-
-    <!-- Banner -->
+    <!-- Start Your Quiz Banner -->
     <div class="quiz-banner">
-      <div class="banner-content">
-        <div class="banner-text">
-          <h3>Start Your Quiz!</h3>
-          <p>Take a fun quiz and check your progress!</p>
-
-          @if (hasIncompleteQuiz) {
-          <ion-button class="resume-btn" (click)="resumeQuiz()">
-            Resume Quiz
-          </ion-button>
-          <p class="resume-text">Complete your pending quiz first!</p>
-          } @else {
-          <ion-button class="start-btn" (click)="startQuiz()">
-            Start Quiz
-          </ion-button>
-          }
+        <div class="banner-content">
+            <div class="banner-text">
+                <h3>Start Your Quiz!</h3>
+                <p>Take a fun quiz and check your progress!</p>
+                <ion-button class="start-quiz-btn" expand="block" (click)="startQuiz()">
+                    Start Quiz
+                </ion-button>
+            </div>
+            <div class="banner-characters">
+                <img src="assets/landing/landing.png" alt="Characters" class="characters-img">
+                <div class="question-mark">?</div>
+            </div>
         </div>
-        <div class="banner-image">
-          <!-- Using a placeholder or existing asset if available -->
-          <img src="assets/landing/landing.png" alt="Family">
-        </div>
-      </div>
     </div>
 
-    <!-- Recent Results -->
+    <!-- Recent Results Section -->
     <div class="section-header">
-      <h3>Recent Results</h3>
-      <span class="view-all">View all</span>
+        <h3>Recent Results</h3>
+        <a class="view-all" (click)="viewAllResults()">View all</a>
     </div>
 
+    @if((recentResults$ | async); as results) {
+    @if(results.length === 0) {
+    <div class="empty-message">
+        <p>No quiz results yet. Start your first quiz!</p>
+    </div>
+    } @else {
     <div class="results-list">
-      @for(res of resultsHistory; track $index) {
-      <div class="result-item">
-        <div class="item-image">
-          <img [src]="res.image || 'assets/images/objects/apple.svg'" alt="Result Icon">
-        </div>
-        <div class="item-content">
-          <h4>{{res.title}}</h4>
-          <p>{{res.subtitle}}</p>
-        </div>
-        <div class="item-progress">
-          <div class="progress-circle" [style.--progress-color]="res.color || '#FF6B6B'">
-            <svg viewBox="0 0 36 36" class="circular-chart">
-              <path class="circle-bg" d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831" />
-              <path class="circle" [attr.stroke-dasharray]="res.percentage + ', 100'" d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831" />
-            </svg>
-            <span class="percentage">{{res.percentage}}%</span>
-          </div>
-        </div>
-      </div>
-      }
-      @if(resultsHistory.length === 0) {
-      <div class="empty-state">
-        <p>No results yet. Take a quiz!</p>
-      </div>
-      }
-    </div>
-  </div>
-  }
-
-  <!-- 🎮 Active Quiz View (3D Model) -->
-  <div class="viewer cartoon-viewer" [class.hidden]="!quizStarted">
-    <!-- Header Overlay -->
-    <div class="quiz-header">
-      <ion-button fill="clear" class="back-btn" (click)="handleBackNavigation()">
-        <ion-icon name="arrow-back"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" class="help-btn" (click)="toggleHelpTooltip()">
-        <ion-icon name="help-circle-outline"></ion-icon>
-      </ion-button>
-
-      <!-- 💡 Help Tooltip -->
-      @if (showHelpTooltip) {
-      <div class="help-tooltip-overlay" (click)="toggleHelpTooltip()">
-        <div class="help-tooltip" (click)="$event.stopPropagation()">
-          <h3>How to play ?</h3>
-          <ul>
-            <li>See the Animation</li>
-            <li>Then Select the card you think is the animation</li>
-            <li>Then click on the check button</li>
-            <li>If you want to play animation deselect the Card then you can play animation</li>
-          </ul>
-        </div>
-      </div>
-      }
-    </div>
-
-    <div class="viewer-border">
-      <!-- 3D Model Canvas - Full Screen Background feel -->
-      <canvas #canvas></canvas>
-
-      <!-- Bottom Sheet Content -->
-      <div class="canvas-content">
-        <!-- ❓ Quiz Question Screen -->
-        @if (quizStarted && !quizCompleted) {
-        <div class="quiz-question-container">
-
-          <div class="question-section">
-            <h2 class="question-title">Select the answer!</h2>
-            <button class="action-btn play" (click)="playQuestionMedia()">
-              <ion-icon name="play"></ion-icon>
-            </button>
-          </div>
-
-          <div class="answers-container">
-            <!-- Options Row -->
-            <div class="options-row">
-              @for (option of currentQuestion.options; track option; let i = $index) {
-              <div class="answer-option" [class.selected]="selectedAnswer === i"
-                [class.correct]="showResult && option.isCorrect"
-                [class.incorrect]="showResult && selectedAnswer === i && !option.isCorrect"
-                [class.card-yellow]="i % 3 === 0" [class.card-blue]="i % 3 === 1" [class.card-green]="i % 3 === 2"
-                (click)="selectAnswer(i)">
-
-                <div class="option-content">
-                  <div class="option-image-container">
-                    <img [src]="option.imageUrl" [alt]="option.text" class="option-image">
-                  </div>
-                  <span class="option-text">{{ option.text }}</span>
-                </div>
-
-                @if (showResult && selectedAnswer === i) {
-                <div class="result-icon">
-                  @if (option.isCorrect) {
-                  <ion-icon name="checkmark-circle" color="success"></ion-icon>
-                  }
-                  @if (!option.isCorrect) {
-                  <ion-icon name="close-circle" color="danger"></ion-icon>
-                  }
-                </div>
-                }
-              </div>
-              }
+        @for(result of results; track result.date) {
+        <div class="result-card">
+            <div class="result-image">
+                <img [src]="result.imageUrl" [alt]="result.label">
             </div>
-          </div>
-
-          <!-- Action Buttons (Check Only) -->
-          <div class="action-buttons">
-            <div class="action-btn-wrapper check-wrapper">
-              <button class="action-btn check" [disabled]="selectedAnswer === null || showResult"
-                (click)="checkAnswer()">
-                Check
-              </button>
+            <div class="result-info">
+                <h4>{{ result.label }}</h4>
+                <p>{{ result.description }}</p>
             </div>
-          </div>
-
+            <div class="result-progress">
+                <svg class="progress-circle" width="70" height="70" viewBox="0 0 70 70">
+                    <circle class="progress-bg" cx="35" cy="35" r="30" fill="none" stroke="#F0F0F0" stroke-width="6" />
+                    <circle class="progress-fill" cx="35" cy="35" r="30" fill="none" [attr.stroke]="result.color"
+                        stroke-width="6" stroke-linecap="round" [style.stroke-dasharray]="188.4"
+                        [style.stroke-dashoffset]="188.4 - (result.percentage / 100) * 188.4"
+                        transform="rotate(-90 35 35)" />
+                </svg>
+                <span class="progress-text">{{ result.percentage }}%</span>
+            </div>
         </div>
         }
-      </div>
     </div>
-  </div>
-
-  <!-- 🏆 Quiz Results Screen -->
-  @if (quizCompleted) {
-  <div class="quiz-results-container">
-    <div class="results-content">
-      <h2 class="results-label">Quiz Completed!</h2>
-
-      <div class="progress-card" (click)="showProgressPopup()">
-        <div class="progress-content">
-          <ion-icon name="star" class="star-icon"></ion-icon>
-          <span class="progress-text">{{ correctAnswers }}/{{ totalQuestions }} Correct</span>
-          <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
-        </div>
-      </div>
-
-      <ion-button class="take-quiz-button" expand="block" (click)="startQuiz()">
-        Take Quiz Again
-      </ion-button>
-      <ion-button fill="clear" (click)="goToLanding()">
-        Back to Home
-      </ion-button>
-    </div>
-  </div>
-  }
-
-  <!-- Quiz Result Modal -->
-  @if (showResultModalFlag) {
-  <div class="result-modal-overlay" (click)="hideResultModal()">
-    <div class="result-modal" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2 class="modal-title">{{ completionTitle }}</h2>
-      </div>
-
-      <div class="modal-content">
-        <div class="result-message">
-          <p class="congratulations-text">{{ completionMessage }}</p>
-        </div>
-
-        <div class="progress-bar-section">
-          <div class="progress-bar-container">
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" [style.width.%]="selectedResult?.percentage || 0"></div>
-            </div>
-            <div class="progress-text">{{ selectedResult?.score || 0 }}/{{ selectedResult?.total || 5 }}</div>
-          </div>
-        </div>
-
-        <div class="celebration-character">
-          <div class="character"><img [src]="completionImage" alt="Celebration"></div>
-        </div>
-
-        <ion-button (click)="hideResultModal()" expand="block" class="ok-button">
-          ok
-        </ion-button>
-      </div>
-    </div>
-  </div>
-  }
-  <!-- Loading Overlay -->
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="loading-content">
-      <ion-spinner name="crescent"></ion-spinner>
-      <h2>Are you ready for your quiz?</h2>
-      <p>Getting everything ready for you...</p>
-    </div>
-  </div>
-  }
+    }
+    }
 </ion-content>

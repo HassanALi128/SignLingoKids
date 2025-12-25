@@ -1,41 +1,31 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  HostListener,
-} from '@angular/core';
-import { NavController, IonicModule, AlertController } from '@ionic/angular';
-import { addIcons } from 'ionicons';
-import {
-  checkmarkCircle,
-  closeCircle,
-  play,
-  playCircle,
-  star,
-  swapHorizontal,
-  handLeft,
-  mic,
-  time,
-  refresh,
-  home,
-  arrowBack,
-  helpCircleOutline,
-} from 'ionicons/icons';
-import { QuizQuestion, QuizResult, QuizService } from 'src/app/services/quiz';
-import { ThreeRenderer } from 'src/app/services/three-renderer.service';
-import { DataService } from 'src/app/services/data';
 import { Router } from '@angular/router';
-import { CommonService } from 'src/app/core/services/common';
+import {
+  IonHeader,
+  IonToolbar,
+  IonContent,
+  IonButton,
+  IonIcon,
+  IonImg,
+} from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { personCircleOutline } from 'ionicons/icons';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { QuizService, QuizResult } from '../../services/quiz';
 
-interface ExtendedQuizResult extends QuizResult {
-  image?: string;
-  title?: string;
-  subtitle?: string;
-  color?: string;
+interface UserProfile {
+  name: string;
+  avatar?: string;
+  isPremium?: boolean;
+}
+
+interface ResultDisplay extends QuizResult {
+  label: string;
+  description: string;
+  imageUrl: string;
+  color: string;
 }
 
 @Component({
@@ -43,537 +33,137 @@ interface ExtendedQuizResult extends QuizResult {
   templateUrl: './quiz.page.html',
   styleUrls: ['./quiz.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [
+    CommonModule,
+    IonHeader,
+    IonToolbar,
+    IonContent,
+    IonButton,
+    IonIcon,
+    IonImg,
+  ],
 })
-export class QuizPage implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+export class QuizPage implements OnInit, OnDestroy {
+  // RxJS State Management
+  private userNameSubject = new BehaviorSubject<string>('User');
+  private userAvatarSubject = new BehaviorSubject<string | null>(null);
+  private recentResultsSubject = new BehaviorSubject<ResultDisplay[]>([]);
+  private isPremiumSubject = new BehaviorSubject<boolean>(false);
+  private destroy$ = new Subject<void>();
 
-  quizStarted = false;
-  quizCompleted = false;
-  currentQuestionIndex = 0;
-  selectedAnswer: number | null = null;
-  showResult = false;
-  showFeedback = false;
-  isCorrectAnswer = false;
-  correctAnswers = 0;
-  totalQuestions = 0;
-  showProgressModal = false;
-  showResultModalFlag = false;
-  showHelpTooltip = false;
-  selectedResult?: QuizResult;
-  completionTitle = '';
-  completionMessage = '';
-  completionImage = '';
+  // Public Observables
+  userName$: Observable<string> = this.userNameSubject.asObservable();
+  userAvatar$: Observable<string | null> =
+    this.userAvatarSubject.asObservable();
+  recentResults$: Observable<ResultDisplay[]> =
+    this.recentResultsSubject.asObservable();
+  isPremium$: Observable<boolean> = this.isPremiumSubject.asObservable();
 
-  questions: QuizQuestion[] = [];
-  resultsHistory: ExtendedQuizResult[] = [];
-  characterLoaded = false;
-  loading = true;
+  constructor(private quizService: QuizService, private router: Router) {
+    addIcons({ personCircleOutline });
+  }
 
-  categories: any[] = [];
+  ngOnInit() {
+    this.loadUserProfile();
+    this.loadRecentResults();
+    this.subscribeToPremiumStatus();
+  }
 
-  constructor(
-    private navCtrl: NavController,
-    private quizService: QuizService,
-    private three: ThreeRenderer,
-    private router: Router,
-    private alertCtrl: AlertController, // Inject AlertController
-    private dataService: DataService, // Inject DataService
-    private commonService: CommonService
-  ) {
-    addIcons({
-      star,
-      play,
-      playCircle,
-      checkmarkCircle,
-      closeCircle,
-      swapHorizontal,
-      handLeft,
-      mic,
-      time,
-      refresh,
-      home,
-      'arrow-back': arrowBack,
-      'help-circle-outline': helpCircleOutline,
-    });
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadUserProfile() {
+    const profileStr = localStorage.getItem('userProfile');
+    if (profileStr) {
+      try {
+        const profile: UserProfile = JSON.parse(profileStr);
+        this.userNameSubject.next(profile.name || 'User');
+        this.userAvatarSubject.next(profile.avatar || null);
+        this.isPremiumSubject.next(profile.isPremium || false);
+      } catch (error) {
+        console.error('Error parsing user profile:', error);
+      }
+    }
+  }
+
+  private subscribeToPremiumStatus() {
+    this.quizService.isPremium$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isPremium) => {
+        this.isPremiumSubject.next(isPremium);
+      });
+  }
+
+  private loadRecentResults() {
+    const results = this.quizService.getResults();
+    const displayResults: ResultDisplay[] = results
+      .slice(0, 3)
+      .map((result, index) => {
+        return this.mapResultToDisplay(result, index);
+      });
+    this.recentResultsSubject.next(displayResults);
+  }
+
+  private mapResultToDisplay(result: QuizResult, index: number): ResultDisplay {
+    const percentage = result.percentage;
+    let label = 'Good Moments';
+    let description = 'Great Job! Keep Going!';
+    let color = '#FFA726'; // Orange
+    let imageUrl = 'assets/landing/landing.png';
+
+    if (percentage === 100) {
+      label = 'Perfect';
+      description = 'Your Progress Was Awesome';
+      color = '#66BB6A'; // Green
+      imageUrl = 'assets/landing/landing.png';
+    } else if (percentage >= 80) {
+      label = 'Almost Perfect';
+      description = 'You Did Awesome!';
+      color = '#FF7043'; // Red-Orange
+      imageUrl = 'assets/landing/landing.png';
+    } else if (percentage >= 60) {
+      label = 'Good Moments';
+      description = 'Great Job! Keep Going!';
+      color = '#FFA726'; // Orange
+      imageUrl = 'assets/landing/landing.png';
+    }
+
+    return {
+      ...result,
+      label,
+      description,
+      imageUrl,
+      color,
+    };
+  }
+
+  startQuiz() {
+    // Check if user has reached attempt limit (non-premium users)
+    const isPremium = this.isPremiumSubject.value;
+    const attempts = this.quizService.getAttempts();
+
+    if (!isPremium && attempts >= 3) {
+      // Show premium modal or alert
+      this.router.navigate(['/tabs/premium']);
+      return;
+    }
+
+    // Increment attempts
+    this.quizService.incrementAttempts();
+
+    // Navigate to quiz questions page
+    this.router.navigate(['/tabs/quiz/quiz-questions']);
+  }
+
+  viewAllResults() {
+    // Navigate to full results history page
+    // TODO: Implement results history page
+    console.log('Viewing all results...');
   }
 
   goToProfile() {
-    this.commonService.goToPage('tabs/setting');
-  }
-
-  goToLanding(): void {
-    this.router.navigate(['tabs/quiz']);
-  }
-
-  userName: string = 'Babu';
-  userAvatar: string = '';
-
-  async ngOnInit() {
-    this.loadUserProfile();
-    this.resultsHistory = this.quizService.getResults().map((res) => ({
-      ...res,
-      image: this.getResultImage(res.percentage),
-      subtitle: this.getResultSubtitle(res.percentage),
-      title: this.getResultTitle(res.percentage),
-      color: this.getResultColor(res.percentage),
-    }));
-
-    // Load categories to access animation data
-    try {
-      this.categories = await this.dataService.loadCategories();
-      console.log(
-        'QuizPage: Loaded categories for animations',
-        this.categories
-      );
-    } catch (error) {
-      console.error('QuizPage: Error loading categories', error);
-    }
-  }
-
-  loadUserProfile() {
-    try {
-      const profile = localStorage.getItem('userProfile');
-      if (profile) {
-        const userData = JSON.parse(profile);
-        this.userName = userData.name || 'Babu';
-        this.userAvatar = userData.avatar || '';
-      }
-    } catch (error) {
-      console.error('Error loading profile:', error);
-    }
-  }
-
-  getResultImage(percentage: number): string {
-    if (percentage >= 100) return 'assets/images/objects/apple.svg';
-    if (percentage >= 80) return 'assets/images/objects/forest.svg';
-    return 'assets/images/objects/tree.svg';
-  }
-
-  getResultSubtitle(percentage: number): string {
-    if (percentage >= 100) return 'Your Progress Was Awesome';
-    if (percentage >= 80) return 'You Did Awesome!';
-    return 'Great Job! Keep Going!';
-  }
-
-  getResultTitle(percentage: number): string {
-    if (percentage >= 100) return 'Perfect';
-    if (percentage >= 80) return 'Almost Perfect';
-    return 'Good Moments';
-  }
-
-  getResultColor(percentage: number): string {
-    if (percentage >= 100) return '#FF0040'; // Red
-    if (percentage >= 80) return '#FF4000'; // Orange-Red
-    return '#FF8000'; // Orange
-  }
-
-  ngAfterViewInit(): void {
-    // We moved initialization to ionViewWillEnter to handle page caching
-  }
-
-  async ionViewWillEnter() {
-    await this.initializeThree();
-  }
-
-  private async initializeThree(): Promise<void> {
-    try {
-      if (!this.canvasRef) {
-        console.error('Canvas not found!');
-        return;
-      }
-
-      // Check if already initialized to avoid duplicates
-      // (Though we dispose on leave, so this should be fresh)
-
-      this.loading = true;
-      const canvas = this.canvasRef.nativeElement;
-      const width = canvas.clientWidth || window.innerWidth;
-      const height = canvas.clientHeight || window.innerHeight;
-
-      this.three.initialize(this.canvasRef, width, height);
-
-      // Load the main character model
-      await this.three.loadModel(
-        'assets/aslkidanimation/models/asl_new_Modle.glb'
-      );
-
-      // Load default actions
-      await this.three.loadActions(
-        'assets/aslkidanimation/actions/alsagirl_model_animation.glb'
-      );
-      this.three.centerModel();
-
-      this.characterLoaded = true;
-      this.loading = false;
-    } catch (e: any) {
-      console.error('Failed to load character:', e);
-      this.loading = false;
-    }
-  }
-
-  hasIncompleteQuiz = false;
-
-  // Handle Back Navigation with Confirmation
-  async handleBackNavigation(): Promise<void> {
-    if (this.quizStarted && !this.quizCompleted) {
-      const alert = await this.alertCtrl.create({
-        header: 'Quit Quiz?',
-        message:
-          'Are you sure you want to quit? Your progress will be saved so you can resume later.',
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel',
-          },
-          {
-            text: 'Yes, Quit',
-            handler: () => {
-              this.quizStarted = false;
-              this.hasIncompleteQuiz = true;
-              this.loading = false; // Ensure loading is off
-              this.toggleTabBar(true);
-            },
-          },
-        ],
-      });
-      await alert.present();
-    } else {
-      this.goToLanding();
-    }
-  }
-
-  // Start the quiz with limit check
-  async startQuiz(isNew: boolean = true): Promise<void> {
-    // Check if user is premium
-    const isPremium = this.quizService.isPremium();
-    // Get current attempts
-    const attempts = this.quizService.getAttempts();
-
-    // If not premium and attempts >= 5, show alert
-    if (!isPremium && attempts >= 5) {
-      const alert = await this.alertCtrl.create({
-        header: 'Premium Required',
-        message:
-          'You have reached the free limit of 5 quizzes. Please upgrade to Premium to continue learning!',
-        buttons: ['OK'],
-      });
-      await alert.present();
-      return;
-    }
-
-    // Check for incomplete quiz if starting new
-    if (isNew && this.hasIncompleteQuiz) {
-      const alert = await this.alertCtrl.create({
-        header: 'Incomplete Quiz',
-        message:
-          'You have an incomplete quiz. Do you want to start a new one? Your current progress will be lost.',
-        buttons: [
-          {
-            text: 'Resume Existing',
-            handler: () => {
-              this.resumeQuiz();
-            },
-          },
-          {
-            text: 'Start New',
-            handler: () => {
-              this.hasIncompleteQuiz = false;
-              this.startNewQuiz();
-            },
-          },
-        ],
-      });
-      await alert.present();
-      return;
-    }
-
-    if (isNew) {
-      this.startNewQuiz();
-    }
-  }
-
-  private startNewQuiz() {
-    this.toggleTabBar(false);
-    // Proceed to start quiz
-    this.quizService.getRandomQuiz().subscribe(async (q) => {
-      this.questions = q;
-      this.totalQuestions = q.length;
-
-      // 🚀 Preload animations for the selected questions
-      this.loading = true; // Show loading spinner if needed
-      console.log('🚀 Preloading quiz animations...');
-
-      const uniqueActionFiles = new Set<string>();
-
-      for (const question of this.questions) {
-        const correctOption = question.options.find((opt) => opt.isCorrect);
-        if (correctOption) {
-          const signInfo = this.findSignInfo(correctOption.id);
-          if (signInfo && signInfo.actionFile) {
-            uniqueActionFiles.add(signInfo.actionFile);
-          }
-        }
-      }
-
-      // Load all required files
-      for (const file of uniqueActionFiles) {
-        try {
-          await this.three.preloadActions(file);
-          console.log('✅ Preloaded:', file);
-        } catch (error) {
-          console.warn('Failed to preload:', file, error);
-        }
-      }
-
-      this.loading = false;
-      console.log('✨ All animations preloaded!');
-
-      this.quizStarted = true;
-      this.quizCompleted = false;
-      this.currentQuestionIndex = 0;
-      this.selectedAnswer = null;
-      this.correctAnswers = 0;
-      this.showResult = false;
-      this.showFeedback = false;
-    });
-  }
-
-  resumeQuiz(): void {
-    this.quizStarted = true;
-    this.loading = false;
-    this.toggleTabBar(false);
-    // Don't reset question index or answers
-  }
-
-  get currentQuestion(): QuizQuestion {
-    return this.questions[this.currentQuestionIndex];
-  }
-
-  // 🔊 Play Question Media (Audio/Video) + Quiz Action
-  async playQuestionMedia(): Promise<void> {
-    // Play quiz action on 3D model
-    if (this.characterLoaded && this.currentQuestion) {
-      try {
-        // Find the correct answer option to determine which animation to play
-        const correctOption = this.currentQuestion.options.find(
-          (opt) => opt.isCorrect
-        );
-
-        if (correctOption) {
-          // Find animation details for this sign
-          const signInfo = this.findSignInfo(correctOption.id);
-
-          if (signInfo && signInfo.actionFile && signInfo.actionName) {
-            console.log(
-              `Playing animation for ${correctOption.id}: ${signInfo.actionName}`
-            );
-
-            // Just play - file is already preloaded
-            this.three.play(signInfo.actionName);
-          } else {
-            // Fallback if no specific animation found
-            console.warn(
-              `No animation found for ${correctOption.id}, playing default`
-            );
-            this.three.play('quiz_action');
-          }
-        } else {
-          this.three.play('quiz_action');
-        }
-      } catch (error) {
-        console.warn('Could not play quiz action:', error);
-        // Fallback to any available action
-        this.three.play('idle');
-      }
-    }
-  }
-
-  // Helper to find sign info from loaded categories
-  findSignInfo(
-    signId: string
-  ): { actionFile?: string; actionName?: string } | null {
-    for (const category of this.categories) {
-      const sign = category.signs.find((s: any) => s.id === signId);
-      if (sign) {
-        return {
-          actionFile: category.actionFile,
-          actionName: sign.actionName,
-        };
-      }
-    }
-    return null;
-  }
-
-  get isLastQuestion(): boolean {
-    return this.currentQuestionIndex === this.questions.length - 1;
-  }
-
-  selectAnswer(answerIndex: number): void {
-    if (this.showResult) return; // Prevent changing answer if result is already shown
-    this.selectedAnswer = answerIndex;
-  }
-
-  checkAnswer(): void {
-    if (this.selectedAnswer === null) return;
-
-    const selectedOption = this.currentQuestion.options[this.selectedAnswer];
-    this.isCorrectAnswer = selectedOption.isCorrect;
-    if (this.isCorrectAnswer) this.correctAnswers++;
-
-    this.showResult = true;
-    this.showFeedback = false;
-
-    // Auto-advance after a short delay
-    setTimeout(() => {
-      this.nextQuestion();
-    }, 1500); // 1.5 second delay
-  }
-
-  nextQuestion(): void {
-    if (this.isLastQuestion) {
-      this.completeQuiz();
-    } else {
-      this.currentQuestionIndex++;
-      this.selectedAnswer = null;
-      this.showResult = false;
-
-      // Play media for next question automatically if desired, or let user click play
-      this.playQuestionMedia();
-    }
-  }
-
-  completeQuiz(): void {
-    const percentage = this.getScorePercentage();
-
-    // Set motivational content based on performance
-    if (percentage >= 100) {
-      this.completionTitle = 'Perfect Score!';
-      this.completionMessage =
-        'Absolutely amazing! You have mastered this quiz. Keep up the incredible work!';
-      this.completionImage = 'assets/images/spelling/a.svg';
-    } else if (percentage >= 80) {
-      this.completionTitle = 'Almost Perfect!';
-      this.completionMessage =
-        'Great job! You are doing fantastic. Just a little more practice and you will be perfect!';
-      this.completionImage = 'assets/images/spelling/b.svg';
-    } else if (percentage >= 60) {
-      this.completionTitle = 'Good Effort!';
-      this.completionMessage =
-        'Well done! You have a good grasp of this. Keep practicing to reach the top!';
-      this.completionImage = 'assets/images/spelling/c.svg';
-    } else {
-      this.completionTitle = 'Keep Learning!';
-      this.completionMessage =
-        "Don't give up! Every mistake is a step towards learning. Try again and you'll get better!";
-      this.completionImage = 'assets/shapes.svg';
-    }
-
-    // Save result in history
-    const result: ExtendedQuizResult = {
-      score: this.correctAnswers,
-      total: this.totalQuestions,
-      percentage: percentage,
-      date: new Date().toISOString(),
-      title: this.getResultTitle(percentage),
-      subtitle: this.getResultSubtitle(percentage),
-      image: this.completionImage,
-      color: this.getResultColor(percentage),
-    };
-
-    this.resultsHistory.unshift(result);
-
-    // max 5 results rakho
-    if (this.resultsHistory.length > 5) {
-      this.resultsHistory.pop();
-    }
-
-    // Increment attempts count after completing a quiz
-    this.quizService.incrementAttempts();
-
-    // Show the motivational modal
-    this.selectedResult = result;
-    this.showResultModalFlag = true;
-
-    // Reset quiz flags
-    this.quizCompleted = false;
-    this.quizStarted = false;
-    this.showFeedback = false;
-    this.hasIncompleteQuiz = false;
-    this.toggleTabBar(true);
-  }
-
-  getScorePercentage(): number {
-    return Math.round((this.correctAnswers / this.totalQuestions) * 100);
-  }
-
-  getProgressMessage(): string {
-    const percentage = this.getScorePercentage();
-    if (percentage >= 80) return 'Awesome';
-    if (percentage >= 60) return 'Good';
-    return 'Keep Learning';
-  }
-
-  showProgressPopup(): void {
-    this.showProgressModal = true;
-  }
-
-  hideProgressPopup(): void {
-    this.showProgressModal = false;
-  }
-
-  showResultModal(result: QuizResult): void {
-    this.selectedResult = result;
-    this.showResultModalFlag = true;
-  }
-
-  hideResultModal(): void {
-    this.showResultModalFlag = false;
-    this.selectedResult = undefined;
-  }
-
-  hideFeedback(): void {
-    this.showFeedback = false;
-    // Auto navigate to next question after hiding feedback
-    setTimeout(() => {
-      this.nextQuestion();
-    }, 500);
-  }
-
-  toggleHelpTooltip(): void {
-    this.showHelpTooltip = !this.showHelpTooltip;
-  }
-
-  goBack(): void {
-    this.navCtrl.back();
-  }
-
-  // 🔥 Window resize handling
-  @HostListener('window:resize')
-  onResize(): void {
-    if (this.canvasRef) {
-      const canvas = this.canvasRef.nativeElement;
-      const width = canvas.clientWidth || window.innerWidth;
-      const height = canvas.clientHeight || window.innerHeight;
-      this.three.resize(width, height);
-    }
-  }
-
-  ionViewWillLeave() {
-    this.three.dispose();
-    this.characterLoaded = false; // Reset flag
-    this.toggleTabBar(true);
-  }
-
-  ngOnDestroy(): void {
-    this.three.dispose();
-    this.toggleTabBar(true);
-  }
-
-  private toggleTabBar(show: boolean) {
-    const tabBar = document.querySelector('ion-tab-bar');
-    if (tabBar) {
-      tabBar.style.display = show ? 'flex' : 'none';
-    }
+    this.router.navigate(['/profile-setup']);
   }
 }
