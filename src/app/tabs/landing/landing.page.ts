@@ -88,7 +88,7 @@ export class LandingPage implements OnInit, OnDestroy {
 
   // Learning Progress
   currentSign: AslSign | null = null;
-  recentLearning: { category: Category; progress: number } | null = null;
+  recentLearningList: { category: Category; progress: number }[] = [];
 
   isLoading3D: boolean = false;
   isFullscreen: boolean = false;
@@ -333,15 +333,17 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   loadRecentLearning() {
-    const recentCategoryId = this.learningService.getRecentCategoryId();
-    if (recentCategoryId) {
-      const category = this.categories.find((c) => c.id === recentCategoryId);
+    const activeCategoryIds = this.learningService.getActiveCategoryIds();
+    this.recentLearningList = [];
+
+    activeCategoryIds.forEach((id) => {
+      const category = this.categories.find((c) => c.id === id);
       if (category) {
         const itemIds = category.signs.map((s) => s.id);
         const progress = this.learningService.getCategoryProgress(itemIds);
-        this.recentLearning = { category, progress };
+        this.recentLearningList.push({ category, progress });
       }
-    }
+    });
   }
 
   updateCertificateProgress() {

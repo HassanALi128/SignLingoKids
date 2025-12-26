@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export interface LearningProgress {
   learnedItemIds: string[];
-  recentCategoryId: string | null;
+  activeCategoryIds: string[]; // Changed from recentCategoryId
   lastAccessed: number;
 }
 
@@ -15,7 +15,7 @@ export class LearningService {
 
   private progressSubject = new BehaviorSubject<LearningProgress>({
     learnedItemIds: [],
-    recentCategoryId: null,
+    activeCategoryIds: [],
     lastAccessed: Date.now(),
   });
 
@@ -29,7 +29,13 @@ export class LearningService {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
-        this.progressSubject.next(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        // Migration: convert old recentCategoryId to activeCategoryIds if needed
+        if (parsed.recentCategoryId && !parsed.activeCategoryIds) {
+          parsed.activeCategoryIds = [parsed.recentCategoryId];
+          delete parsed.recentCategoryId;
+        }
+        this.progressSubject.next(parsed);
       }
     } catch (error) {
       console.error('Error loading learning progress:', error);
@@ -48,20 +54,29 @@ export class LearningService {
   markAsLearned(itemId: string, categoryId: string) {
     const current = this.progressSubject.value;
     const learnedIds = new Set(current.learnedItemIds);
+    let activeCategories = [...(current.activeCategoryIds || [])];
+
+    // Add category to active list if not present, or move to front
+    const index = activeCategories.indexOf(categoryId);
+    if (index !== -1) {
+      activeCategories.splice(index, 1);
+    }
+    activeCategories.unshift(categoryId);
+
+    // Limit to a reasonable number of recent categories if needed,
+    // but for now let's keep all as requested.
 
     if (!learnedIds.has(itemId)) {
       learnedIds.add(itemId);
-
       this.saveProgress({
         learnedItemIds: Array.from(learnedIds),
-        recentCategoryId: categoryId,
+        activeCategoryIds: activeCategories,
         lastAccessed: Date.now(),
       });
-    } else if (current.recentCategoryId !== categoryId) {
-      // Update recent category even if item is already learned
+    } else {
       this.saveProgress({
         ...current,
-        recentCategoryId: categoryId,
+        activeCategoryIds: activeCategories,
         lastAccessed: Date.now(),
       });
     }
@@ -71,8 +86,8 @@ export class LearningService {
     return this.progressSubject.value.learnedItemIds.includes(itemId);
   }
 
-  getRecentCategoryId(): string | null {
-    return this.progressSubject.value.recentCategoryId;
+  getActiveCategoryIds(): string[] {
+    return this.progressSubject.value.activeCategoryIds || [];
   }
 
   getCategoryProgress(categoryItemIds: string[]): number {

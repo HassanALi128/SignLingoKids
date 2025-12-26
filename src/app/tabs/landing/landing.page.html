@@ -89,30 +89,34 @@
 
 
   <!-- Recent Learning Section -->
-  @if(recentLearning) {
+  @if(recentLearningList.length > 0) {
   <div class="section-header">
     <h3>Recent Learning</h3>
   </div>
-  <div class="recent-learning-card" (click)="selectCategory(recentLearning.category)">
-    <div class="recent-learning-content">
-      <div class="recent-learning-icon">
-        <img [src]="recentLearning.category.thumbUrl" [alt]="recentLearning.category.label">
+  <div class="recent-learning-container">
+    @for(item of recentLearningList; track item.category.id) {
+    <div class="recent-learning-card" (click)="selectCategory(item.category)">
+      <div class="recent-learning-content">
+        <div class="recent-learning-icon">
+          <img [src]="item.category.thumbUrl" [alt]="item.category.label">
+        </div>
+        <div class="recent-learning-info">
+          <h4>{{item.category.label}}</h4>
+          <p>Continue your progress</p>
+        </div>
       </div>
-      <div class="recent-learning-info">
-        <h4>{{recentLearning.category.label}}</h4>
-        <p>Continue your progress</p>
+      <div class="recent-learning-progress">
+        <svg class="progress-ring" width="60" height="60">
+          <circle class="progress-ring-circle-bg" stroke="#E8E8E8" stroke-width="6" fill="transparent" r="24" cx="30"
+            cy="30" />
+          <circle class="progress-ring-circle" [attr.stroke]="item.category.color || '#FF6B6B'" stroke-width="6"
+            fill="transparent" r="24" cx="30" cy="30" [style.stroke-dasharray]="progressCircumference"
+            [style.stroke-dashoffset]="progressCircumference - (item.progress / 100) * progressCircumference" />
+        </svg>
+        <span class="progress-text">{{item.progress}}%</span>
       </div>
     </div>
-    <div class="recent-learning-progress">
-      <svg class="progress-ring" width="60" height="60">
-        <circle class="progress-ring-circle-bg" stroke="#E8E8E8" stroke-width="6" fill="transparent" r="24" cx="30"
-          cy="30" />
-        <circle class="progress-ring-circle" [attr.stroke]="recentLearning.category.color || '#FF6B6B'" stroke-width="6"
-          fill="transparent" r="24" cx="30" cy="30" [style.stroke-dasharray]="progressCircumference"
-          [style.stroke-dashoffset]="progressCircumference - (recentLearning.progress / 100) * progressCircumference" />
-      </svg>
-      <span class="progress-text">{{recentLearning.progress}}%</span>
-    </div>
+    }
   </div>
   }
 
