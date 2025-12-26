@@ -193,6 +193,7 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   async selectCategory(category: Category): Promise<void> {
+    this.isLoading3D = true;
     this.selectedCategory = category;
     this.categoryItems = category.signs || [];
     this.toggleTabBar(false);

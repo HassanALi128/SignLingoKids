@@ -149,20 +149,20 @@
 
   <!-- Category Detail Overlay -->
   @if(selectedCategory) {
-
   <div class="category-detail-view">
+    <!-- Premium Loader Overlay -->
+    @if(isLoading3D) {
+    <div class="custom-loader">
+      <div class="loader-content">
+        <ion-spinner name="bubbles" color="primary"></ion-spinner>
+        <h2>Are you ready to learn?</h2>
+        <p>Preparing 3D Character & Animations...</p>
+      </div>
+    </div>
+    }
 
-
-
-    <div class="detail-content">
+    <div class="detail-content" [style.visibility]="isLoading3D ? 'hidden' : 'visible'">
       <div class="character-container">
-        <!-- Loading Overlay -->
-        @if(isLoading3D) {
-        <div class="loading-overlay">
-          <ion-spinner name="crescent" color="primary"></ion-spinner>
-          <p>Loading Character...</p>
-        </div>
-        }
         <!-- 3D Character Canvas -->
         <canvas #canvas class="character-3d-canvas"></canvas>
       </div>
@@ -199,7 +199,7 @@
           <div class="detail-header">
             <ion-button fill="clear" (click)="closeCategoryDetail()" class="back-btn">
               <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
-              <span class="back-text">back to category</span>
+              <span class="back-text">back</span>
             </ion-button>
           </div>
         </div>
