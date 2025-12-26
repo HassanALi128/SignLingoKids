@@ -3,8 +3,8 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./splash/splash.page').then((m) => m.SplashPage),
+    redirectTo: 'tabs/home',
+    pathMatch: 'full',
   },
   {
     path: 'onboarding',

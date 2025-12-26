@@ -2,7 +2,7 @@ ion-header {
     ion-toolbar {
         // --background: transparent;
         --border-width: 0;
-        padding: 8px 16px;
+        padding: calc(8px + var(--ion-safe-area-top, 0px)) 16px 8px;
     }
 }
 
@@ -233,10 +233,6 @@ ion-header {
 
     .answer-option {
         background: var(--ion-color-step-100);
-
-        .option-image {
-            // background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-        }
     }
 }
 
@@ -340,7 +336,6 @@ ion-popover.help-popover {
 .actions-section {
     margin-top: 24px;
     padding: 0 8px;
-    padding-bottom: calc(20px + env(safe-area-inset-bottom)); // Add safe area padding
 
     .action-btn {
         --border-radius: 16px;

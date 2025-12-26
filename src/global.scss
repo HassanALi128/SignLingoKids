@@ -55,11 +55,11 @@ body {
 
 /* Ensure headers respect safe areas */
 ion-header {
-    --ion-safe-area-top: 20px;
+    --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 ion-toolbar {
-    --ion-safe-area-top: 20px;
+    --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 /* Ensure footers and tab bars respect safe areas */
@@ -76,11 +76,11 @@ ion-tab-bar {
 
 /* Headers respect safe areas */
 ion-header {
-    --ion-safe-area-top: 20px;
+    --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 ion-toolbar {
-    --ion-safe-area-top: 20px;
+    --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 /* Tab bars respect safe areas */
