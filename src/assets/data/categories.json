@@ -1579,6 +1579,214 @@
         "thumbUrl": "assets/images/categories/playtime/decoration.webp",
         "audioUrl": "assets/audio/decorating.m4a",
         "actionName": "decorating"
+      },
+      {
+        "id": "ball_premium",
+        "label": "Ball (Premium)",
+        "thumbUrl": "assets/images/categories/playtime/permium/ball.webp",
+        "audioUrl": "assets/audio/ball.m4a",
+        "actionName": "ball",
+        "isPremium": true
+      },
+      {
+        "id": "basketball",
+        "label": "Basketball",
+        "thumbUrl": "assets/images/categories/playtime/permium/basketball.webp",
+        "audioUrl": "assets/audio/basketball.m4a",
+        "actionName": "basketball",
+        "isPremium": true
+      },
+      {
+        "id": "batman",
+        "label": "Batman",
+        "thumbUrl": "assets/images/categories/playtime/permium/batman.webp",
+        "audioUrl": "assets/audio/batman.m4a",
+        "actionName": "batman",
+        "isPremium": true
+      },
+      {
+        "id": "captainamerica",
+        "label": "Captain America",
+        "thumbUrl": "assets/images/categories/playtime/permium/captainamerica.webp",
+        "audioUrl": "assets/audio/captainamerica.m4a",
+        "actionName": "captainamerica",
+        "isPremium": true
+      },
+      {
+        "id": "doll",
+        "label": "Doll",
+        "thumbUrl": "assets/images/categories/playtime/permium/doll.webp",
+        "audioUrl": "assets/audio/doll.m4a",
+        "actionName": "doll",
+        "isPremium": true
+      },
+      {
+        "id": "drawing",
+        "label": "Drawing",
+        "thumbUrl": "assets/images/categories/playtime/permium/drawing.webp",
+        "audioUrl": "assets/audio/drawing.m4a",
+        "actionName": "drawing",
+        "isPremium": true
+      },
+      {
+        "id": "flipflop",
+        "label": "Flip Flop",
+        "thumbUrl": "assets/images/categories/playtime/permium/flipflop.webp",
+        "audioUrl": "assets/audio/flipflop.m4a",
+        "actionName": "flipflop",
+        "isPremium": true
+      },
+      {
+        "id": "gift",
+        "label": "Gift",
+        "thumbUrl": "assets/images/categories/playtime/permium/gift.webp",
+        "audioUrl": "assets/audio/gift.m4a",
+        "actionName": "gift",
+        "isPremium": true
+      },
+      {
+        "id": "giving",
+        "label": "Giving",
+        "thumbUrl": "assets/images/categories/playtime/permium/giving.webp",
+        "audioUrl": "assets/audio/giving.m4a",
+        "actionName": "giving",
+        "isPremium": true
+      },
+      {
+        "id": "glue",
+        "label": "Glue",
+        "thumbUrl": "assets/images/categories/playtime/permium/glue.webp",
+        "audioUrl": "assets/audio/glue.m4a",
+        "actionName": "glue",
+        "isPremium": true
+      },
+      {
+        "id": "hideandseek",
+        "label": "Hide and Seek",
+        "thumbUrl": "assets/images/categories/playtime/permium/hideandseek.webp",
+        "audioUrl": "assets/audio/hideandseek.m4a",
+        "actionName": "hideandseek",
+        "isPremium": true
+      },
+      {
+        "id": "hulk",
+        "label": "Hulk",
+        "thumbUrl": "assets/images/categories/playtime/permium/hulk.webp",
+        "audioUrl": "assets/audio/hulk.m4a",
+        "actionName": "hulk",
+        "isPremium": true
+      },
+      {
+        "id": "ironman",
+        "label": "Iron Man",
+        "thumbUrl": "assets/images/categories/playtime/permium/ironman.webp",
+        "audioUrl": "assets/audio/ironman.m4a",
+        "actionName": "ironman",
+        "isPremium": true
+      },
+      {
+        "id": "lemonade",
+        "label": "Lemonade",
+        "thumbUrl": "assets/images/categories/playtime/permium/lemonade.webp",
+        "audioUrl": "assets/audio/lemonade.m4a",
+        "actionName": "lemonade",
+        "isPremium": true
+      },
+      {
+        "id": "painting",
+        "label": "Painting",
+        "thumbUrl": "assets/images/categories/playtime/permium/painting.webp",
+        "audioUrl": "assets/audio/painting.m4a",
+        "actionName": "painting",
+        "isPremium": true
+      },
+      {
+        "id": "paper",
+        "label": "Paper",
+        "thumbUrl": "assets/images/categories/playtime/permium/paper.webp",
+        "audioUrl": "assets/audio/paper.m4a",
+        "actionName": "paper",
+        "isPremium": true
+      },
+      {
+        "id": "playground",
+        "label": "Playground",
+        "thumbUrl": "assets/images/categories/playtime/permium/playground.webp",
+        "audioUrl": "assets/audio/playground.m4a",
+        "actionName": "playground",
+        "isPremium": true
+      },
+      {
+        "id": "playing",
+        "label": "Playing",
+        "thumbUrl": "assets/images/categories/playtime/permium/playing.webp",
+        "audioUrl": "assets/audio/playing.m4a",
+        "actionName": "playing",
+        "isPremium": true
+      },
+      {
+        "id": "sandbox",
+        "label": "Sandbox",
+        "thumbUrl": "assets/images/categories/playtime/permium/sandbox.webp",
+        "audioUrl": "assets/audio/sandbox.m4a",
+        "actionName": "sandbox",
+        "isPremium": true
+      },
+      {
+        "id": "scissors",
+        "label": "Scissors",
+        "thumbUrl": "assets/images/categories/playtime/permium/scissors.webp",
+        "audioUrl": "assets/audio/scissors.m4a",
+        "actionName": "scissors",
+        "isPremium": true
+      },
+      {
+        "id": "shovel",
+        "label": "Shovel",
+        "thumbUrl": "assets/images/categories/playtime/permium/shovel.webp",
+        "audioUrl": "assets/audio/shovel.m4a",
+        "actionName": "shovel",
+        "isPremium": true
+      },
+      {
+        "id": "soccer",
+        "label": "Soccer",
+        "thumbUrl": "assets/images/categories/playtime/permium/soccer.webp",
+        "audioUrl": "assets/audio/soccer.m4a",
+        "actionName": "soccer",
+        "isPremium": true
+      },
+      {
+        "id": "spiderman",
+        "label": "Spider-Man",
+        "thumbUrl": "assets/images/categories/playtime/permium/spiderman.webp",
+        "audioUrl": "assets/audio/spiderman.m4a",
+        "actionName": "spiderman",
+        "isPremium": true
+      },
+      {
+        "id": "superman",
+        "label": "Superman",
+        "thumbUrl": "assets/images/categories/playtime/permium/superman.webp",
+        "audioUrl": "assets/audio/superman.m4a",
+        "actionName": "superman",
+        "isPremium": true
+      },
+      {
+        "id": "theflash",
+        "label": "The Flash",
+        "thumbUrl": "assets/images/categories/playtime/permium/theflash.webp",
+        "audioUrl": "assets/audio/theflash.m4a",
+        "actionName": "theflash",
+        "isPremium": true
+      },
+      {
+        "id": "wolverine",
+        "label": "Wolverine",
+        "thumbUrl": "assets/images/categories/playtime/permium/wolverine.webp",
+        "audioUrl": "assets/audio/wolverine.m4a",
+        "actionName": "wolverine",
+        "isPremium": true
       }
     ]
   }

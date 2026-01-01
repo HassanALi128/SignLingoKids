@@ -2,8 +2,8 @@ const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
 
-const inputDir = "src/assets/images/categories/nature/permium";
-const outputDir = "src/assets/images/categories/nature/permium";
+const inputDir = "src/assets/images/categories/playtime/permium";
+const outputDir = "src/assets/images/categories/playtime/permium";
 
 fs.readdir(inputDir, (err, files) => {
   if (err) {
