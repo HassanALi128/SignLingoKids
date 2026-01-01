@@ -170,6 +170,6 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   goToProfile() {
-    this.router.navigate(['/profile-setup']);
+    this.router.navigate(['tabs/setting']);
   }
 }
