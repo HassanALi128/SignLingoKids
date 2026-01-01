@@ -1368,6 +1368,150 @@
         "thumbUrl": "assets/images/categories/nature/freezing.webp",
         "audioUrl": "assets/audio/freezing.m4a",
         "actionName": "freezing"
+      },
+      {
+        "id": "ice",
+        "label": "Ice",
+        "thumbUrl": "assets/images/categories/nature/permium/ice.webp",
+        "audioUrl": "assets/audio/ice.m4a",
+        "actionName": "ice",
+        "isPremium": true
+      },
+      {
+        "id": "leaf",
+        "label": "Leaf",
+        "thumbUrl": "assets/images/categories/nature/permium/leaf.webp",
+        "audioUrl": "assets/audio/leaf.m4a",
+        "actionName": "leaf",
+        "isPremium": true
+      },
+      {
+        "id": "melting",
+        "label": "Melting",
+        "thumbUrl": "assets/images/categories/nature/permium/melting.webp",
+        "audioUrl": "assets/audio/melting.m4a",
+        "actionName": "melting",
+        "isPremium": true
+      },
+      {
+        "id": "moon",
+        "label": "Moon",
+        "thumbUrl": "assets/images/categories/nature/permium/moon.webp",
+        "audioUrl": "assets/audio/moon.m4a",
+        "actionName": "moon",
+        "isPremium": true
+      },
+      {
+        "id": "mushroom",
+        "label": "Mushroom",
+        "thumbUrl": "assets/images/categories/nature/permium/mushroom.webp",
+        "audioUrl": "assets/audio/mushroom.m4a",
+        "actionName": "mushroom",
+        "isPremium": true
+      },
+      {
+        "id": "rainbow",
+        "label": "Rainbow",
+        "thumbUrl": "assets/images/categories/nature/permium/rainbow.webp",
+        "audioUrl": "assets/audio/rainbow.m4a",
+        "actionName": "rainbow",
+        "isPremium": true
+      },
+      {
+        "id": "raincoat",
+        "label": "Raincoat",
+        "thumbUrl": "assets/images/categories/nature/permium/raincoat.webp",
+        "audioUrl": "assets/audio/raincoat.m4a",
+        "actionName": "raincoat",
+        "isPremium": true
+      },
+      {
+        "id": "rain",
+        "label": "Rain",
+        "thumbUrl": "assets/images/categories/nature/permium/rain.webp",
+        "audioUrl": "assets/audio/rain.m4a",
+        "actionName": "rain",
+        "isPremium": true
+      },
+      {
+        "id": "sand",
+        "label": "Sand",
+        "thumbUrl": "assets/images/categories/nature/permium/sand.webp",
+        "audioUrl": "assets/audio/sand.m4a",
+        "actionName": "sand",
+        "isPremium": true
+      },
+      {
+        "id": "snowing",
+        "label": "Snowing",
+        "thumbUrl": "assets/images/categories/nature/permium/snowing.webp",
+        "audioUrl": "assets/audio/snowing.m4a",
+        "actionName": "snowing",
+        "isPremium": true
+      },
+      {
+        "id": "snowman",
+        "label": "Snowman",
+        "thumbUrl": "assets/images/categories/nature/permium/snowman.webp",
+        "audioUrl": "assets/audio/snowman.m4a",
+        "actionName": "snowman",
+        "isPremium": true
+      },
+      {
+        "id": "spring",
+        "label": "Spring",
+        "thumbUrl": "assets/images/categories/nature/permium/spring.webp",
+        "audioUrl": "assets/audio/spring.m4a",
+        "actionName": "spring",
+        "isPremium": true
+      },
+      {
+        "id": "strom",
+        "label": "Storm",
+        "thumbUrl": "assets/images/categories/nature/permium/strom.webp",
+        "audioUrl": "assets/audio/storm.m4a",
+        "actionName": "storm",
+        "isPremium": true
+      },
+      {
+        "id": "summer",
+        "label": "Summer",
+        "thumbUrl": "assets/images/categories/nature/permium/summer.webp",
+        "audioUrl": "assets/audio/summer.m4a",
+        "actionName": "summer",
+        "isPremium": true
+      },
+      {
+        "id": "sun",
+        "label": "Sun",
+        "thumbUrl": "assets/images/categories/nature/permium/sun.webp",
+        "audioUrl": "assets/audio/sun.m4a",
+        "actionName": "sun",
+        "isPremium": true
+      },
+      {
+        "id": "tree",
+        "label": "Tree",
+        "thumbUrl": "assets/images/categories/nature/permium/tree.webp",
+        "audioUrl": "assets/audio/tree.m4a",
+        "actionName": "tree",
+        "isPremium": true
+      },
+      {
+        "id": "warm",
+        "label": "Warm",
+        "thumbUrl": "assets/images/categories/nature/permium/warm.webp",
+        "audioUrl": "assets/audio/warm.m4a",
+        "actionName": "warm",
+        "isPremium": true
+      },
+      {
+        "id": "winter",
+        "label": "Winter",
+        "thumbUrl": "assets/images/categories/nature/permium/winter.webp",
+        "audioUrl": "assets/audio/winter.m4a",
+        "actionName": "winter",
+        "isPremium": true
       }
     ]
   },
