@@ -492,6 +492,462 @@
         "thumbUrl": "assets/images/categories/basic/umbrella.webp",
         "audioUrl": "assets/audio/umbrella.m4a",
         "actionName": "umbrella"
+      },
+      {
+        "id": "airplane",
+        "label": "Airplane",
+        "thumbUrl": "assets/images/categories/basic/permium/airplane.webp",
+        "audioUrl": "assets/audio/airplane.m4a",
+        "actionName": "airplane",
+        "isPremium": true
+      },
+      {
+        "id": "baby",
+        "label": "Baby",
+        "thumbUrl": "assets/images/categories/basic/permium/baby.webp",
+        "audioUrl": "assets/audio/baby.m4a",
+        "actionName": "baby",
+        "isPremium": true
+      },
+      {
+        "id": "bathroom",
+        "label": "Bathroom",
+        "thumbUrl": "assets/images/categories/basic/permium/bathroom.webp",
+        "audioUrl": "assets/audio/bathroom.m4a",
+        "actionName": "bathroom",
+        "isPremium": true
+      },
+      {
+        "id": "battery",
+        "label": "Battery",
+        "thumbUrl": "assets/images/categories/basic/permium/battery.webp",
+        "audioUrl": "assets/audio/battery.m4a",
+        "actionName": "battery",
+        "isPremium": true
+      },
+      {
+        "id": "bed",
+        "label": "Bed",
+        "thumbUrl": "assets/images/categories/basic/permium/bed.webp",
+        "audioUrl": "assets/audio/bed.m4a",
+        "actionName": "bed",
+        "isPremium": true
+      },
+      {
+        "id": "bedroom",
+        "label": "Bedroom",
+        "thumbUrl": "assets/images/categories/basic/permium/bedroom.webp",
+        "audioUrl": "assets/audio/bedroom.m4a",
+        "actionName": "bedroom",
+        "isPremium": true
+      },
+      {
+        "id": "brush",
+        "label": "Brush",
+        "thumbUrl": "assets/images/categories/basic/permium/brush.webp",
+        "audioUrl": "assets/audio/brush.m4a",
+        "actionName": "brush",
+        "isPremium": true
+      },
+      {
+        "id": "bucket",
+        "label": "Bucket",
+        "thumbUrl": "assets/images/categories/basic/permium/bucket.webp",
+        "audioUrl": "assets/audio/bucket.m4a",
+        "actionName": "bucket",
+        "isPremium": true
+      },
+      {
+        "id": "bus",
+        "label": "Bus",
+        "thumbUrl": "assets/images/categories/basic/permium/bus.webp",
+        "audioUrl": "assets/audio/bus.m4a",
+        "actionName": "bus",
+        "isPremium": true
+      },
+      {
+        "id": "chair",
+        "label": "Chair",
+        "thumbUrl": "assets/images/categories/basic/permium/chair.webp",
+        "audioUrl": "assets/audio/chair.m4a",
+        "actionName": "chair",
+        "isPremium": true
+      },
+      {
+        "id": "church",
+        "label": "Church",
+        "thumbUrl": "assets/images/categories/basic/permium/church.webp",
+        "audioUrl": "assets/audio/church.m4a",
+        "actionName": "church",
+        "isPremium": true
+      },
+      {
+        "id": "dollar",
+        "label": "Dollar",
+        "thumbUrl": "assets/images/categories/basic/permium/dollar.webp",
+        "audioUrl": "assets/audio/dollar.m4a",
+        "actionName": "dollar",
+        "isPremium": true
+      },
+      {
+        "id": "door",
+        "label": "Door",
+        "thumbUrl": "assets/images/categories/basic/permium/door.webp",
+        "audioUrl": "assets/audio/door.m4a",
+        "actionName": "door",
+        "isPremium": true
+      },
+      {
+        "id": "elevator",
+        "label": "Elevator",
+        "thumbUrl": "assets/images/categories/basic/permium/elevator.webp",
+        "audioUrl": "assets/audio/elevator.m4a",
+        "actionName": "elevator",
+        "isPremium": true
+      },
+      {
+        "id": "flower",
+        "label": "Flower",
+        "thumbUrl": "assets/images/categories/basic/permium/flower.webp",
+        "audioUrl": "assets/audio/flower.m4a",
+        "actionName": "flower",
+        "isPremium": true
+      },
+      {
+        "id": "friend",
+        "label": "Friend",
+        "thumbUrl": "assets/images/categories/basic/permium/friend.webp",
+        "audioUrl": "assets/audio/friend.m4a",
+        "actionName": "friend",
+        "isPremium": true
+      },
+      {
+        "id": "garden",
+        "label": "Garden",
+        "thumbUrl": "assets/images/categories/basic/permium/garden.webp",
+        "audioUrl": "assets/audio/garden.m4a",
+        "actionName": "garden",
+        "isPremium": true
+      },
+      {
+        "id": "gel",
+        "label": "Gel",
+        "thumbUrl": "assets/images/categories/basic/permium/gel.webp",
+        "audioUrl": "assets/audio/gel.m4a",
+        "actionName": "gel",
+        "isPremium": true
+      },
+      {
+        "id": "glasses",
+        "label": "Glasses",
+        "thumbUrl": "assets/images/categories/basic/permium/glasses.webp",
+        "audioUrl": "assets/audio/glasses.m4a",
+        "actionName": "glasses",
+        "isPremium": true
+      },
+      {
+        "id": "gloves",
+        "label": "Gloves",
+        "thumbUrl": "assets/images/categories/basic/permium/gloves.webp",
+        "audioUrl": "assets/audio/gloves.m4a",
+        "actionName": "gloves",
+        "isPremium": true
+      },
+      {
+        "id": "hat",
+        "label": "Hat",
+        "thumbUrl": "assets/images/categories/basic/permium/hat.webp",
+        "audioUrl": "assets/audio/hat.m4a",
+        "actionName": "hat",
+        "isPremium": true
+      },
+      {
+        "id": "hi",
+        "label": "Hi",
+        "thumbUrl": "assets/images/categories/basic/permium/hi.webp",
+        "audioUrl": "assets/audio/hi.m4a",
+        "actionName": "hi",
+        "isPremium": true
+      },
+      {
+        "id": "home",
+        "label": "Home",
+        "thumbUrl": "assets/images/categories/basic/permium/home.webp",
+        "audioUrl": "assets/audio/home.m4a",
+        "actionName": "home",
+        "isPremium": true
+      },
+      {
+        "id": "house",
+        "label": "House",
+        "thumbUrl": "assets/images/categories/basic/permium/house.webp",
+        "audioUrl": "assets/audio/house.m4a",
+        "actionName": "house",
+        "isPremium": true
+      },
+      {
+        "id": "iloveyou",
+        "label": "I Love You",
+        "thumbUrl": "assets/images/categories/basic/permium/iloveyou.webp",
+        "audioUrl": "assets/audio/iloveyou.m4a",
+        "actionName": "iloveyou",
+        "isPremium": true
+      },
+      {
+        "id": "in",
+        "label": "In",
+        "thumbUrl": "assets/images/categories/basic/permium/in.webp",
+        "audioUrl": "assets/audio/in.m4a",
+        "actionName": "in",
+        "isPremium": true
+      },
+      {
+        "id": "jecket",
+        "label": "Jacket",
+        "thumbUrl": "assets/images/categories/basic/permium/jecket.webp",
+        "audioUrl": "assets/audio/jecket.m4a",
+        "actionName": "jecket",
+        "isPremium": true
+      },
+      {
+        "id": "key",
+        "label": "Key",
+        "thumbUrl": "assets/images/categories/basic/permium/key.webp",
+        "audioUrl": "assets/audio/key.m4a",
+        "actionName": "key",
+        "isPremium": true
+      },
+      {
+        "id": "laptop",
+        "label": "Laptop",
+        "thumbUrl": "assets/images/categories/basic/permium/laptop.webp",
+        "audioUrl": "assets/audio/laptop.m4a",
+        "actionName": "laptop",
+        "isPremium": true
+      },
+      {
+        "id": "love",
+        "label": "Love",
+        "thumbUrl": "assets/images/categories/basic/permium/love.webp",
+        "audioUrl": "assets/audio/love.m4a",
+        "actionName": "love",
+        "isPremium": true
+      },
+      {
+        "id": "mail",
+        "label": "Mail",
+        "thumbUrl": "assets/images/categories/basic/permium/mail.webp",
+        "audioUrl": "assets/audio/mail.m4a",
+        "actionName": "mail",
+        "isPremium": true
+      },
+      {
+        "id": "me",
+        "label": "Me",
+        "thumbUrl": "assets/images/categories/basic/permium/me.webp",
+        "audioUrl": "assets/audio/me.m4a",
+        "actionName": "me",
+        "isPremium": true
+      },
+      {
+        "id": "music",
+        "label": "Music",
+        "thumbUrl": "assets/images/categories/basic/permium/music.webp",
+        "audioUrl": "assets/audio/music.m4a",
+        "actionName": "music",
+        "isPremium": true
+      },
+      {
+        "id": "pen",
+        "label": "Pen",
+        "thumbUrl": "assets/images/categories/basic/permium/pen.webp",
+        "audioUrl": "assets/audio/pen.m4a",
+        "actionName": "pen",
+        "isPremium": true
+      },
+      {
+        "id": "phone",
+        "label": "Phone",
+        "thumbUrl": "assets/images/categories/basic/permium/phone.webp",
+        "audioUrl": "assets/audio/phone.m4a",
+        "actionName": "phone",
+        "isPremium": true
+      },
+      {
+        "id": "piano",
+        "label": "Piano",
+        "thumbUrl": "assets/images/categories/basic/permium/piano.webp",
+        "audioUrl": "assets/audio/piano.m4a",
+        "actionName": "piano",
+        "isPremium": true
+      },
+      {
+        "id": "school",
+        "label": "School",
+        "thumbUrl": "assets/images/categories/basic/permium/school.webp",
+        "audioUrl": "assets/audio/school.m4a",
+        "actionName": "school",
+        "isPremium": true
+      },
+      {
+        "id": "shoes",
+        "label": "Shoes",
+        "thumbUrl": "assets/images/categories/basic/permium/shoes.webp",
+        "audioUrl": "assets/audio/shoes.m4a",
+        "actionName": "shoes",
+        "isPremium": true
+      },
+      {
+        "id": "shower",
+        "label": "Shower",
+        "thumbUrl": "assets/images/categories/basic/permium/shower.webp",
+        "audioUrl": "assets/audio/shower.m4a",
+        "actionName": "shower",
+        "isPremium": true
+      },
+      {
+        "id": "slide",
+        "label": "Slide",
+        "thumbUrl": "assets/images/categories/basic/permium/slide.webp",
+        "audioUrl": "assets/audio/slide.m4a",
+        "actionName": "slide",
+        "isPremium": true
+      },
+      {
+        "id": "soap",
+        "label": "Soap",
+        "thumbUrl": "assets/images/categories/basic/permium/soap.webp",
+        "audioUrl": "assets/audio/soap.m4a",
+        "actionName": "soap",
+        "isPremium": true
+      },
+      {
+        "id": "socks",
+        "label": "Socks",
+        "thumbUrl": "assets/images/categories/basic/permium/socks.webp",
+        "audioUrl": "assets/audio/socks.m4a",
+        "actionName": "socks",
+        "isPremium": true
+      },
+      {
+        "id": "sorry",
+        "label": "Sorry",
+        "thumbUrl": "assets/images/categories/basic/permium/sorry.webp",
+        "audioUrl": "assets/audio/sorry.m4a",
+        "actionName": "sorry",
+        "isPremium": true
+      },
+      {
+        "id": "stairs",
+        "label": "Stairs",
+        "thumbUrl": "assets/images/categories/basic/permium/stairs.webp",
+        "audioUrl": "assets/audio/stairs.m4a",
+        "actionName": "stairs",
+        "isPremium": true
+      },
+      {
+        "id": "stop",
+        "label": "Stop",
+        "thumbUrl": "assets/images/categories/basic/permium/stop.webp",
+        "audioUrl": "assets/audio/stop.m4a",
+        "actionName": "stop",
+        "isPremium": true
+      },
+      {
+        "id": "street",
+        "label": "Street",
+        "thumbUrl": "assets/images/categories/basic/permium/street.webp",
+        "audioUrl": "assets/audio/street.m4a",
+        "actionName": "street",
+        "isPremium": true
+      },
+      {
+        "id": "swimming",
+        "label": "Swimming",
+        "thumbUrl": "assets/images/categories/basic/permium/swimming.webp",
+        "audioUrl": "assets/audio/swimming.m4a",
+        "actionName": "swimming",
+        "isPremium": true
+      },
+      {
+        "id": "swimsuit",
+        "label": "Swimsuit",
+        "thumbUrl": "assets/images/categories/basic/permium/swimsuit.webp",
+        "audioUrl": "assets/audio/swimsuit.m4a",
+        "actionName": "swimsuit",
+        "isPremium": true
+      },
+      {
+        "id": "swimtrunks",
+        "label": "Swim Trunks",
+        "thumbUrl": "assets/images/categories/basic/permium/swimtrunks.webp",
+        "audioUrl": "assets/audio/swimtrunks.m4a",
+        "actionName": "swimtrunks",
+        "isPremium": true
+      },
+      {
+        "id": "table",
+        "label": "Table",
+        "thumbUrl": "assets/images/categories/basic/permium/table.webp",
+        "audioUrl": "assets/audio/table.m4a",
+        "actionName": "table",
+        "isPremium": true
+      },
+      {
+        "id": "time",
+        "label": "Time",
+        "thumbUrl": "assets/images/categories/basic/permium/time.webp",
+        "audioUrl": "assets/audio/time.m4a",
+        "actionName": "time",
+        "isPremium": true
+      },
+      {
+        "id": "toilet",
+        "label": "Toilet",
+        "thumbUrl": "assets/images/categories/basic/permium/toilet.webp",
+        "audioUrl": "assets/audio/toilet.m4a",
+        "actionName": "toilet",
+        "isPremium": true
+      },
+      {
+        "id": "toothbrush",
+        "label": "Toothbrush",
+        "thumbUrl": "assets/images/categories/basic/permium/toothbrush.webp",
+        "audioUrl": "assets/audio/toothbrush.m4a",
+        "actionName": "toothbrush",
+        "isPremium": true
+      },
+      {
+        "id": "towel",
+        "label": "Towel",
+        "thumbUrl": "assets/images/categories/basic/permium/towel.webp",
+        "audioUrl": "assets/audio/towel.m4a",
+        "actionName": "towel",
+        "isPremium": true
+      },
+      {
+        "id": "train",
+        "label": "Train",
+        "thumbUrl": "assets/images/categories/basic/permium/train.webp",
+        "audioUrl": "assets/audio/train.m4a",
+        "actionName": "train",
+        "isPremium": true
+      },
+      {
+        "id": "walk",
+        "label": "Walk",
+        "thumbUrl": "assets/images/categories/basic/permium/walk.webp",
+        "audioUrl": "assets/audio/walk.m4a",
+        "actionName": "walk",
+        "isPremium": true
+      },
+      {
+        "id": "yes",
+        "label": "Yes",
+        "thumbUrl": "assets/images/categories/basic/permium/yes.webp",
+        "audioUrl": "assets/audio/yes.m4a",
+        "actionName": "yes",
+        "isPremium": true
       }
     ]
   },

@@ -2,8 +2,8 @@ const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
 
-const inputDir = "src/assets/images/categories/animals/permium";
-const outputDir = "src/assets/images/categories/animals/permium";
+const inputDir = "src/assets/images/categories/basic/permium";
+const outputDir = "src/assets/images/categories/basic/permium";
 
 fs.readdir(inputDir, (err, files) => {
   if (err) {
@@ -24,8 +24,6 @@ fs.readdir(inputDir, (err, files) => {
         .toFile(outputFile)
         .then(() => {
           console.log(`Converted ${file} to WebP`);
-          // Optional: Delete original file
-          // fs.unlinkSync(inputFile);
         })
         .catch((err) => {
           console.error(`Error converting ${file}:`, err);
