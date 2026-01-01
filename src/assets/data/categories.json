@@ -85,7 +85,7 @@
     "thumbUrl": "../../assets/images/categories/basics.webp",
     "color": "",
 
-    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Extra.glb",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Basic.glb",
     "signs": [
       {
         "id": "bath",
@@ -308,7 +308,7 @@
         "label": "Autumn",
         "thumbUrl": "assets/images/categories/nature/autumn.webp",
         "audioUrl": "assets/audio/autumn.m4a",
-        "actionName": "Autumn"
+        "actionName": "autumn"
       },
       {
         "id": "beach",

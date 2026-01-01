@@ -673,6 +673,8 @@ ion-header {
     background-size: cover;
     width: 160px;
     height: 200px;
+    contain: layout style;
+    will-change: transform;
     // margin-right: 20px; // Swiper handles spacing via space-between if needed, or margin on slide
   }
 }

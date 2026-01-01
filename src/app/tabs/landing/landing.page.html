@@ -210,9 +210,9 @@
         <swiper-container #swiper effect="coverflow" grab-cursor="true" centered-slides="true"
           centered-slides-bounds="false" slides-per-view="auto" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
           coverflow-effect-depth="100" coverflow-effect-modifier="2.5" coverflow-effect-slide-shadows="false"
-          initial-slide="0">
+          initial-slide="0" observer="true" observe-parents="true">
 
-          @for(item of categoryItems; track $index) {
+          @for(item of categoryItems; track item.id) {
           <swiper-slide>
             <div class="item-card" [style.background-color]="selectedCategory.color || '#ffffff'"
               (click)="playSign(item, $index)" [class.premium-locked]="item.isPremium">
@@ -231,7 +231,7 @@
               </div>
               }
               <div class="item-image-container">
-                <img [src]="item.thumbUrl" [alt]="item.label">
+                <ion-img [src]="item.thumbUrl" [alt]="item.label"></ion-img>
               </div>
               <p class="item-name">{{item.label}}</p>
             </div>
