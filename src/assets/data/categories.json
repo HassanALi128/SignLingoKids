@@ -1068,6 +1068,94 @@
         "thumbUrl": "assets/images/categories/expression-and-color/angry.webp",
         "audioUrl": "assets/audio/angry.m4a",
         "actionName": "angry"
+      },
+      {
+        "id": "afraid",
+        "label": "Afraid",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/afraid.webp",
+        "audioUrl": "assets/audio/afraid.m4a",
+        "actionName": "afraid",
+        "isPremium": true
+      },
+      {
+        "id": "ashamed",
+        "label": "Ashamed",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/ashamed.webp",
+        "audioUrl": "assets/audio/ashamed.m4a",
+        "actionName": "ashamed",
+        "isPremium": true
+      },
+      {
+        "id": "blue",
+        "label": "Blue",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/blue.webp",
+        "audioUrl": "assets/audio/blue.m4a",
+        "actionName": "blue",
+        "isPremium": true
+      },
+      {
+        "id": "gray",
+        "label": "Gray",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/gray.webp",
+        "audioUrl": "assets/audio/gray.m4a",
+        "actionName": "gray",
+        "isPremium": true
+      },
+      {
+        "id": "green",
+        "label": "Green",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/green.webp",
+        "audioUrl": "assets/audio/green.m4a",
+        "actionName": "green",
+        "isPremium": true
+      },
+      {
+        "id": "nervous",
+        "label": "Nervous",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/nervous.webp",
+        "audioUrl": "assets/audio/nervous.m4a",
+        "actionName": "nervous",
+        "isPremium": true
+      },
+      {
+        "id": "orange",
+        "label": "Orange",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/orange.webp",
+        "audioUrl": "assets/audio/orange.m4a",
+        "actionName": "orange",
+        "isPremium": true
+      },
+      {
+        "id": "pink",
+        "label": "Pink",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/pink.webp",
+        "audioUrl": "assets/audio/pink.m4a",
+        "actionName": "pink",
+        "isPremium": true
+      },
+      {
+        "id": "purple",
+        "label": "Purple",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/purple.webp",
+        "audioUrl": "assets/audio/purple.m4a",
+        "actionName": "purple",
+        "isPremium": true
+      },
+      {
+        "id": "shy",
+        "label": "Shy",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/shy.webp",
+        "audioUrl": "assets/audio/shy.m4a",
+        "actionName": "shy",
+        "isPremium": true
+      },
+      {
+        "id": "sweet",
+        "label": "Sweet",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/sweet.webp",
+        "audioUrl": "assets/audio/sweet.m4a",
+        "actionName": "sweet",
+        "isPremium": true
       }
     ]
   },
