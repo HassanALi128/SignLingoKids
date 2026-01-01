@@ -176,8 +176,14 @@ export class LandingPage implements OnInit, OnDestroy {
 
   ionViewWillLeave() {
     this.stopAudio();
-    this.three.dispose();
+    this.three.pauseRendering();
     this.toggleTabBar(true);
+  }
+
+  ionViewDidEnter() {
+    if (this.selectedCategory) {
+      this.three.resumeRendering();
+    }
   }
 
   ngOnDestroy() {
@@ -231,7 +237,7 @@ export class LandingPage implements OnInit, OnDestroy {
       } else {
         // Fallback to default actions
         await this.three.loadActions(
-          'assets/aslkidanimation/actions/alsagirl_model_animation.glb'
+          'assets/aslkidanimation/actions/asl_new_Animation_Basic.glb'
         );
       }
 

@@ -37,6 +37,7 @@ import {
 } from 'src/app/services/quiz';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { Haptics, NotificationType } from '@capacitor/haptics';
+import confetti from 'canvas-confetti';
 
 interface QuizState {
   questions: QuizQuestion[];
@@ -118,6 +119,15 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     this.hideTabBar();
   }
 
+  ionViewWillLeave() {
+    this.threeRenderer.pauseRendering();
+    this.showTabBar();
+  }
+
+  ionViewDidEnter() {
+    this.threeRenderer.resumeRendering();
+  }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -173,7 +183,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
 
       // Load animations
       await this.threeRenderer.loadActions(
-        'assets/aslkidanimation/actions/alsagirl_model_animation.glb'
+        'assets/aslkidanimation/actions/asl_new_Animation_Basic.glb'
       );
 
       // Preload all question animations
@@ -336,19 +346,60 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     }
   }
 
-  private finishQuiz() {
+  private async finishQuiz() {
     const state = this.quizStateSubject.value;
+    const percentage = (state.score / state.questions.length) * 100;
+
     const result: QuizResult = {
       date: new Date().toISOString(),
       score: state.score,
       total: state.questions.length,
-      percentage: (state.score / state.questions.length) * 100,
+      percentage: percentage,
     };
 
     this.quizService.saveResult(result);
 
+    // 🎉 Celebration or Vibration based on score
+    if (percentage > 70) {
+      this.triggerConfetti();
+      await Haptics.notification({ type: NotificationType.Success });
+    } else {
+      await Haptics.vibrate({ duration: 500 }); // Long vibration for low score
+    }
+
     // Navigate back to quiz page to show results
     this.router.navigate(['/tabs/quiz']);
+  }
+
+  private triggerConfetti() {
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) => {
+      return Math.random() * (max - min) + min;
+    };
+
+    const interval: any = setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      // since particles fall down, start a bit higher than random
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 250);
   }
 
   goBack() {
