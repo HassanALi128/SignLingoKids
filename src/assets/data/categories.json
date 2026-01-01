@@ -1009,6 +1009,150 @@
         "thumbUrl": "assets/images/categories/family-and-food/sister.webp",
         "audioUrl": "assets/audio/sister.m4a",
         "actionName": "sister"
+      },
+      {
+        "id": "aunt",
+        "label": "Aunt",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/aunt.webp",
+        "audioUrl": "assets/audio/aunt.m4a",
+        "actionName": "aunt",
+        "isPremium": true
+      },
+      {
+        "id": "egg",
+        "label": "Egg",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/egg.webp",
+        "audioUrl": "assets/audio/egg.m4a",
+        "actionName": "egg",
+        "isPremium": true
+      },
+      {
+        "id": "food",
+        "label": "Food",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/food.webp",
+        "audioUrl": "assets/audio/food.m4a",
+        "actionName": "food",
+        "isPremium": true
+      },
+      {
+        "id": "fork",
+        "label": "Fork",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/fork.webp",
+        "audioUrl": "assets/audio/fork.m4a",
+        "actionName": "fork",
+        "isPremium": true
+      },
+      {
+        "id": "frenchfries",
+        "label": "French Fries",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/frenchfries.webp",
+        "audioUrl": "assets/audio/frenchfries.m4a",
+        "actionName": "frenchfries",
+        "isPremium": true
+      },
+      {
+        "id": "hamburger",
+        "label": "Hamburger",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/hamburger.webp",
+        "audioUrl": "assets/audio/hamburger.m4a",
+        "actionName": "hamburger",
+        "isPremium": true
+      },
+      {
+        "id": "hotdog",
+        "label": "Hot Dog",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/hotdog.webp",
+        "audioUrl": "assets/audio/hotdog.m4a",
+        "actionName": "hotdog",
+        "isPremium": true
+      },
+      {
+        "id": "icecream",
+        "label": "Ice Cream",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/icecream.webp",
+        "audioUrl": "assets/audio/icecream.m4a",
+        "actionName": "icecream",
+        "isPremium": true
+      },
+      {
+        "id": "knife",
+        "label": "Knife",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/knife.webp",
+        "audioUrl": "assets/audio/knife.m4a",
+        "actionName": "knife",
+        "isPremium": true
+      },
+      {
+        "id": "milk",
+        "label": "Milk",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/milk.webp",
+        "audioUrl": "assets/audio/milk.m4a",
+        "actionName": "milk",
+        "isPremium": true
+      },
+      {
+        "id": "pancake",
+        "label": "Pancake",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/pancake.webp",
+        "audioUrl": "assets/audio/pancake.m4a",
+        "actionName": "pancake",
+        "isPremium": true
+      },
+      {
+        "id": "pepper",
+        "label": "Pepper",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/pepper.webp",
+        "audioUrl": "assets/audio/pepper.m4a",
+        "actionName": "pepper",
+        "isPremium": true
+      },
+      {
+        "id": "salt",
+        "label": "Salt",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/salt.webp",
+        "audioUrl": "assets/audio/salt.m4a",
+        "actionName": "salt",
+        "isPremium": true
+      },
+      {
+        "id": "spoon",
+        "label": "Spoon",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/spoon.webp",
+        "audioUrl": "assets/audio/spoon.m4a",
+        "actionName": "spoon",
+        "isPremium": true
+      },
+      {
+        "id": "sugar",
+        "label": "Sugar",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/sugar.webp",
+        "audioUrl": "assets/audio/sugar.m4a",
+        "actionName": "sugar",
+        "isPremium": true
+      },
+      {
+        "id": "thirsty",
+        "label": "Thirsty",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/thirsty.webp",
+        "audioUrl": "assets/audio/thirsty.m4a",
+        "actionName": "thirsty",
+        "isPremium": true
+      },
+      {
+        "id": "uncle",
+        "label": "Uncle",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/uncle.webp",
+        "audioUrl": "assets/audio/uncle.m4a",
+        "actionName": "uncle",
+        "isPremium": true
+      },
+      {
+        "id": "water",
+        "label": "Water",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/water.webp",
+        "audioUrl": "assets/audio/water.m4a",
+        "actionName": "water",
+        "isPremium": true
       }
     ]
   },
