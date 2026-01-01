@@ -320,10 +320,8 @@ export class LandingPage implements OnInit, OnDestroy {
     // Play Audio
     if (item.audioUrl) {
       this.playAudio(item.audioUrl);
-    } else if (this.categoryItems.length > 0) {
-      // If no current sign is selected, play the first one
-      const firstItem = this.categoryItems[0];
-      this.playSign(firstItem, 0);
+    } else {
+      console.log('No audio available for:', item.label);
     }
   }
 
