@@ -7,7 +7,12 @@ import {
   ElementRef,
   CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
-import { IonicModule, NavController, ToastController } from '@ionic/angular';
+import {
+  IonicModule,
+  NavController,
+  ToastController,
+  ModalController,
+} from '@ionic/angular';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
 import { Subscription } from 'rxjs';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
@@ -31,6 +36,7 @@ import { QuizService } from 'src/app/services/quiz';
 import { register } from 'swiper/element/bundle';
 import { CommonService } from 'src/app/core/services/common';
 import { ProfileService } from 'src/app/services/profile.service';
+import { SubscriptionModalComponent } from 'src/app/components/subscription-modal/subscription-modal.component';
 
 register();
 
@@ -102,7 +108,8 @@ export class LandingPage implements OnInit, OnDestroy {
     private toastController: ToastController,
     private commonService: CommonService,
     private quizService: QuizService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private modalController: ModalController
   ) {
     addIcons({
       arrowBack,
@@ -293,7 +300,7 @@ export class LandingPage implements OnInit, OnDestroy {
 
   async playSign(item: AslSign, index: number = -1): Promise<void> {
     if (item.isPremium && !this.quizService.isPremium()) {
-      this.showPremiumAlert('Item');
+      this.openSubscriptionModal();
       return;
     }
     console.log('Playing sign:', item);
@@ -322,6 +329,23 @@ export class LandingPage implements OnInit, OnDestroy {
       this.playAudio(item.audioUrl);
     } else {
       console.log('No audio available for:', item.label);
+    }
+  }
+
+  async openSubscriptionModal() {
+    const modal = await this.modalController.create({
+      component: SubscriptionModalComponent,
+      breakpoints: [0, 1],
+      initialBreakpoint: 1,
+      cssClass: 'subscription-modal-sheet',
+    });
+
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'unlock') {
+      this.goToPremium();
     }
   }
 
@@ -481,28 +505,8 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   async showPremiumAlert(type: string) {
-    const alert = await this.toastController.create({
-      header: 'Premium Required',
-      message: `This ${type} is only available for Premium users. Upgrade now to unlock all features!`,
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Upgrade Now',
-          handler: () => {
-            this.goToPremium();
-          },
-        },
-      ],
-    } as any);
-    // Using toast instead of alert for simplicity if alertCtrl not injected,
-    // but user requested premium feild so I should use AlertController if possible.
-    // Wait, I see AlertController is not injected in LandingPage.
-    // I will use a simple toast or inject AlertController.
-    // Actually, I'll use a toast for now as it's less intrusive.
-    this.showToast(`Premium Required: This ${type} is locked.`);
+    // Deprecated in favor of openSubscriptionModal
+    this.openSubscriptionModal();
   }
 
   playSound() {
