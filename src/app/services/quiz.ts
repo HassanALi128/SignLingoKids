@@ -31,7 +31,7 @@ export interface QuizResult {
 @Injectable({ providedIn: 'root' })
 export class QuizService {
   private resultsKey = 'quiz_results';
-  private readonly PROGRESS_THRESHOLD = 25; // 25% learning progress required
+  private readonly PROGRESS_THRESHOLD = 15; // 25% learning progress required
 
   private premiumSubject = new BehaviorSubject<boolean>(false);
   public isPremium$ = this.premiumSubject.asObservable();
