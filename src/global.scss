@@ -88,3 +88,74 @@ ion-toolbar {
 //     --ion-safe-area-bottom: env(safe-area-inset-bottom);
 //     z-index: 10;
 // }
+
+/* Modern Alert Styles */
+.modern-alert {
+    --backdrop-opacity: 0.6;
+    --background: rgba(255, 255, 255, 0.95);
+
+    .alert-wrapper {
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        max-width: 320px;
+    }
+
+    .alert-head {
+        padding-top: 24px;
+        padding-bottom: 12px;
+
+        h2 {
+            font-family: var(--ion-font-family);
+            font-weight: 700;
+            font-size: 22px;
+            color: #333;
+            text-align: center;
+        }
+    }
+
+    .alert-message {
+        font-family: var(--ion-font-family);
+        font-size: 16px;
+        color: #666;
+        text-align: center;
+        padding-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .alert-button-group {
+        padding: 0 16px 16px;
+        gap: 12px;
+        display: flex;
+
+        // flex-direction: column-reverse;
+        .alert-button {
+            border-radius: 16px;
+            height: 48px;
+            margin: 0 !important;
+            font-weight: 600;
+            font-size: 16px;
+            text-transform: none;
+
+            &.alert-button-cancel {
+                background: #22c55e; // Green
+                color: white;
+                --background: #22c55e;
+
+                .alert-button-inner {
+                    color: white;
+                }
+            }
+
+            &.alert-button-confirm {
+                background: #f3f4f6; // Light Gray
+                color: #ef4444; // Red text
+                --background: #f3f4f6;
+
+                .alert-button-inner {
+                    color: #ef4444;
+                }
+            }
+        }
+    }
+}

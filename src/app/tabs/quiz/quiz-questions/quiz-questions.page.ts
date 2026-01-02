@@ -17,6 +17,8 @@ import {
   IonSpinner,
   NavController,
   IonPopover,
+  AlertController,
+  Platform,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -104,7 +106,9 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     private threeRenderer: ThreeRenderer,
     private router: Router,
     private navController: NavController,
-    private monetizationService: MonetizationService
+    private monetizationService: MonetizationService,
+    private alertController: AlertController,
+    private platform: Platform
   ) {
     addIcons({
       arrowBack,
@@ -124,10 +128,16 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
   ionViewWillLeave() {
     this.threeRenderer.pauseRendering();
     this.showTabBar();
+    // Unregister back button action if needed (Ionic handles this stack usually, but good to be safe)
   }
 
   ionViewDidEnter() {
     this.threeRenderer.resumeRendering();
+
+    // Handle Hardware Back Button
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.confirmQuit();
+    });
   }
 
   ngOnDestroy() {
@@ -406,7 +416,35 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.navController.back();
+    this.confirmQuit();
+  }
+
+  async confirmQuit() {
+    const alert = await this.alertController.create({
+      header: 'Quit Quiz? 😢',
+      message: "Are you sure you want to give up? You're doing great!",
+      cssClass: 'modern-alert',
+      buttons: [
+        {
+          text: 'Quit',
+          role: 'confirm',
+          cssClass: 'alert-button-confirm',
+          handler: () => {
+            this.navController.back();
+          },
+        },
+        {
+          text: 'Keep Playing',
+          role: 'cancel',
+          cssClass: 'alert-button-cancel',
+          handler: () => {
+            // Do nothing, stay in quiz
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   showHelp() {
