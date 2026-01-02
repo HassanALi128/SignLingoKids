@@ -3,6 +3,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { checkmark, close, chevronForward } from 'ionicons/icons';
+import { MonetizationService } from '../../services/monetization.service';
 
 @Component({
   selector: 'app-subscription-modal',
@@ -14,7 +15,10 @@ import { checkmark, close, chevronForward } from 'ionicons/icons';
 export class SubscriptionModalComponent implements OnInit {
   selectedPlan: 'week' | 'year' = 'year';
 
-  constructor(private modalController: ModalController) {
+  constructor(
+    private modalController: ModalController,
+    private monetizationService: MonetizationService
+  ) {
     addIcons({ checkmark, close, chevronForward });
   }
 
@@ -28,10 +32,28 @@ export class SubscriptionModalComponent implements OnInit {
     this.selectedPlan = plan;
   }
 
-  unlockAccess() {
-    this.modalController.dismiss({
-      role: 'unlock',
-      plan: this.selectedPlan,
-    });
+  async unlockAccess() {
+    const offerings = this.monetizationService.offerings;
+    if (!offerings || !offerings.current) {
+      console.error('No offerings available');
+      return;
+    }
+
+    const pkg =
+      this.selectedPlan === 'year'
+        ? offerings.current.annual
+        : offerings.current.weekly;
+
+    if (pkg) {
+      const success = await this.monetizationService.purchasePackage(pkg);
+      if (success) {
+        this.modalController.dismiss({
+          role: 'unlock',
+          plan: this.selectedPlan,
+        });
+      }
+    } else {
+      console.warn('Package not found for plan:', this.selectedPlan);
+    }
   }
 }

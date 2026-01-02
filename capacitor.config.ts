@@ -2,23 +2,22 @@ import type { CapacitorConfig } from '@capacitor/cli';
 import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'SignLingoKids',
+  appId: 'com.handhero.asl',
+  appName: 'Hand Hero 3D ASL',
   webDir: 'www',
   plugins: {
     SplashScreen: {
       launchShowDuration: 3000,
       launchAutoHide: true,
-      backgroundColor: "#ffffffff",
-      androidSplashResourceName: "splash",
-      androidScaleType: "CENTER_CROP",
+      backgroundColor: '#ffffffff',
+      androidSplashResourceName: 'splash',
+      androidScaleType: 'CENTER_CROP',
       showSpinner: true,
-      androidSpinnerStyle: "large",
-      iosSpinnerStyle: "small",
-      spinnerColor: "#999999",
+      androidSpinnerStyle: 'large',
+      iosSpinnerStyle: 'small',
+      spinnerColor: '#999999',
       splashFullScreen: true,
       splashImmersive: true,
-
     },
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
@@ -36,7 +35,7 @@ const config: CapacitorConfig = {
       style: 'DARK',
       backgroundColor: '#ffffffff',
     },
-  }
-}
+  },
+};
 
 export default config;

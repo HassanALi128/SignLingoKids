@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { MonetizationService } from './services/monetization.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
   constructor(
     private platform: Platform,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private monetizationService: MonetizationService
   ) {
     this.initializeApp();
   }
@@ -27,6 +29,7 @@ export class AppComponent implements OnInit {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.monetizationService.init();
       this.handleNavigation();
       this.handleBackButton();
       SplashScreen.hide();

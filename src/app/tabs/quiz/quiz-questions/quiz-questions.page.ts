@@ -38,6 +38,7 @@ import {
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { Haptics, NotificationType } from '@capacitor/haptics';
 import confetti from 'canvas-confetti';
+import { MonetizationService } from 'src/app/services/monetization.service';
 
 interface QuizState {
   questions: QuizQuestion[];
@@ -102,7 +103,8 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     private quizService: QuizService,
     private threeRenderer: ThreeRenderer,
     private router: Router,
-    private navController: NavController
+    private navController: NavController,
+    private monetizationService: MonetizationService
   ) {
     addIcons({
       arrowBack,
@@ -368,6 +370,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     }
 
     // Navigate back to quiz page to show results
+    await this.monetizationService.showInterstitial();
     this.router.navigate(['/tabs/quiz']);
   }
 

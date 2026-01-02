@@ -140,7 +140,7 @@ export class SettingsPage implements OnInit {
   async openPrivacyPolicy() {
     this.commonService.alertMessage(
       'Privacy Policy',
-      'Visit www.signlingokids.com/privacy'
+      'Visit www.handhero3d.com/privacy'
     );
   }
 

@@ -62,7 +62,7 @@ export class ThreeRenderer implements OnDestroy {
     this.renderer.setSize(width, height, false);
 
     // 🚀 Mobile-specific optimizations (Always applied)
-    const pixelRatio = Math.min(window.devicePixelRatio, 1.5); // Cap at 1.5
+    const pixelRatio = Math.min(window.devicePixelRatio, 1.2); // Cap at 1.2 for better performance
 
     this.renderer.setPixelRatio(pixelRatio);
     console.log('🎨 Pixel ratio set to:', pixelRatio);
@@ -369,9 +369,9 @@ export class ThreeRenderer implements OnDestroy {
     this.mixer = undefined;
     this.activeAction = undefined;
 
-    // Clear caches
-    this.globalActions.clear();
-    this.loadedFiles.clear();
+    // NOTE: We DO NOT clear globalActions or loadedFiles to persist cache across navigations!
+    // this.globalActions.clear();
+    // this.loadedFiles.clear();
 
     // Dispose Controls
     this.controls?.dispose();

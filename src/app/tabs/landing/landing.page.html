@@ -2,7 +2,9 @@
   <ion-toolbar>
     <div class="header-content">
       <div class="greeting">
-        <h2>Hi <span class="user-name">{{userName}}</span>, Ready to Learn Today?</h2>
+        <h2>
+          Hi <span class="user-name">{{userName}}</span>, Ready to Learn Today?
+        </h2>
         <p>Let's Start Learning!</p>
       </div>
       @if(userAvatar){
@@ -24,34 +26,35 @@
     <div class="premium-content">
       <div class="premium-text">
         <h3>{{ isPremium ? 'Premium Active' : 'Buy Premium' }}</h3>
-        <p>{{ isPremium ? 'Now you can learn more!' : 'Unlock all features' }}</p>
+        <p>
+          {{ isPremium ? 'Now you can learn more!' : 'Unlock all features' }}
+        </p>
         @if(!isPremium){
-        <ion-button class="premium-btn" expand="block">
-          Buy Now
-        </ion-button>
+        <ion-button class="premium-btn" expand="block"> Buy Now </ion-button>
         }
       </div>
       <div class="premium-characters">
-        <ion-img src="assets/landing/landing.png" alt="Characters" class="characters-img"></ion-img>
+        <ion-img
+          src="assets/landing/landing.png"
+          alt="Characters"
+          class="characters-img"
+        ></ion-img>
       </div>
     </div>
-
   </div>
 
   <!-- Categories Section -->
   <div class="section-header">
-    <h3>Category</h3>
+    <h3>Categories</h3>
   </div>
   <div class="categories-scroll">
     <div class="categories-container">
       @for(category of categories; track $index){
       <div class="category-item" (click)="selectCategory(category)">
         <div class="category-circle">
-          <img [src]="category.thumbUrl" [alt]="category.label">
+          <img [src]="category.thumbUrl" [alt]="category.label" />
         </div>
-        <p class="category-label">
-          {{category.label}}
-        </p>
+        <p class="category-label">{{category.label}}</p>
       </div>
       }
     </div>
@@ -59,25 +62,26 @@
 
   <!-- Favourite Section -->
   <div class="section-header">
-    <h3>Favourite</h3>
+    <h3>Favorites</h3>
     <a class="see-all">See All</a>
   </div>
   @if(featuredItems.length === 0){
-  <div class="empty-message">
-    Your Favourite Will Show There.
-  </div>
-  }
-  @if(featuredItems.length > 0){
+  <div class="empty-message">Your Favorites will appear here.</div>
+  } @if(featuredItems.length > 0){
   <div class="featured-grid">
     @for(item of featuredItems; track $index){
     <div class="featured-card" (click)="openFeatured(item)">
       <div class="card-container" [style.background-color]="item.bgColor">
-        <ion-icon [name]="item.isFavorite ? 'heart' : 'heart-outline'" class="favorite-icon"
-          [class.active]="item.isFavorite" (click)="toggleFavorite(item, $event)">
+        <ion-icon
+          [name]="item.isFavorite ? 'heart' : 'heart-outline'"
+          class="favorite-icon"
+          [class.active]="item.isFavorite"
+          (click)="toggleFavorite(item, $event)"
+        >
         </ion-icon>
 
         <div class="featured-image">
-          <img [src]="item.image" [alt]="item.name">
+          <img [src]="item.image" [alt]="item.name" />
         </div>
       </div>
 
@@ -86,7 +90,6 @@
     }
   </div>
   }
-
 
   <!-- Recent Learning Section -->
   @if(recentLearningList.length > 0) {
@@ -98,7 +101,7 @@
     <div class="recent-learning-card" (click)="selectCategory(item.category)">
       <div class="recent-learning-content">
         <div class="recent-learning-icon">
-          <img [src]="item.category.thumbUrl" [alt]="item.category.label">
+          <img [src]="item.category.thumbUrl" [alt]="item.category.label" />
         </div>
         <div class="recent-learning-info">
           <h4>{{item.category.label}}</h4>
@@ -107,11 +110,26 @@
       </div>
       <div class="recent-learning-progress">
         <svg class="progress-ring" width="60" height="60">
-          <circle class="progress-ring-circle-bg" stroke="#E8E8E8" stroke-width="6" fill="transparent" r="24" cx="30"
-            cy="30" />
-          <circle class="progress-ring-circle" [attr.stroke]="item.category.color || '#FF6B6B'" stroke-width="6"
-            fill="transparent" r="24" cx="30" cy="30" [style.stroke-dasharray]="progressCircumference"
-            [style.stroke-dashoffset]="progressCircumference - (item.progress / 100) * progressCircumference" />
+          <circle
+            class="progress-ring-circle-bg"
+            stroke="#E8E8E8"
+            stroke-width="6"
+            fill="transparent"
+            r="24"
+            cx="30"
+            cy="30"
+          />
+          <circle
+            class="progress-ring-circle"
+            [attr.stroke]="item.category.color || '#FF6B6B'"
+            stroke-width="6"
+            fill="transparent"
+            r="24"
+            cx="30"
+            cy="30"
+            [style.stroke-dasharray]="progressCircumference"
+            [style.stroke-dashoffset]="progressCircumference - (item.progress / 100) * progressCircumference"
+          />
         </svg>
         <span class="progress-text">{{item.progress}}%</span>
       </div>
@@ -161,14 +179,16 @@
     </div>
     }
 
-    <div class="detail-content" [style.visibility]="isLoading3D ? 'hidden' : 'visible'">
+    <div
+      class="detail-content"
+      [style.visibility]="isLoading3D ? 'hidden' : 'visible'"
+    >
       <div class="character-container">
         <!-- 3D Character Canvas -->
         <canvas #canvas class="character-3d-canvas"></canvas>
       </div>
 
       <div class="action-buttons" [class.lowered]="isFullscreen">
-
         <div class="action-btn-wrapper">
           <button class="action-btn expand" (click)="toggleFullscreen()">
             <ion-icon name="resize"></ion-icon>
@@ -197,7 +217,11 @@
       <div class="sheet-header">
         <div class="sheet-actions">
           <div class="detail-header">
-            <ion-button fill="clear" (click)="closeCategoryDetail()" class="back-btn">
+            <ion-button
+              fill="clear"
+              (click)="closeCategoryDetail()"
+              class="back-btn"
+            >
               <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
               <span class="back-text">back</span>
             </ion-button>
@@ -207,25 +231,44 @@
       </div>
 
       <div class="swiper-wrapper">
-        <swiper-container #swiper effect="coverflow" grab-cursor="true" centered-slides="true"
-          centered-slides-bounds="false" slides-per-view="auto" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
-          coverflow-effect-depth="100" coverflow-effect-modifier="2.5" coverflow-effect-slide-shadows="false"
-          initial-slide="0" observer="true" observe-parents="true">
-
+        <swiper-container
+          #swiper
+          effect="coverflow"
+          grab-cursor="true"
+          centered-slides="true"
+          centered-slides-bounds="false"
+          slides-per-view="auto"
+          coverflow-effect-rotate="0"
+          coverflow-effect-stretch="0"
+          coverflow-effect-depth="100"
+          coverflow-effect-modifier="2.5"
+          coverflow-effect-slide-shadows="false"
+          initial-slide="0"
+          observer="true"
+          observe-parents="true"
+        >
           @for(item of categoryItems; track item.id) {
           <swiper-slide>
-            <div class="item-card" [style.background-color]="selectedCategory.color || '#ffffff'"
-              (click)="playSign(item, $index)" [class.premium-locked]="item.isPremium">
-              <div class="item-favorite-wrapper" (click)="toggleItemFavorite(item, $event)">
-                <ion-icon [name]="isItemFavorite(item) ? 'heart' : 'heart-outline'"
-                  [class.active]="isItemFavorite(item)"></ion-icon>
+            <div
+              class="item-card"
+              [style.background-color]="selectedCategory.color || '#ffffff'"
+              (click)="playSign(item, $index)"
+              [class.premium-locked]="item.isPremium"
+            >
+              <div
+                class="item-favorite-wrapper"
+                (click)="toggleItemFavorite(item, $event)"
+              >
+                <ion-icon
+                  [name]="isItemFavorite(item) ? 'heart' : 'heart-outline'"
+                  [class.active]="isItemFavorite(item)"
+                ></ion-icon>
               </div>
               @if(item.isPremium && !isPremium){
               <div class="premium-lock-badge">
                 <ion-icon name="lock-closed"></ion-icon>
               </div>
-              }
-              @if(isItemLearned(item)) {
+              } @if(isItemLearned(item)) {
               <div class="item-learned-badge">
                 <ion-icon name="star"></ion-icon>
               </div>
@@ -242,5 +285,4 @@
     </div>
   </div>
   }
-
 </ion-content>
