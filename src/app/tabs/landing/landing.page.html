@@ -90,7 +90,7 @@
   </div>
   <div class="recent-learning-container">
     @for(item of recentLearningList; track item.category.id) {
-    <div class="recent-learning-card" (click)="selectCategory(item.category)">
+    <div class="recent-learning-card" (click)="selectCategory(item.category, true)">
       <div class="recent-learning-content">
         <div class="recent-learning-icon">
           <img [src]="item.category.thumbUrl" [alt]="item.category.label" />

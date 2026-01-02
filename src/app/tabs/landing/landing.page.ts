@@ -205,7 +205,10 @@ export class LandingPage implements OnInit, OnDestroy {
     this.navController.navigateForward('/tabs/premium');
   }
 
-  async selectCategory(category: Category): Promise<void> {
+  async selectCategory(
+    category: Category,
+    resume: boolean = false
+  ): Promise<void> {
     this.isLoading3D = true;
     this.selectedCategory = category;
     this.categoryItems = category.signs || [];
@@ -217,9 +220,41 @@ export class LandingPage implements OnInit, OnDestroy {
     // Give time for the view to render the canvas
     setTimeout(async () => {
       await this.init3DModel(category);
-      // Initialize currentSign to the first item
+
+      let initialIndex = 0;
+      if (resume) {
+        // Find the LAST item that was marked as learned
+        // We iterate backwards or use lastIndexOf logic
+        // Since isItemLearned checks a service, we map first
+        const learnedStatuses = this.categoryItems.map((item) =>
+          this.isItemLearned(item)
+        );
+        const lastLearnedIndex = learnedStatuses.lastIndexOf(true);
+
+        if (lastLearnedIndex !== -1) {
+          initialIndex = lastLearnedIndex;
+        } else {
+          // If nothing is learned yet, start at 0
+          initialIndex = 0;
+        }
+        console.log(
+          'Resuming learning at last learned item index:',
+          initialIndex
+        );
+      }
+
+      // Initialize currentSign
       if (this.categoryItems.length > 0) {
-        this.currentSign = this.categoryItems[0];
+        this.currentSign = this.categoryItems[initialIndex];
+      }
+
+      // Slide to the calculated index
+      if (initialIndex > 0 && this.swiperRef && this.swiperRef.nativeElement) {
+        const swiperEl = this.swiperRef.nativeElement;
+        if (swiperEl.swiper) {
+          // Use 0ms duration for instant jump if resuming, or small animation
+          swiperEl.swiper.slideTo(initialIndex, 500, true);
+        }
       }
     }, 100);
   }
