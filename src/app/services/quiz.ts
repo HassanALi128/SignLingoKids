@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from './data';
-import { Observable, BehaviorSubject, from } from 'rxjs';
+import { LearningService } from './learning.service';
+import { Observable, BehaviorSubject, from, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface QuizOption {
   id: string;
@@ -29,6 +31,8 @@ export interface QuizResult {
 @Injectable({ providedIn: 'root' })
 export class QuizService {
   private resultsKey = 'quiz_results';
+  private readonly PROGRESS_THRESHOLD = 25; // 25% learning progress required
+
   private premiumSubject = new BehaviorSubject<boolean>(false);
   public isPremium$ = this.premiumSubject.asObservable();
 
@@ -36,9 +40,48 @@ export class QuizService {
   private resultsSubject = new BehaviorSubject<QuizResult[]>([]);
   public results$ = this.resultsSubject.asObservable();
 
-  constructor(private http: HttpClient, private dataService: DataService) {
+  // Quiz unlock state: combines progress and first quiz check
+  public canStartQuiz$: Observable<boolean> = combineLatest([
+    this.premiumSubject,
+    this.resultsSubject,
+    this.learningService.overallProgress$,
+  ]).pipe(
+    map(([isPremium, results, progress]) => {
+      // Premium users always have access
+      if (isPremium) return true;
+
+      // First quiz is always unlocked
+      if (results.length === 0) return true;
+
+      // After first quiz, check progress threshold
+      return progress >= this.PROGRESS_THRESHOLD;
+    })
+  );
+
+  // Combined unlock state with progress info for UI
+  public quizUnlockState$: Observable<{
+    canStart: boolean;
+    progress: number;
+    message: string;
+  }> = combineLatest([
+    this.canStartQuiz$,
+    this.learningService.overallProgress$,
+  ]).pipe(
+    map(([canStart, progress]) => ({
+      canStart,
+      progress,
+      message: this.getQuizLockMessage(canStart, progress),
+    }))
+  );
+
+  constructor(
+    private http: HttpClient,
+    private dataService: DataService,
+    private learningService: LearningService
+  ) {
     this.checkInitialPremiumStatus();
     this.loadInitialResults();
+    this.initializeTotalItemsCount();
   }
 
   private checkInitialPremiumStatus() {
@@ -166,5 +209,58 @@ export class QuizService {
       return userData.isPremium === true;
     }
     return false;
+  }
+
+  // Initialize total items count for progress calculation (non-premium items only)
+  private async initializeTotalItemsCount() {
+    try {
+      const categories = await this.dataService.loadCategories();
+      let totalItems = 0;
+
+      categories.forEach((cat: any) => {
+        if (cat.signs && Array.isArray(cat.signs)) {
+          // Only count non-premium items for progress calculation
+          const nonPremiumSigns = cat.signs.filter(
+            (sign: any) => !sign.isPremium
+          );
+          totalItems += nonPremiumSigns.length;
+        }
+      });
+
+      this.learningService.setTotalItemsCount(totalItems);
+    } catch (error) {
+      console.error('Error initializing total items count:', error);
+    }
+  }
+
+  // Check if user has completed their first quiz
+  hasCompletedFirstQuiz(): boolean {
+    return this.resultsSubject.value.length > 0;
+  }
+
+  // Get user-friendly lock message
+  private getQuizLockMessage(canStart: boolean, progress: number): string {
+    if (canStart) {
+      return 'Ready to test your knowledge!';
+    }
+
+    const remaining = this.PROGRESS_THRESHOLD - progress;
+    if (remaining <= 5) {
+      return `Almost there! Learn a few more signs to unlock! 🌟`;
+    }
+
+    return `🔒 Learn some signs to unlock the quiz!`;
+  }
+
+  // Get current quiz accessibility (synchronous check)
+  canStartQuizNow(): boolean {
+    const isPremium = this.premiumSubject.value;
+    if (isPremium) return true;
+
+    const hasQuizResults = this.resultsSubject.value.length > 0;
+    if (!hasQuizResults) return true; // First quiz is free
+
+    const progress = this.learningService.getOverallProgress();
+    return progress >= this.PROGRESS_THRESHOLD;
   }
 }

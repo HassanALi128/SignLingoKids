@@ -19,15 +19,49 @@
 </ion-header>
 
 <ion-content class="quiz-content">
+    <!-- Lock Message and Progress (Outside Banner) -->
+    @if((quizUnlockState$ | async); as unlockState) {
+    @if(!unlockState.canStart) {
+    <div class="lock-section">
+        <div class="lock-message">
+            <ion-icon name="lock-closed-outline" class="lock-icon"></ion-icon>
+            <p class="lock-text">{{ unlockState.message }}</p>
+        </div>
+
+        <!-- Progress indicator -->
+        <div class="progress-container">
+            <div class="progress-info">
+                <span class="progress-label">Learning Progress</span>
+                <span class="progress-value">{{ unlockState.progress }}%</span>
+            </div>
+            <ion-progress-bar [value]="unlockState.progress / 100" class="learning-progress-bar"></ion-progress-bar>
+            <p class="progress-hint">Reach 25% to unlock! 🎯</p>
+        </div>
+    </div>
+    }
+    }
+
     <!-- Start Your Quiz Banner -->
     <div class="quiz-banner">
         <div class="banner-content">
             <div class="banner-text">
                 <h3>Start Your Quiz!</h3>
-                <p>Take a fun quiz and check your progress!</p>
-                <ion-button class="start-quiz-btn" expand="block" (click)="startQuiz()">
+
+                @if((quizUnlockState$ | async); as unlockState) {
+                @if(unlockState.canStart) {
+                <p>{{ unlockState.message }}</p>
+                }
+
+                <ion-button class="start-quiz-btn" expand="block" (click)="startQuiz()"
+                    [disabled]="!unlockState.canStart">
+                    @if(unlockState.canStart) {
                     Start Quiz
+                    } @else {
+                    <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                    Locked
+                    }
                 </ion-button>
+                }
             </div>
             <div class="banner-characters">
                 <img src="assets/landing/landing.png" alt="Characters" class="characters-img">

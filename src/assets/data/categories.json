@@ -1316,8 +1316,7 @@
         "label": "Cloud",
         "thumbUrl": "assets/images/categories/nature/cloud.webp",
         "audioUrl": "assets/audio/cloud.m4a",
-        "actionName": "cloud",
-        "isPremium": true
+        "actionName": "cloud"
       },
 
       {
@@ -1528,8 +1527,7 @@
         "label": "Ball",
         "thumbUrl": "assets/images/categories/playtime/football.webp",
         "audioUrl": "assets/audio/ball.m4a",
-        "actionName": "ball",
-        "isPremium": true
+        "actionName": "ball"
       },
       {
         "id": "balloon",

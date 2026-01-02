@@ -8,9 +8,10 @@ import {
   IonButton,
   IonIcon,
   IonImg,
+  IonProgressBar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { personCircleOutline } from 'ionicons/icons';
+import { personCircleOutline, lockClosedOutline } from 'ionicons/icons';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QuizService, QuizResult } from '../../services/quiz';
@@ -42,6 +43,7 @@ interface ResultDisplay extends QuizResult {
     IonButton,
     IonIcon,
     IonImg,
+    IonProgressBar,
   ],
 })
 export class QuizPage implements OnInit, OnDestroy {
@@ -60,12 +62,19 @@ export class QuizPage implements OnInit, OnDestroy {
     this.recentResultsSubject.asObservable();
   isPremium$: Observable<boolean> = this.isPremiumSubject.asObservable();
 
+  // Quiz unlock state observables
+  quizUnlockState$: Observable<{
+    canStart: boolean;
+    progress: number;
+    message: string;
+  }> = this.quizService.quizUnlockState$;
+
   constructor(
     private quizService: QuizService,
     private router: Router,
     private profileService: ProfileService
   ) {
-    addIcons({ personCircleOutline });
+    addIcons({ personCircleOutline, lockClosedOutline });
   }
 
   ngOnInit() {
@@ -146,6 +155,12 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   startQuiz() {
+    // Check if quiz is accessible (soft-lock check)
+    if (!this.quizService.canStartQuizNow()) {
+      // Quiz is locked, do nothing (UI already shows lock state)
+      return;
+    }
+
     // Check if user has reached attempt limit (non-premium users)
     const isPremium = this.isPremiumSubject.value;
     const attempts = this.quizService.getAttempts();
