@@ -106,6 +106,20 @@ export class LearningService {
     }
   }
 
+  unlearn(itemId: string) {
+    const current = this.progressSubject.value;
+    const learnedIds = new Set(current.learnedItemIds);
+
+    if (learnedIds.has(itemId)) {
+      learnedIds.delete(itemId);
+      this.saveProgress({
+        ...current,
+        learnedItemIds: Array.from(learnedIds),
+        lastAccessed: Date.now(),
+      });
+    }
+  }
+
   isLearned(itemId: string): boolean {
     return this.progressSubject.value.learnedItemIds.includes(itemId);
   }

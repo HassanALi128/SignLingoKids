@@ -180,7 +180,8 @@
           </button>
         </div> -->
         <div class="action-btn-wrapper">
-          <button class="action-btn hat" (click)="markAsLearned()">
+          <button class="action-btn hat" (click)="markAsLearned()"
+            [class.active-learned]="currentSign && isItemLearned(currentSign)">
             <ion-icon name="school"></ion-icon>
           </button>
         </div>

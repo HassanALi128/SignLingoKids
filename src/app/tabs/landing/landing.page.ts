@@ -12,6 +12,7 @@ import {
   NavController,
   ToastController,
   ModalController,
+  AlertController,
 } from '@ionic/angular';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
 import { Subscription } from 'rxjs';
@@ -109,7 +110,8 @@ export class LandingPage implements OnInit, OnDestroy {
     private commonService: CommonService,
     private quizService: QuizService,
     private profileService: ProfileService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private alertController: AlertController
   ) {
     addIcons({
       arrowBack,
@@ -390,15 +392,43 @@ export class LandingPage implements OnInit, OnDestroy {
     }
   }
 
-  markAsLearned() {
+  async markAsLearned() {
     if (this.currentSign && this.selectedCategory) {
       const signId = this.currentSign.id;
       const categoryId = this.selectedCategory.id;
 
-      this.learningService.markAsLearned(signId, categoryId);
-      this.loadRecentLearning();
-      this.updateCertificateProgress();
-      console.log('Marked as learned:', this.currentSign.label);
+      if (this.learningService.isLearned(signId)) {
+        // Already learned, ask to unlearn
+        const alert = await this.alertController.create({
+          header: 'Unlearn Item?',
+          message: 'Do you want to unlearn this item?',
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              cssClass: 'secondary',
+            },
+            {
+              text: 'Unlearn',
+              handler: () => {
+                this.learningService.unlearn(signId);
+                this.loadRecentLearning();
+                this.updateCertificateProgress();
+                this.showToast('Item unlearned');
+              },
+            },
+          ],
+        });
+
+        await alert.present();
+      } else {
+        // Not learned, mark as learned
+        this.learningService.markAsLearned(signId, categoryId);
+        this.loadRecentLearning();
+        this.updateCertificateProgress();
+        console.log('Marked as learned:', this.currentSign.label);
+        this.showToast('Great job! Item learned!');
+      }
     }
   }
 

@@ -611,8 +611,14 @@ ion-header {
   }
 
   &.hat {
-    background: #A0522D; // Sienna
+    background: #e0f2fe;
+    color: #0ea5e9;
     box-shadow: 0 6px 0 #8B4513; // SaddleBrown
+
+    &.active-learned {
+      background: #22c55e;
+      color: white;
+    }
   }
 }
 
