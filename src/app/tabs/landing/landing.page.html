@@ -34,11 +34,7 @@
         }
       </div>
       <div class="premium-characters">
-        <ion-img
-          src="assets/landing/landing.png"
-          alt="Characters"
-          class="characters-img"
-        ></ion-img>
+        <ion-img src="assets/landing/landing.png" alt="Characters" class="characters-img"></ion-img>
       </div>
     </div>
   </div>
@@ -72,12 +68,8 @@
     @for(item of featuredItems; track $index){
     <div class="featured-card" (click)="openFeatured(item)">
       <div class="card-container" [style.background-color]="item.bgColor">
-        <ion-icon
-          [name]="item.isFavorite ? 'heart' : 'heart-outline'"
-          class="favorite-icon"
-          [class.active]="item.isFavorite"
-          (click)="toggleFavorite(item, $event)"
-        >
+        <ion-icon [name]="item.isFavorite ? 'heart' : 'heart-outline'" class="favorite-icon"
+          [class.active]="item.isFavorite" (click)="toggleFavorite(item, $event)">
         </ion-icon>
 
         <div class="featured-image">
@@ -110,26 +102,11 @@
       </div>
       <div class="recent-learning-progress">
         <svg class="progress-ring" width="60" height="60">
-          <circle
-            class="progress-ring-circle-bg"
-            stroke="#E8E8E8"
-            stroke-width="6"
-            fill="transparent"
-            r="24"
-            cx="30"
-            cy="30"
-          />
-          <circle
-            class="progress-ring-circle"
-            [attr.stroke]="item.category.color || '#FF6B6B'"
-            stroke-width="6"
-            fill="transparent"
-            r="24"
-            cx="30"
-            cy="30"
-            [style.stroke-dasharray]="progressCircumference"
-            [style.stroke-dashoffset]="progressCircumference - (item.progress / 100) * progressCircumference"
-          />
+          <circle class="progress-ring-circle-bg" stroke="#E8E8E8" stroke-width="6" fill="transparent" r="24" cx="30"
+            cy="30" />
+          <circle class="progress-ring-circle" [attr.stroke]="item.category.color || '#FF6B6B'" stroke-width="6"
+            fill="transparent" r="24" cx="30" cy="30" [style.stroke-dasharray]="progressCircumference"
+            [style.stroke-dashoffset]="progressCircumference - (item.progress / 100) * progressCircumference" />
         </svg>
         <span class="progress-text">{{item.progress}}%</span>
       </div>
@@ -179,10 +156,7 @@
     </div>
     }
 
-    <div
-      class="detail-content"
-      [style.visibility]="isLoading3D ? 'hidden' : 'visible'"
-    >
+    <div class="detail-content" [style.visibility]="isLoading3D ? 'hidden' : 'visible'">
       <div class="character-container">
         <!-- 3D Character Canvas -->
         <canvas #canvas class="character-3d-canvas"></canvas>
@@ -217,11 +191,7 @@
       <div class="sheet-header">
         <div class="sheet-actions">
           <div class="detail-header">
-            <ion-button
-              fill="clear"
-              (click)="closeCategoryDetail()"
-              class="back-btn"
-            >
+            <ion-button fill="clear" (click)="closeCategoryDetail()" class="back-btn">
               <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
               <span class="back-text">back</span>
             </ion-button>
@@ -231,50 +201,31 @@
       </div>
 
       <div class="swiper-wrapper">
-        <swiper-container
-          #swiper
-          effect="coverflow"
-          grab-cursor="true"
-          centered-slides="true"
-          centered-slides-bounds="false"
-          slides-per-view="auto"
-          coverflow-effect-rotate="0"
-          coverflow-effect-stretch="0"
-          coverflow-effect-depth="100"
-          coverflow-effect-modifier="2.5"
-          coverflow-effect-slide-shadows="false"
-          initial-slide="0"
-          observer="true"
-          observe-parents="true"
-        >
+        <swiper-container #swiper effect="coverflow" grab-cursor="true" centered-slides="true"
+          centered-slides-bounds="false" slides-per-view="auto" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
+          coverflow-effect-depth="100" coverflow-effect-modifier="2.5" coverflow-effect-slide-shadows="false"
+          initial-slide="0" observer="true" observe-parents="true">
           @for(item of categoryItems; track item.id) {
           <swiper-slide>
-            <div
-              class="item-card"
-              [style.background-color]="selectedCategory.color || '#ffffff'"
-              (click)="playSign(item, $index)"
-              [class.premium-locked]="item.isPremium"
-            >
-              <div
-                class="item-favorite-wrapper"
-                (click)="toggleItemFavorite(item, $event)"
-              >
-                <ion-icon
-                  [name]="isItemFavorite(item) ? 'heart' : 'heart-outline'"
-                  [class.active]="isItemFavorite(item)"
-                ></ion-icon>
+            <div class="item-card" [style.background-color]="selectedCategory.color || '#ffffff'"
+              (click)="playSign(item, $index)" [class.premium-locked]="item.isPremium">
+              <div class="item-favorite-wrapper" (click)="toggleItemFavorite(item, $event)">
+                <ion-icon [name]="isItemFavorite(item) ? 'heart' : 'heart-outline'"
+                  [class.active]="isItemFavorite(item)"></ion-icon>
               </div>
-              @if(item.isPremium && !isPremium){
-              <div class="premium-lock-badge">
-                <ion-icon name="lock-closed"></ion-icon>
-              </div>
-              } @if(isItemLearned(item)) {
+              @if(isItemLearned(item)) {
               <div class="item-learned-badge">
                 <ion-icon name="star"></ion-icon>
               </div>
               }
               <div class="item-image-container">
-                <ion-img [src]="item.thumbUrl" [alt]="item.label"></ion-img>
+                @if(item.isPremium && !isPremium){
+                <div class="premium-lock-badge">
+                  <ion-icon name="lock-closed"></ion-icon>
+                </div>
+                }
+                <ion-img [src]="item.thumbUrl" [alt]="item.label"
+                  [class.premium-blur]="item.isPremium && !isPremium"></ion-img>
               </div>
               <p class="item-name">{{item.label}}</p>
             </div>

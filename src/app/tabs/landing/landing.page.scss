@@ -746,6 +746,7 @@ ion-header {
   }
 
   .item-image-container {
+    position: relative;
     width: 100%;
     height: 120px;
     display: flex;
@@ -811,22 +812,28 @@ ion-header {
 
 .premium-lock-badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
   backdrop-filter: blur(4px);
 
   ion-icon {
-    font-size: 18px;
+    font-size: 24px;
     color: #fff;
   }
+}
+
+.premium-blur {
+  filter: blur(4px);
+  transition: filter 0.3s ease;
 }
 
 ::ng-deep .swiper {

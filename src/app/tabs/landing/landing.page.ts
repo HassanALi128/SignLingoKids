@@ -450,6 +450,11 @@ export class LandingPage implements OnInit, OnDestroy {
       addedAt: Date.now(),
     };
 
+    if (item.isPremium && !this.isPremium) {
+      this.openSubscriptionModal();
+      return;
+    }
+
     this.favoritesService.toggleFavorite(favoriteItem);
   }
 
