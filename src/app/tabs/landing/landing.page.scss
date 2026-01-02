@@ -690,7 +690,7 @@ ion-header {
   align-items: center;
   justify-content: space-between;
   position: relative;
-  // box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); // Added shadow as requested
   transition: transform 0.2s ease;
   // margin-right removed as it's inside swiper-slide
 
@@ -771,6 +771,10 @@ ion-header {
     margin: 0;
     margin-bottom: 8px;
     text-align: center;
+  }
+
+  &.learned {
+    border: 2px solid #22c55e; // Green border for learned items
   }
 }
 

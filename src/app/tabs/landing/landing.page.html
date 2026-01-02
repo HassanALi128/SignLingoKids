@@ -207,8 +207,10 @@
           initial-slide="0" observer="true" observe-parents="true" (swiperslidechange)="onSlideChange($event)">
           @for(item of categoryItems; track item.id) {
           <swiper-slide>
-            <div class="item-card" [style.background-color]="selectedCategory.color || '#ffffff'"
-              (click)="playSign(item, $index)" [class.premium-locked]="item.isPremium">
+            <div class="item-card shadow-card"
+              [style.background-color]="isItemLearned(item) ? '#DCFCE7' : (selectedCategory.color || '#ffffff')"
+              (click)="playSign(item, $index)" [class.premium-locked]="item.isPremium"
+              [class.learned]="isItemLearned(item)">
               <div class="item-favorite-wrapper" (click)="toggleItemFavorite(item, $event)">
                 <ion-icon [name]="isItemFavorite(item) ? 'heart' : 'heart-outline'"
                   [class.active]="isItemFavorite(item)"></ion-icon>
