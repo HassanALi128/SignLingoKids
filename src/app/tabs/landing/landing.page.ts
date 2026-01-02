@@ -217,7 +217,20 @@ export class LandingPage implements OnInit, OnDestroy {
     // Give time for the view to render the canvas
     setTimeout(async () => {
       await this.init3DModel(category);
+      // Initialize currentSign to the first item
+      if (this.categoryItems.length > 0) {
+        this.currentSign = this.categoryItems[0];
+      }
     }, 100);
+  }
+
+  onSlideChange(event: any) {
+    const swiper = event.target.swiper;
+    const index = swiper.realIndex; // Use realIndex for loop mode compatibility if needed, or activeIndex
+    if (this.categoryItems && this.categoryItems[index]) {
+      this.currentSign = this.categoryItems[index];
+      console.log('Active item updated via swipe:', this.currentSign.label);
+    }
   }
 
   async init3DModel(category: Category) {
@@ -299,14 +312,9 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   async playSign(item: AslSign, index: number = -1): Promise<void> {
-    if (item.isPremium && !this.quizService.isPremium()) {
-      this.openSubscriptionModal();
-      return;
-    }
-    console.log('Playing sign:', item);
+    // We update the currentSign immediately for responsiveness
     this.currentSign = item;
 
-    // Slide to the selected item if index is provided
     // Slide to the selected item if index is provided
     if (index >= 0 && this.swiperRef && this.swiperRef.nativeElement) {
       const swiperEl = this.swiperRef.nativeElement;
@@ -315,21 +323,19 @@ export class LandingPage implements OnInit, OnDestroy {
       } else {
         console.warn('Swiper instance not ready yet');
       }
-    } else {
-      console.warn('Swiper element not found or index invalid');
     }
 
-    // Play Animation
-    if (item.actionName) {
-      this.three.play(item.actionName);
-    }
+    // We do NOT automatically play the animation here anymore when clicking a card,
+    // unless we want to maintain that behavior. The user said:
+    // "Clicking an item card inside the swiper is optional, but it should NOT be required to make an item active."
+    // And "When the PLAY button is clicked: It must play the animation of the CURRENTLY CENTERED swiper item"
+    // However, usually clicking a card implies "select and play".
+    // Let's keep the "play on click" behavior for better UX, but route it through the central logic if needed.
+    // Actually, the user's problem was that clicking PLAY played the LAST CLICKED item, not the CENTERED one.
+    // By updating currentSign on slideChange, we solve that.
+    // So here we can just play it if we want immediate feedback.
 
-    // Play Audio
-    if (item.audioUrl) {
-      this.playAudio(item.audioUrl);
-    } else {
-      console.log('No audio available for:', item.label);
-    }
+    this.playAnimation();
   }
 
   async openSubscriptionModal() {
@@ -488,10 +494,25 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   playAnimation() {
-    // Play the animation of the current sign
-    if (this.currentSign && this.currentSign.actionName) {
-      this.three.play(this.currentSign.actionName);
-      console.log('Playing current sign:', this.currentSign.actionName);
+    // Play the animation of the current sign (which is always the centered one)
+    if (this.currentSign) {
+      // Check Premium Status
+      if (this.currentSign.isPremium && !this.isPremium) {
+        this.openSubscriptionModal();
+        return;
+      }
+
+      if (this.currentSign.actionName) {
+        this.three.play(this.currentSign.actionName);
+        console.log('Playing current sign:', this.currentSign.actionName);
+      }
+
+      // Also play audio if available
+      if (this.currentSign.audioUrl) {
+        this.playAudio(this.currentSign.audioUrl);
+      } else {
+        console.log('No audio available for:', this.currentSign.label);
+      }
     } else {
       // Show tooltip if no item is selected
       this.showToast('Select the item to play the animation');

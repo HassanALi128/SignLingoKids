@@ -174,11 +174,11 @@
             <ion-icon name="play"></ion-icon>
           </button>
         </div>
-        <div class="action-btn-wrapper">
+        <!-- <div class="action-btn-wrapper">
           <button class="action-btn sound" (click)="playSound()">
             <ion-icon name="volume-high"></ion-icon>
           </button>
-        </div>
+        </div> -->
         <div class="action-btn-wrapper">
           <button class="action-btn hat" (click)="markAsLearned()">
             <ion-icon name="school"></ion-icon>
@@ -204,7 +204,7 @@
         <swiper-container #swiper effect="coverflow" grab-cursor="true" centered-slides="true"
           centered-slides-bounds="false" slides-per-view="auto" coverflow-effect-rotate="0" coverflow-effect-stretch="0"
           coverflow-effect-depth="100" coverflow-effect-modifier="2.5" coverflow-effect-slide-shadows="false"
-          initial-slide="0" observer="true" observe-parents="true">
+          initial-slide="0" observer="true" observe-parents="true" (swiperslidechange)="onSlideChange($event)">
           @for(item of categoryItems; track item.id) {
           <swiper-slide>
             <div class="item-card" [style.background-color]="selectedCategory.color || '#ffffff'"
