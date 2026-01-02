@@ -105,10 +105,17 @@ export class QuizService {
       const categories = await this.dataService.loadCategories();
       const allSigns: any[] = [];
 
+      const isPremium = this.isPremium();
+
       // Flatten all signs with actionFile
       categories.forEach((cat: any) => {
         if (cat.signs) {
-          const signsWithAction = cat.signs.map((s: any) => ({
+          // Filter signs based on premium status
+          const availableSigns = isPremium
+            ? cat.signs
+            : cat.signs.filter((s: any) => !s.isPremium);
+
+          const signsWithAction = availableSigns.map((s: any) => ({
             ...s,
             actionFile: cat.actionFile,
           }));
