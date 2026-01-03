@@ -35,11 +35,12 @@ export class ProfileSetupPage implements OnInit {
 
   ngOnInit() {
     // Check if user already has a profile
-    const existingProfile = this.getStoredProfile();
-    if (existingProfile) {
-      this.userName = existingProfile.name || '';
-      this.selectedAvatar = existingProfile.avatar || '';
-    }
+    this.profileService.profile$.subscribe((profile) => {
+      if (profile) {
+        this.userName = profile.name || '';
+        this.selectedAvatar = profile.avatar || '';
+      }
+    });
   }
 
   selectAvatar(avatar: string) {
@@ -64,21 +65,7 @@ export class ProfileSetupPage implements OnInit {
     });
 
     // Navigate to home/tabs or back to settings if editing
-    const isEditing = localStorage.getItem('profileSetupCompleted') === 'true';
-    if (isEditing) {
-      this.router.navigateByUrl('tabs/settings');
-    } else {
-      localStorage.setItem('profileSetupCompleted', 'true');
-      this.router.navigateByUrl('tabs/home');
-    }
-  }
-
-  private getStoredProfile(): any {
-    try {
-      const profile = localStorage.getItem('userProfile');
-      return profile ? JSON.parse(profile) : null;
-    } catch (error) {
-      return null;
-    }
+    // We can check if we have a previous route or just default to home
+    this.router.navigateByUrl('tabs/home');
   }
 }
