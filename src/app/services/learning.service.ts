@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataService } from './data';
+import { ProgressService } from './progress.service';
 
 export interface LearningProgress {
   learnedItemIds: string[];
@@ -44,80 +45,33 @@ export class LearningService {
     })
   );
 
-  constructor(private dataService: DataService) {
+  constructor(
+    private dataService: DataService,
+    private progressService: ProgressService
+  ) {
     this.loadProgress();
     this.loadNonPremiumItems();
   }
 
   private loadProgress() {
-    try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        // Migration: convert old recentCategoryId to activeCategoryIds if needed
-        if (parsed.recentCategoryId && !parsed.activeCategoryIds) {
-          parsed.activeCategoryIds = [parsed.recentCategoryId];
-          delete parsed.recentCategoryId;
-        }
-        this.progressSubject.next(parsed);
+    this.progressService.initProgress();
+    this.progressService.progress$.subscribe((data) => {
+      if (data) {
+        this.progressSubject.next({
+          learnedItemIds: data.learnedItemIds || [],
+          activeCategoryIds: data.activeCategoryIds || [],
+          lastAccessed: data.lastAccessed || Date.now(),
+        });
       }
-    } catch (error) {
-      console.error('Error loading learning progress:', error);
-    }
-  }
-
-  private saveProgress(progress: LearningProgress) {
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(progress));
-      this.progressSubject.next(progress);
-    } catch (error) {
-      console.error('Error saving learning progress:', error);
-    }
+    });
   }
 
   markAsLearned(itemId: string, categoryId: string) {
-    const current = this.progressSubject.value;
-    const learnedIds = new Set(current.learnedItemIds);
-    let activeCategories = [...(current.activeCategoryIds || [])];
-
-    // Add category to active list if not present, or move to front
-    const index = activeCategories.indexOf(categoryId);
-    if (index !== -1) {
-      activeCategories.splice(index, 1);
-    }
-    activeCategories.unshift(categoryId);
-
-    // Limit to a reasonable number of recent categories if needed,
-    // but for now let's keep all as requested.
-
-    if (!learnedIds.has(itemId)) {
-      learnedIds.add(itemId);
-      this.saveProgress({
-        learnedItemIds: Array.from(learnedIds),
-        activeCategoryIds: activeCategories,
-        lastAccessed: Date.now(),
-      });
-    } else {
-      this.saveProgress({
-        ...current,
-        activeCategoryIds: activeCategories,
-        lastAccessed: Date.now(),
-      });
-    }
+    this.progressService.markAsLearned(itemId, categoryId);
   }
 
   unlearn(itemId: string) {
-    const current = this.progressSubject.value;
-    const learnedIds = new Set(current.learnedItemIds);
-
-    if (learnedIds.has(itemId)) {
-      learnedIds.delete(itemId);
-      this.saveProgress({
-        ...current,
-        learnedItemIds: Array.from(learnedIds),
-        lastAccessed: Date.now(),
-      });
-    }
+    this.progressService.unlearn(itemId);
   }
 
   isLearned(itemId: string): boolean {

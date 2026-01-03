@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from './data';
 import { LearningService } from './learning.service';
+import { QuizAttemptService } from './quiz-attempt.service';
+import { UserService } from './user.service';
 import { Observable, BehaviorSubject, from, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -77,7 +79,9 @@ export class QuizService {
   constructor(
     private http: HttpClient,
     private dataService: DataService,
-    private learningService: LearningService
+    private learningService: LearningService,
+    private quizAttemptService: QuizAttemptService,
+    private userService: UserService
   ) {
     this.checkInitialPremiumStatus();
     this.loadInitialResults();
@@ -85,18 +89,26 @@ export class QuizService {
   }
 
   private checkInitialPremiumStatus() {
-    this.premiumSubject.next(this.isPremium());
+    this.userService.userData$.subscribe((user) => {
+      this.premiumSubject.next(user?.isPremium || false);
+    });
   }
 
   private loadInitialResults() {
-    const stored = localStorage.getItem(this.resultsKey);
-    const results = stored ? JSON.parse(stored) : [];
-    this.resultsSubject.next(results);
+    this.quizAttemptService.getRecentAttempts().then((attempts) => {
+      const results: QuizResult[] = attempts.map((a) => ({
+        date: a.createdAt,
+        score: a.score,
+        total: a.total,
+        percentage: a.percentage,
+      }));
+      this.resultsSubject.next(results);
+    });
   }
 
   // Refresh premium status (call this after updating profile)
   refreshPremiumStatus() {
-    this.premiumSubject.next(this.isPremium());
+    // Handled by subscription in checkInitialPremiumStatus
   }
 
   // Generate dynamic quiz from all categories
@@ -175,16 +187,19 @@ export class QuizService {
   }
 
   // Save quiz result (max 5)
-  saveResult(result: QuizResult): void {
-    let results = this.getResults();
-    results.unshift(result); // add new at start
-    if (results.length > 5) {
-      results = results.slice(0, 5); // keep only 5
-    }
-    localStorage.setItem(this.resultsKey, JSON.stringify(results));
+  async saveResult(result: QuizResult): Promise<void> {
+    try {
+      await this.quizAttemptService.recordAttempt(
+        result.score,
+        result.total,
+        this.isPremium()
+      );
 
-    // Update the subject to notify subscribers
-    this.resultsSubject.next(results);
+      // Update local state by fetching fresh results
+      this.loadInitialResults();
+    } catch (error) {
+      console.error('Error saving quiz result:', error);
+    }
   }
 
   getResults(): QuizResult[] {
@@ -199,23 +214,17 @@ export class QuizService {
   }
 
   getAttempts(): number {
-    const attempts = localStorage.getItem('quiz_attempts');
-    return attempts ? parseInt(attempts, 10) : 0;
+    // This was local storage based, now we rely on backend limits or local cache if needed.
+    // For now returning 0 or we could fetch from DeviceService if we exposed it.
+    return 0;
   }
 
   incrementAttempts(): void {
-    let attempts = this.getAttempts();
-    attempts++;
-    localStorage.setItem('quiz_attempts', attempts.toString());
+    // Handled by backend in recordAttempt
   }
 
   isPremium(): boolean {
-    const profile = localStorage.getItem('userProfile');
-    if (profile) {
-      const userData = JSON.parse(profile);
-      return userData.isPremium === true;
-    }
-    return false;
+    return this.premiumSubject.value;
   }
 
   // Initialize total items count for progress calculation (non-premium items only)

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { UserService } from './user.service';
 
 export interface UserProfile {
   name: string;
@@ -15,27 +16,41 @@ export class ProfileService {
   private profileSubject = new BehaviorSubject<UserProfile | null>(null);
   profile$: Observable<UserProfile | null> = this.profileSubject.asObservable();
 
-  constructor() {
+  constructor(private userService: UserService) {
     this.loadProfile();
   }
 
   private loadProfile() {
-    try {
-      const storedProfile = localStorage.getItem('userProfile');
-      if (storedProfile) {
-        this.profileSubject.next(JSON.parse(storedProfile));
-      }
-    } catch (error) {
-      console.error('Error loading profile from localStorage:', error);
-    }
+    this.userService.ensureAuth().then(() => {
+      this.userService.userData$.subscribe((userData) => {
+        if (userData) {
+          const profile: UserProfile = {
+            name: userData.displayName || 'Guest',
+            avatar: userData.photoURL || 'assets/images/avatars/default.png',
+            isPremium: userData.isPremium,
+            createdAt: userData.createdAt,
+          };
+          this.profileSubject.next(profile);
+        } else {
+          // If no user data yet (e.g. just created), create it
+          const user = this.userService.auth.currentUser;
+          if (user) {
+            this.userService.createUserProfile(user);
+          }
+        }
+      });
+    });
   }
 
-  updateProfile(profile: UserProfile) {
+  async updateProfile(profile: UserProfile) {
     try {
-      localStorage.setItem('userProfile', JSON.stringify(profile));
-      this.profileSubject.next(profile);
+      await this.userService.updateUserProfile({
+        displayName: profile.name,
+        photoURL: profile.avatar,
+      });
+      // Local subject will be updated via subscription
     } catch (error) {
-      console.error('Error saving profile to localStorage:', error);
+      console.error('Error saving profile to Firestore:', error);
     }
   }
 
