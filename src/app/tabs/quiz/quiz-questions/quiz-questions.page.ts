@@ -38,10 +38,6 @@ import {
   QuizResult,
 } from 'src/app/services/quiz';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
-import { Haptics, NotificationType } from '@capacitor/haptics';
-import confetti from 'canvas-confetti';
-import { MonetizationService } from 'src/app/services/monetization.service';
-
 interface QuizState {
   questions: QuizQuestion[];
   currentIndex: number;

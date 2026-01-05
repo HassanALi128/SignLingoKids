@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform } from '@ionic/angular/standalone';
 import {
   AdMob,
   AdOptions,
@@ -11,20 +11,16 @@ import {
   BannerAdPluginEvents,
   AdMobError,
 } from '@capacitor-community/admob';
+import { PurchasesService } from './purchases.service';
 import {
-  Purchases,
   PurchasesOfferings,
   PurchasesPackage,
-} from '@awesome-cordova-plugins/purchases';
+} from '@revenuecat/purchases-typescript-internal-esm';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MonetizationService {
-  // Placeholder keys - REPLACE WITH REAL KEYS
-  private readonly REVENUECAT_API_KEY_IOS = 'appl_...';
-  private readonly REVENUECAT_API_KEY_ANDROID = 'goog_...';
-
   // Placeholder Ad Units - REPLACE WITH REAL UNITS
   // Test IDs provided by Google
   private readonly BANNER_ID_ANDROID = 'ca-app-pub-3940256099942544/6300978111';
@@ -34,74 +30,41 @@ export class MonetizationService {
   private readonly INTERSTITIAL_ID_IOS =
     'ca-app-pub-3940256099942544/4411468910';
 
-  public isPro = false;
+  public isPro = false; // Synced with RevenueCat
+
+  // RevenueCat offerings - exposed for premium page
   public offerings: PurchasesOfferings | null = null;
 
-  constructor(private platform: Platform) {}
+  constructor(
+    private platform: Platform,
+    private purchasesService: PurchasesService
+  ) {}
 
   async init() {
     await this.platform.ready();
 
-    // 1. Initialize RevenueCat
-    await this.initRevenueCat();
+    // Initialize RevenueCat first
+    await this.purchasesService.init();
 
-    // 2. Initialize AdMob
+    // Subscribe to premium status from RevenueCat
+    this.purchasesService.isPremium$.subscribe((isPremium) => {
+      this.isPro = isPremium;
+      console.log('Premium status updated:', isPremium);
+
+      // Hide ads if user is premium
+      if (isPremium) {
+        this.hideBanner();
+      }
+    });
+
+    // Subscribe to offerings
+    this.purchasesService.offerings$.subscribe((offerings) => {
+      this.offerings = offerings;
+    });
+
+    // Initialize AdMob if not premium
     if (!this.isPro) {
       await this.initAdMob();
-    }
-  }
-
-  // REVENUECAT
-  private async initRevenueCat() {
-    try {
-      if (this.platform.is('ios')) {
-        await Purchases.configure(this.REVENUECAT_API_KEY_IOS);
-      } else if (this.platform.is('android')) {
-        await Purchases.configure(this.REVENUECAT_API_KEY_ANDROID);
-      }
-
-      const info = await Purchases.getCustomerInfo();
-      this.checkEntitlement(info);
-
-      this.offerings = await Purchases.getOfferings();
-    } catch (e) {
-      console.error('RevenueCat Init Error:', e);
-    }
-  }
-
-  private checkEntitlement(info: any) {
-    if (info?.entitlements?.all?.['pro_access']?.active) {
-      this.isPro = true;
-      this.hideBanner(); // Hide ads if they become pro
-    } else {
-      this.isPro = false;
-    }
-    console.log('User is Pro:', this.isPro);
-  }
-
-  async purchasePackage(pkg: PurchasesPackage): Promise<boolean> {
-    try {
-      const { customerInfo } = await Purchases.purchasePackage(pkg);
-      this.checkEntitlement(customerInfo);
-      return this.isPro;
-    } catch (e: any) {
-      if (e.userCancelled) {
-        console.log('User cancelled purchase');
-      } else {
-        console.error('Purchase error:', e);
-      }
-      return false;
-    }
-  }
-
-  async restorePurchases(): Promise<boolean> {
-    try {
-      const info = await Purchases.restorePurchases();
-      this.checkEntitlement(info);
-      return this.isPro;
-    } catch (e) {
-      console.error('Restore error:', e);
-      return false;
     }
   }
 
@@ -174,6 +137,32 @@ export class MonetizationService {
     } catch (e) {
       console.error('Show Interstitial Error, trying to prepare again:', e);
       await this.prepareInterstitial();
+    }
+  }
+
+  // REVENUECAT METHODS - Exposed for premium page
+
+  /**
+   * Purchase a package from RevenueCat
+   */
+  async purchasePackage(packageToBuy: PurchasesPackage): Promise<void> {
+    try {
+      await this.purchasesService.purchasePackage(packageToBuy);
+    } catch (error) {
+      console.error('Purchase error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Restore previous purchases
+   */
+  async restorePurchases(): Promise<void> {
+    try {
+      await this.purchasesService.restorePurchases();
+    } catch (error) {
+      console.error('Restore error:', error);
+      throw error;
     }
   }
 }

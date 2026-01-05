@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserService } from './user.service';
+import { PurchasesService } from './purchases.service';
 
 export interface UserProfile {
   name: string;
@@ -16,21 +17,31 @@ export class ProfileService {
   private profileSubject = new BehaviorSubject<UserProfile | null>(null);
   profile$: Observable<UserProfile | null> = this.profileSubject.asObservable();
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private purchasesService: PurchasesService
+  ) {
     this.loadProfile();
+    this.syncPremiumStatus();
   }
 
   private loadProfile() {
     this.userService.ensureAuth().then(() => {
       this.userService.userData$.subscribe((userData) => {
         if (userData) {
+          const currentProfile = this.profileSubject.value;
           const profile: UserProfile = {
             name: userData.displayName || 'Guest',
             avatar: userData.photoURL || 'assets/images/avatars/default.png',
-            isPremium: userData.isPremium,
+            isPremium: this.purchasesService.isPremium() || userData.isPremium, // Prefer RevenueCat
             createdAt: userData.createdAt,
           };
           this.profileSubject.next(profile);
+
+          // Identify user in RevenueCat
+          if (userData.uid) {
+            this.purchasesService.identifyUser(userData.uid);
+          }
         } else {
           // If no user data yet (e.g. just created), create it
           const user = this.userService.auth.currentUser;
@@ -39,6 +50,19 @@ export class ProfileService {
           }
         }
       });
+    });
+  }
+
+  private syncPremiumStatus() {
+    this.purchasesService.isPremium$.subscribe((isPremium) => {
+      const currentProfile = this.profileSubject.value;
+      if (currentProfile && currentProfile.isPremium !== isPremium) {
+        const updatedProfile = { ...currentProfile, isPremium };
+        this.profileSubject.next(updatedProfile);
+
+        // Update Firestore as well
+        this.userService.updateUserProfile({ isPremium });
+      }
     });
   }
 

@@ -45,12 +45,15 @@ export class SubscriptionModalComponent implements OnInit {
         : offerings.current.weekly;
 
     if (pkg) {
-      const success = await this.monetizationService.purchasePackage(pkg);
-      if (success) {
+      try {
+        await this.monetizationService.purchasePackage(pkg);
         this.modalController.dismiss({
           role: 'unlock',
           plan: this.selectedPlan,
         });
+      } catch (error) {
+        console.error('Purchase failed:', error);
+        // Optionally show an alert to the user
       }
     } else {
       console.warn('Package not found for plan:', this.selectedPlan);

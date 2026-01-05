@@ -9,4 +9,10 @@ export const environment = {
     appId: '1:710376628790:web:c6139f2f7b7b2e18052e97',
     measurementId: 'G-LX6WH15GES',
   },
+  revenuecat: {
+    // REPLACE THESE WITH YOUR ACTUAL REVENUECAT API KEYS
+    // Get them from: https://app.revenuecat.com/
+    apiKeyIOS: 'YOUR_IOS_API_KEY_HERE',
+    apiKeyAndroid: 'YOUR_ANDROID_API_KEY_HERE',
+  },
 };

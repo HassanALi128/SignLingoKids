@@ -100,11 +100,29 @@ ion-header {
   }
 }
 
-ion-img {
-  display: flex;
-  justify-content: center;
-  width: 75%;
-  margin: auto;
+.footer-toolbar {
+  --background: #FFE8E1;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+
+.lets-learn-btn {
+  --background: linear-gradient(135deg, #f06a3f 0%, #d13d32 50%, #6d1a65 100%);
+  --border-radius: 30px;
+  --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --padding-top: 18px;
+  --padding-bottom: 18px;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  margin: 0;
+
+  &::part(native) {
+    border-radius: 30px;
+  }
 }
 
 .footer-md {
