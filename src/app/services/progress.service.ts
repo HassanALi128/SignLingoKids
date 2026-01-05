@@ -62,11 +62,15 @@ export class ProgressService {
     // For simplicity with Firestore arrayUnion, we just add it.
     // If strict ordering is needed, we'd read, modify, and write back.
 
-    await updateDoc(docRef, {
-      learnedItemIds: arrayUnion(itemId),
-      activeCategoryIds: arrayUnion(categoryId),
-      lastAccessed: Date.now(),
-    });
+    await setDoc(
+      docRef,
+      {
+        learnedItemIds: arrayUnion(itemId),
+        activeCategoryIds: arrayUnion(categoryId),
+        lastAccessed: Date.now(),
+      },
+      { merge: true }
+    );
   }
 
   async unlearn(itemId: string) {
@@ -74,9 +78,13 @@ export class ProgressService {
     if (!uid) return;
 
     const docRef = doc(this.firestore, `progress/${uid}`);
-    await updateDoc(docRef, {
-      learnedItemIds: arrayRemove(itemId),
-      lastAccessed: Date.now(),
-    });
+    await setDoc(
+      docRef,
+      {
+        learnedItemIds: arrayRemove(itemId),
+        lastAccessed: Date.now(),
+      },
+      { merge: true }
+    );
   }
 }
