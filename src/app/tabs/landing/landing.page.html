@@ -10,10 +10,20 @@
       @if(userAvatar){
       <div class="user-avatar" (click)="goToProfile()">
         <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
+        @if(isPremium) {
+        <div class="premium-badge-star">
+          <ion-icon name="star"></ion-icon>
+        </div>
+        }
       </div>
       } @else {
       <div class="user-avatar" (click)="goToProfile()">
         <ion-icon name="person-circle-outline"></ion-icon>
+        @if(isPremium) {
+        <div class="premium-badge-star">
+          <ion-icon name="star"></ion-icon>
+        </div>
+        }
       </div>
       }
     </div>

@@ -1,0 +1,44 @@
+<div class="modal-container">
+    <div class="modal-handle"></div>
+
+    <div class="close-btn-wrapper">
+        <ion-button fill="clear" class="close-btn" (click)="dismiss()">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+    </div>
+
+    <swiper-container pagination="true" pagination-dynamic-bullets="true" class="premium-swiper">
+        <!-- Slide 1: Success -->
+        <swiper-slide>
+            <div class="slide-content">
+                <div class="emoji-container bounce">
+                    🎉
+                </div>
+                <h2>You are Premium!</h2>
+                <p>Welcome to the club! You've unlocked all the fun signs and features.</p>
+            </div>
+        </swiper-slide>
+
+        <!-- Slide 2: More to Learn -->
+        <swiper-slide>
+            <div class="slide-content">
+                <div class="emoji-container float">
+                    🚀
+                </div>
+                <h2>More to Learn</h2>
+                <p>Access 200+ new signs and exclusive animations just for you.</p>
+            </div>
+        </swiper-slide>
+
+        <!-- Slide 3: Thumbs Up -->
+        <swiper-slide>
+            <div class="slide-content">
+                <div class="emoji-container pulse">
+                    👍
+                </div>
+                <h2>You're Awesome!</h2>
+                <p>Keep learning and having fun. We are so proud of you!</p>
+            </div>
+        </swiper-slide>
+    </swiper-container>
+</div>

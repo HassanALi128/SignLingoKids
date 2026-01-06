@@ -17,7 +17,12 @@
           }
         </div>
         <div class="user-details">
-          <h2 class="user-name">{{userName}}</h2>
+          <h2 class="user-name">
+            {{userName}}
+            @if(isPremium) {
+            <ion-icon name="star" class="premium-star-icon"></ion-icon>
+            }
+          </h2>
         </div>
       </div>
 

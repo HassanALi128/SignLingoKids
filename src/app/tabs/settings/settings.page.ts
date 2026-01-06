@@ -21,6 +21,8 @@ import {
 import { CommonService } from '../../core/services/common';
 import { ProfileService } from '../../services/profile.service';
 import { UserService } from '../../services/user.service';
+import { ModalController } from '@ionic/angular';
+import { PremiumSuccessModalComponent } from '../../components/premium-success-modal/premium-success-modal.component';
 import { FormsModule } from '@angular/forms';
 import { QuizService } from '../../services/quiz';
 
@@ -57,7 +59,8 @@ export class SettingsPage implements OnInit {
     public profileService: ProfileService,
     private commonService: CommonService,
     private quizService: QuizService,
-    private userService: UserService
+    private userService: UserService,
+    private modalController: ModalController
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -146,14 +149,19 @@ export class SettingsPage implements OnInit {
     );
   }
 
-  togglePremium() {
+  async togglePremium() {
     const newStatus = !this.isPremium;
     this.userService.toggleTestPremium(newStatus);
 
-    // We don't need to manually update profileService or isPremium here
-    // because userService.toggleTestPremium updates the subject,
-    // which updates userData$, which updates profileService.profile$,
-    // which updates this.isPremium via subscription.
+    if (newStatus) {
+      const modal = await this.modalController.create({
+        component: PremiumSuccessModalComponent,
+        breakpoints: [0, 0.6],
+        initialBreakpoint: 0.6,
+        cssClass: 'premium-success-modal',
+      });
+      await modal.present();
+    }
 
     this.commonService.messageWithToast(
       `Premium Mode: ${newStatus ? 'Enabled' : 'Disabled'}`,
