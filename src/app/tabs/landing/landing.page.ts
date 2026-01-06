@@ -13,6 +13,7 @@ import {
   ToastController,
   ModalController,
   AlertController,
+  Platform,
 } from '@ionic/angular';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
 import { Subscription } from 'rxjs';
@@ -100,6 +101,8 @@ export class LandingPage implements OnInit, OnDestroy {
   isLoading3D: boolean = false;
   isFullscreen: boolean = false;
 
+  private backButtonSubscription: Subscription | undefined;
+
   constructor(
     private navController: NavController,
     private favoritesService: FavoritesService,
@@ -111,7 +114,8 @@ export class LandingPage implements OnInit, OnDestroy {
     private quizService: QuizService,
     private profileService: ProfileService,
     private modalController: ModalController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private platform: Platform
   ) {
     addIcons({
       arrowBack,
@@ -187,12 +191,28 @@ export class LandingPage implements OnInit, OnDestroy {
     this.stopAudio();
     this.three.pauseRendering();
     this.toggleTabBar(true);
+
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
   }
 
   ionViewDidEnter() {
     if (this.selectedCategory) {
       this.three.resumeRendering();
     }
+
+    this.backButtonSubscription =
+      this.platform.backButton.subscribeWithPriority(
+        20,
+        (processNextHandler) => {
+          if (this.selectedCategory) {
+            this.closeCategoryDetail();
+          } else {
+            processNextHandler();
+          }
+        }
+      );
   }
 
   ngOnDestroy() {

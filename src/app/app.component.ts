@@ -44,15 +44,19 @@ export class AppComponent implements OnInit {
   }
 
   private handleBackButton() {
-    this.platform.backButton.subscribeWithPriority(10, async () => {
-      const url = this.router.url;
+    this.platform.backButton.subscribeWithPriority(
+      10,
+      async (processNextHandler) => {
+        const url = this.router.url;
 
-      if (url === '/tabs/home' || url === '/') {
-        await this.showExitConfirm();
-      } else {
-        this.router.navigateByUrl('/tabs/home');
+        if (url === '/tabs/home' || url === '/') {
+          await this.showExitConfirm();
+        } else {
+          // Allow default Ionic back navigation for other pages
+          processNextHandler();
+        }
       }
-    });
+    );
   }
 
   private async showExitConfirm() {
