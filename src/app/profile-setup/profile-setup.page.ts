@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { ProfileService } from '../services/profile.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-profile-setup',
@@ -31,7 +32,11 @@ export class ProfileSetupPage implements OnInit {
     'assets/images/avaters/teenager.webp',
   ];
 
-  constructor(private router: Router, private profileService: ProfileService) {}
+  constructor(
+    private router: Router,
+    private profileService: ProfileService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     // Check if user already has a profile
@@ -53,7 +58,7 @@ export class ProfileSetupPage implements OnInit {
     // You can implement camera/file picker here
   }
 
-  saveProfile() {
+  async saveProfile() {
     if (!this.userName || !this.selectedAvatar) {
       return;
     }
@@ -66,6 +71,7 @@ export class ProfileSetupPage implements OnInit {
 
     // Mark profile as completed
     localStorage.setItem('profileCompleted', 'true');
+    await this.userService.completeProfile();
 
     // Navigate to home/tabs or back to settings if editing
     // We can check if we have a previous route or just default to home

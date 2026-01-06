@@ -28,6 +28,8 @@ export interface UserData {
   lastActiveAt: string;
   displayName?: string;
   photoURL?: string;
+  onboardingCompleted?: boolean;
+  profileCompleted?: boolean;
 }
 
 @Injectable({
@@ -122,9 +124,13 @@ export class UserService {
     const user = this.auth.currentUser;
     if (user) {
       const userRef = doc(this.firestore, 'users', user.uid);
-      await updateDoc(userRef, {
-        lastActiveAt: new Date().toISOString(),
-      });
+      await setDoc(
+        userRef,
+        {
+          lastActiveAt: new Date().toISOString(),
+        },
+        { merge: true }
+      );
     }
   }
 
@@ -132,7 +138,7 @@ export class UserService {
     const user = this.auth.currentUser;
     if (user) {
       const userRef = doc(this.firestore, 'users', user.uid);
-      await updateDoc(userRef, { isPremium });
+      await setDoc(userRef, { isPremium }, { merge: true });
     }
   }
 
@@ -146,7 +152,59 @@ export class UserService {
     const user = this.auth.currentUser;
     if (user) {
       const userRef = doc(this.firestore, 'users', user.uid);
-      await updateDoc(userRef, data);
+      // Use setDoc with merge: true to ensure document is created if it doesn't exist
+      // This fixes "No document to update" error on fresh installs
+      await setDoc(userRef, data, { merge: true });
+    }
+  }
+
+  async completeOnboarding() {
+    await this.updateUserProfile({ onboardingCompleted: true });
+  }
+
+  async completeProfile() {
+    await this.updateUserProfile({ profileCompleted: true });
+  }
+
+  /**
+   * Migrate user data from old UID to new UID
+   */
+  private async migrateUserData(oldUid: string, newUid: string) {
+    try {
+      console.log(`Migrating data from ${oldUid} to ${newUid}`);
+      const oldUserRef = doc(this.firestore, 'users', oldUid);
+      const oldUserSnap = await (
+        await import('@angular/fire/firestore')
+      ).getDoc(oldUserRef);
+
+      if (oldUserSnap.exists()) {
+        const oldData = oldUserSnap.data() as UserData;
+
+        // Prepare data to copy
+        // We don't copy UID, deviceIdHash (maybe), or createdAt of the new user
+        // But we want to keep the profile info and status
+        const dataToCopy: Partial<UserData> = {
+          displayName: oldData.displayName,
+          photoURL: oldData.photoURL,
+          isPremium: oldData.isPremium,
+          onboardingCompleted: oldData.onboardingCompleted,
+          profileCompleted: oldData.profileCompleted,
+          // We can also copy other fields if needed
+        };
+
+        // Remove undefined values
+        Object.keys(dataToCopy).forEach(
+          (key) =>
+            (dataToCopy as any)[key] === undefined &&
+            delete (dataToCopy as any)[key]
+        );
+
+        const newUserRef = doc(this.firestore, 'users', newUid);
+        await setDoc(newUserRef, dataToCopy, { merge: true });
+        console.log('Migration successful');
+      }
+    } catch (error) {
+      console.error('Error migrating user data:', error);
     }
   }
 
@@ -169,7 +227,22 @@ export class UserService {
       }
 
       // Step 2: Check if device exists in Firebase
-      const deviceExists = await this.checkDeviceExistsInFirebase(deviceIdHash);
+      // We need to get the actual document data to check linkedUids
+      const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
+      const deviceSnap = await (
+        await import('@angular/fire/firestore')
+      ).getDoc(deviceRef);
+
+      const deviceExists = deviceSnap.exists();
+      let oldUid: string | null = null;
+
+      if (deviceExists) {
+        const deviceData = deviceSnap.data();
+        const linkedUids = deviceData?.['linkedUids'] || [];
+        if (linkedUids.length > 0) {
+          oldUid = linkedUids[linkedUids.length - 1];
+        }
+      }
 
       // Step 3: Ensure Firebase auth
       await this.ensureAuth();
@@ -187,14 +260,30 @@ export class UserService {
         // New user should go through onboarding
         return 'onboarding';
       } else {
-        // Existing device - load user data
+        // Existing device
+
+        // Check if we need to migrate data
+        if (oldUid && oldUid !== currentUser.uid) {
+          await this.migrateUserData(oldUid, currentUser.uid);
+        }
+
+        // Link current user to device
         await this.loadUserDataByDevice(deviceIdHash, currentUser.uid);
 
-        // Check if user has completed onboarding and profile setup
-        const onboardingCompleted =
-          localStorage.getItem('onboardingCompleted') === 'true';
-        const profileCompleted =
-          localStorage.getItem('profileCompleted') === 'true';
+        // Check user status from FIRESTORE, not localStorage
+        const userRef = doc(this.firestore, 'users', currentUser.uid);
+        const userSnap = await (
+          await import('@angular/fire/firestore')
+        ).getDoc(userRef);
+
+        let onboardingCompleted = false;
+        let profileCompleted = false;
+
+        if (userSnap.exists()) {
+          const userData = userSnap.data() as UserData;
+          onboardingCompleted = !!userData.onboardingCompleted;
+          profileCompleted = !!userData.profileCompleted;
+        }
 
         if (!onboardingCompleted) {
           return 'onboarding';

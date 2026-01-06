@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { UserService } from '../services/user.service';
 import { register } from 'swiper/element/bundle';
 
 @Component({
@@ -15,7 +16,7 @@ import { register } from 'swiper/element/bundle';
 export class OnboardingPage {
   currentIndex = 0;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private userService: UserService) {
     // Ensure swiper web components are registered once
     try {
       register();
@@ -43,9 +44,10 @@ export class OnboardingPage {
     this.finish();
   }
 
-  private finish() {
+  private async finish() {
     try {
       localStorage.setItem('onboardingCompleted', 'true');
+      await this.userService.completeOnboarding();
     } catch (e) {
       // ignore storage errors
     }

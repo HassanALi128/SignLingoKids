@@ -74,7 +74,7 @@ export class DeviceService {
     }
   }
 
-  async incrementQuizAttempt(): Promise<boolean> {
+  async incrementQuizAttempt(ignoreLimit: boolean = false): Promise<boolean> {
     const deviceIdHash = await this.getDeviceIdHash();
     const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
     const deviceSnap = await getDoc(deviceRef);
@@ -82,7 +82,7 @@ export class DeviceService {
     if (!deviceSnap.exists()) return false;
 
     const data = deviceSnap.data() as DeviceData;
-    if (data.freeQuizAttempts >= this.MAX_FREE_QUIZZES) {
+    if (!ignoreLimit && data.freeQuizAttempts >= this.MAX_FREE_QUIZZES) {
       return false; // Limit reached
     }
 

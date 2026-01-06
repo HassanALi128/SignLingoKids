@@ -9,7 +9,7 @@ import {
   arrayRemove,
 } from '@angular/fire/firestore';
 import { Observable, of, switchMap } from 'rxjs';
-import { UserService } from './user.service';
+import { DeviceService } from './device.service';
 
 export interface ProgressData {
   learnedItemIds: string[];
@@ -23,11 +23,14 @@ export interface ProgressData {
 export class ProgressService {
   progress$: Observable<ProgressData | null>;
 
-  constructor(private firestore: Firestore, private userService: UserService) {
-    this.progress$ = this.userService.user$.pipe(
-      switchMap((user) => {
-        if (user) {
-          const docRef = doc(this.firestore, `progress/${user.uid}`);
+  constructor(
+    private firestore: Firestore,
+    private deviceService: DeviceService
+  ) {
+    this.progress$ = this.deviceService.getDeviceId().pipe(
+      switchMap((deviceId) => {
+        if (deviceId) {
+          const docRef = doc(this.firestore, `progress/${deviceId}`);
           return docData(docRef) as Observable<ProgressData>;
         }
         return of(null);
@@ -36,10 +39,10 @@ export class ProgressService {
   }
 
   async initProgress() {
-    const uid = this.userService.getCurrentUserId();
-    if (!uid) return;
+    const deviceId = await this.deviceService.getDeviceId().toPromise();
+    if (!deviceId) return;
 
-    const docRef = doc(this.firestore, `progress/${uid}`);
+    const docRef = doc(this.firestore, `progress/${deviceId}`);
     // Initialize if not exists, but don't overwrite
     await setDoc(
       docRef,
@@ -53,10 +56,10 @@ export class ProgressService {
   }
 
   async markAsLearned(itemId: string, categoryId: string) {
-    const uid = this.userService.getCurrentUserId();
-    if (!uid) return;
+    const deviceId = await this.deviceService.getDeviceId().toPromise();
+    if (!deviceId) return;
 
-    const docRef = doc(this.firestore, `progress/${uid}`);
+    const docRef = doc(this.firestore, `progress/${deviceId}`);
 
     // We need to manage activeCategoryIds order manually if we want "recent" behavior
     // For simplicity with Firestore arrayUnion, we just add it.
@@ -74,10 +77,10 @@ export class ProgressService {
   }
 
   async unlearn(itemId: string) {
-    const uid = this.userService.getCurrentUserId();
-    if (!uid) return;
+    const deviceId = await this.deviceService.getDeviceId().toPromise();
+    if (!deviceId) return;
 
-    const docRef = doc(this.firestore, `progress/${uid}`);
+    const docRef = doc(this.firestore, `progress/${deviceId}`);
     await setDoc(
       docRef,
       {

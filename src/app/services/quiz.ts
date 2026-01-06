@@ -4,6 +4,7 @@ import { DataService } from './data';
 import { LearningService } from './learning.service';
 import { QuizAttemptService } from './quiz-attempt.service';
 import { UserService } from './user.service';
+import { DeviceService } from './device.service';
 import { Observable, BehaviorSubject, from, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -41,10 +42,12 @@ export interface QuizResult {
 @Injectable({ providedIn: 'root' })
 export class QuizService {
   private resultsKey = 'quiz_results';
-  private readonly PROGRESS_THRESHOLD = 15; // 25% learning progress required
+  private readonly PROGRESS_THRESHOLD = 25; // 25% learning progress required
 
   private premiumSubject = new BehaviorSubject<boolean>(false);
   public isPremium$ = this.premiumSubject.asObservable();
+
+  private freeAttemptsLeftSubject = new BehaviorSubject<boolean>(true);
 
   // RxJS for Results
   private resultsSubject = new BehaviorSubject<QuizResult[]>([]);
@@ -55,15 +58,16 @@ export class QuizService {
     this.premiumSubject,
     this.resultsSubject,
     this.learningService.overallProgress$,
+    this.freeAttemptsLeftSubject,
   ]).pipe(
-    map(([isPremium, results, progress]) => {
+    map(([isPremium, results, progress, hasFreeAttempts]) => {
       // Premium users always have access
       if (isPremium) return true;
 
-      // First quiz is always unlocked
-      if (results.length === 0) return true;
+      // If user has free attempts left, they can start
+      if (hasFreeAttempts) return true;
 
-      // After first quiz, check progress threshold
+      // After limit reached, check progress threshold
       return progress >= this.PROGRESS_THRESHOLD;
     })
   );
@@ -89,20 +93,36 @@ export class QuizService {
     private dataService: DataService,
     private learningService: LearningService,
     private quizAttemptService: QuizAttemptService,
-    private userService: UserService
+    private userService: UserService,
+    private deviceService: DeviceService
   ) {
-    this.checkInitialPremiumStatus();
-    this.loadInitialResults();
+    this.initialize();
+  }
+
+  private initialize() {
+    // Subscribe to user data to handle auth changes and load data
+    this.userService.userData$.subscribe((user) => {
+      if (user) {
+        this.premiumSubject.next(user.isPremium || false);
+        this.loadResults();
+        this.checkFreeAttempts();
+      } else {
+        // Clear results if no user (e.g. logout)
+        this.resultsSubject.next([]);
+        this.premiumSubject.next(false);
+      }
+    });
+
     this.initializeTotalItemsCount();
   }
 
-  private checkInitialPremiumStatus() {
-    this.userService.userData$.subscribe((user) => {
-      this.premiumSubject.next(user?.isPremium || false);
-    });
+  private async checkFreeAttempts() {
+    const hasLeft = await this.deviceService.checkQuizLimit();
+    this.freeAttemptsLeftSubject.next(hasLeft);
   }
 
-  private loadInitialResults() {
+  // Renamed from loadInitialResults to be more generic
+  private loadResults() {
     this.quizAttemptService.getRecentAttempts().then((attempts) => {
       const results: QuizResult[] = attempts.map((a) => ({
         date: a.createdAt,
@@ -117,7 +137,7 @@ export class QuizService {
 
   // Refresh premium status (call this after updating profile)
   refreshPremiumStatus() {
-    // Handled by subscription in checkInitialPremiumStatus
+    // Handled by subscription in initialize()
   }
 
   // Generate dynamic quiz from all categories
@@ -198,15 +218,19 @@ export class QuizService {
   // Save quiz result (max 5)
   async saveResult(result: QuizResult): Promise<void> {
     try {
+      const progress = this.learningService.getOverallProgress();
+      const isUnlockedByLearning = progress >= this.PROGRESS_THRESHOLD;
+
       await this.quizAttemptService.recordAttempt(
         result.score,
         result.total,
         this.isPremium(),
-        result.details
+        result.details,
+        isUnlockedByLearning
       );
 
       // Update local state by fetching fresh results
-      this.loadInitialResults();
+      this.loadResults();
     } catch (error) {
       console.error('Error saving quiz result:', error);
     }
@@ -283,8 +307,8 @@ export class QuizService {
     const isPremium = this.premiumSubject.value;
     if (isPremium) return true;
 
-    const hasQuizResults = this.resultsSubject.value.length > 0;
-    if (!hasQuizResults) return true; // First quiz is free
+    const hasFreeAttempts = this.freeAttemptsLeftSubject.value;
+    if (hasFreeAttempts) return true;
 
     const progress = this.learningService.getOverallProgress();
     return progress >= this.PROGRESS_THRESHOLD;

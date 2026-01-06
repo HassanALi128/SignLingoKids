@@ -42,16 +42,20 @@ export class QuizAttemptService {
     score: number,
     total: number,
     isPremiumQuiz: boolean,
-    details?: QuizAttemptDetail[]
+    details?: QuizAttemptDetail[],
+    isUnlockedByLearning: boolean = false
   ): Promise<void> {
-    const uid = this.userService.getCurrentUserId();
-    if (!uid) return;
+    const deviceId = await this.deviceService.getDeviceId().toPromise();
+    if (!deviceId) return;
 
     // Check limits for free users
     if (!isPremiumQuiz) {
       // Logic for free quiz limits if any specific per-user limit exists
       // The device limit is checked in DeviceService
-      const allowed = await this.deviceService.incrementQuizAttempt();
+      // If unlocked by learning, we ignore the limit
+      const allowed = await this.deviceService.incrementQuizAttempt(
+        isUnlockedByLearning
+      );
       if (!allowed) {
         throw new Error('Free quiz limit reached for this device.');
       }
@@ -68,18 +72,18 @@ export class QuizAttemptService {
 
     const attemptsRef = collection(
       this.firestore,
-      `quizAttempts/${uid}/attempts`
+      `quizAttempts/${deviceId}/attempts`
     );
     await addDoc(attemptsRef, attempt);
   }
 
   async getRecentAttempts(limitCount: number = 5): Promise<QuizAttempt[]> {
-    const uid = this.userService.getCurrentUserId();
-    if (!uid) return [];
+    const deviceId = await this.deviceService.getDeviceId().toPromise();
+    if (!deviceId) return [];
 
     const attemptsRef = collection(
       this.firestore,
-      `quizAttempts/${uid}/attempts`
+      `quizAttempts/${deviceId}/attempts`
     );
     const q = query(
       attemptsRef,

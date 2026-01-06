@@ -39,7 +39,10 @@ export class ProfileService {
           this.profileSubject.next(profile);
 
           // Identify user in RevenueCat
-          if (userData.uid) {
+          // Use deviceIdHash for better persistence across reinstalls
+          if (userData.deviceIdHash) {
+            this.purchasesService.identifyUser(userData.deviceIdHash);
+          } else if (userData.uid) {
             this.purchasesService.identifyUser(userData.uid);
           }
         } else {
