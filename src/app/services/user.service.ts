@@ -7,7 +7,15 @@ import {
   updateDoc,
   docData,
 } from '@angular/fire/firestore';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import {
+  Observable,
+  of,
+  switchMap,
+  tap,
+  map,
+  BehaviorSubject,
+  combineLatest,
+} from 'rxjs';
 import { DeviceService } from './device.service';
 
 export interface UserData {
@@ -29,6 +37,11 @@ export class UserService {
   user$: Observable<User | null>;
   userData$: Observable<UserData | null>;
 
+  private readonly TEST_PREMIUM_KEY = 'test_premium_status';
+  private testPremiumSubject = new BehaviorSubject<boolean>(
+    localStorage.getItem(this.TEST_PREMIUM_KEY) === 'true'
+  );
+
   constructor(
     public auth: Auth,
     private firestore: Firestore,
@@ -36,11 +49,39 @@ export class UserService {
   ) {
     this.user$ = user(this.auth);
 
-    this.userData$ = this.user$.pipe(
-      switchMap((u) => {
+    this.userData$ = combineLatest([
+      this.user$,
+      this.testPremiumSubject.asObservable(),
+    ]).pipe(
+      switchMap(([u, isTestPremium]) => {
         if (u) {
           const userDoc = doc(this.firestore, `users/${u.uid}`);
-          return docData(userDoc) as Observable<UserData>;
+          return docData(userDoc).pipe(
+            map((data) => {
+              const userData = data as UserData;
+              // Override with test status if true (or handle logic as needed)
+              // Requirement: "Toggling ON should: Set user as premium"
+              // Requirement: "Toggling OFF should: Revert back to non-premium behavior"
+              // So if test premium is ON, force true. If OFF, use DB value?
+              // Or does the toggle mean "Force ON" vs "Force OFF"?
+              // "Toggling OFF should: Revert back to non-premium behavior" implies reverting to actual user state,
+              // but usually "non-premium behavior" means free.
+              // Let's assume the toggle overrides the DB value when ON.
+              // Wait, if I toggle OFF, I should probably respect the DB value.
+              // But if the DB value is FALSE, and I toggle ON, it becomes TRUE.
+              // If I toggle OFF, it goes back to FALSE (DB value).
+              // What if DB value is TRUE? Then toggling OFF should probably not force it to FALSE if they paid?
+              // "PREMIUM TOGGLE (FOR TESTING ONLY)"
+              // "Toggling ON should: Set user as premium"
+              // "Toggling OFF should: Revert back to non-premium behavior"
+              // This implies the toggle is a "Force Premium" switch.
+
+              if (isTestPremium) {
+                userData.isPremium = true;
+              }
+              return userData;
+            })
+          );
         } else {
           return of(null);
         }
@@ -93,6 +134,12 @@ export class UserService {
       const userRef = doc(this.firestore, 'users', user.uid);
       await updateDoc(userRef, { isPremium });
     }
+  }
+
+  // For testing purposes only
+  toggleTestPremium(status: boolean) {
+    localStorage.setItem(this.TEST_PREMIUM_KEY, String(status));
+    this.testPremiumSubject.next(status);
   }
 
   async updateUserProfile(data: Partial<UserData>) {

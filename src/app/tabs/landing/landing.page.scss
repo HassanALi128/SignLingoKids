@@ -800,13 +800,82 @@ ion-header {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 24px;
+  z-index: 5;
+}
+
+.premium-lock-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(4px);
 
   ion-icon {
+    font-size: 20px;
     color: white;
-    font-size: 24px;
   }
 }
+
+.premium-blur {
+  filter: blur(4px);
+  opacity: 0.8;
+}
+
+// Premium Mode Styles (New)
+.premium-header {
+  padding-top: 10px; // Adjust spacing since banner is gone
+
+  h3 {
+    font-size: 22px;
+    font-weight: 800; // Bolder
+    letter-spacing: 0.5px;
+    color: var(--ion-color-primary); // Make it pop more
+  }
+}
+
+.premium-scroll {
+  padding-bottom: 10px;
+
+  .category-item {
+    min-width: 100px; // Wider items
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &:active {
+      transform: scale(0.92);
+    }
+
+    .category-circle {
+      width: 85px;
+      height: 85px;
+
+      margin-bottom: 12px;
+    }
+
+    .category-label {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 4px;
+      color: #2d3436;
+    }
+  }
+}
+
+
+
+ion-icon {
+  color: white;
+  font-size: 24px;
+}
+
 
 .premium-badge {
   background: linear-gradient(135deg, #ffd700, #ffa500);

@@ -22,31 +22,29 @@
 
 <ion-content class="landing-content">
   <!-- Premium Banner -->
+  @if(!isPremium) {
   <div class="premium-banner" (click)="goToPremium()">
     <div class="premium-content">
       <div class="premium-text">
-        <h3>{{ isPremium ? 'Premium Active' : 'Buy Premium' }}</h3>
-        <p>
-          {{ isPremium ? 'Now you can learn more!' : 'Unlock all features' }}
-        </p>
-        @if(!isPremium){
+        <h3>Buy Premium</h3>
+        <p>Unlock all features</p>
         <ion-button class="premium-btn" expand="block"> Buy Now </ion-button>
-        }
       </div>
       <div class="premium-characters">
         <ion-img src="assets/landing/landing.png" alt="Characters" class="characters-img"></ion-img>
       </div>
     </div>
   </div>
+  }
 
   <!-- Categories Section -->
-  <div class="section-header">
+  <div class="section-header" [class.premium-header]="isPremium">
     <h3>Categories</h3>
   </div>
-  <div class="categories-scroll">
+  <div class="categories-scroll" [class.premium-scroll]="isPremium">
     <div class="categories-container">
       @for(category of categories; track $index){
-      <div class="category-item" (click)="selectCategory(category)">
+      <div class="category-item" [class.premium-item]="isPremium" (click)="selectCategory(category)">
         <div class="category-circle">
           <img [src]="category.thumbUrl" [alt]="category.label" />
         </div>

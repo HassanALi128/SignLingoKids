@@ -20,6 +20,7 @@ import {
 
 import { CommonService } from '../../core/services/common';
 import { ProfileService } from '../../services/profile.service';
+import { UserService } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { QuizService } from '../../services/quiz';
 
@@ -55,7 +56,8 @@ export class SettingsPage implements OnInit {
     private router: Router,
     public profileService: ProfileService,
     private commonService: CommonService,
-    private quizService: QuizService
+    private quizService: QuizService,
+    private userService: UserService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -145,20 +147,19 @@ export class SettingsPage implements OnInit {
   }
 
   togglePremium() {
-    const currentProfile = this.profileService.getProfile();
-    if (currentProfile) {
-      const newStatus = !currentProfile.isPremium;
-      this.profileService.updateProfile({
-        ...currentProfile,
-        isPremium: newStatus,
-      });
-      this.quizService.refreshPremiumStatus();
-      this.commonService.messageWithToast(
-        `Premium Mode: ${newStatus ? 'Enabled' : 'Disabled'}`,
-        2000,
-        newStatus ? 'success' : 'warning',
-        'bottom'
-      );
-    }
+    const newStatus = !this.isPremium;
+    this.userService.toggleTestPremium(newStatus);
+
+    // We don't need to manually update profileService or isPremium here
+    // because userService.toggleTestPremium updates the subject,
+    // which updates userData$, which updates profileService.profile$,
+    // which updates this.isPremium via subscription.
+
+    this.commonService.messageWithToast(
+      `Premium Mode: ${newStatus ? 'Enabled' : 'Disabled'}`,
+      2000,
+      newStatus ? 'success' : 'warning',
+      'bottom'
+    );
   }
 }
