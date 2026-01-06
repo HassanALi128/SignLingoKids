@@ -1,44 +1,65 @@
-<div class="modal-container">
-    <div class="modal-handle"></div>
-
-    <div class="close-btn-wrapper">
-        <ion-button fill="clear" class="close-btn" (click)="dismiss()">
-            <ion-icon name="close" slot="icon-only"></ion-icon>
-        </ion-button>
+<ion-content class="ion-no-padding">
+  <div class="modal-container">
+    <!-- Close Button -->
+    <div class="close-button" (click)="dismiss()">
+      <ion-icon name="close"></ion-icon>
     </div>
 
-    <swiper-container pagination="true" pagination-dynamic-bullets="true" class="premium-swiper">
+    <!-- Header Content -->
+    <div class="header-content">
+      <h1>Premium Activated!</h1>
+      <p>You've unlocked the full experience</p>
+    </div>
+
+    <!-- Hero Image Area -->
+    <div class="hero-spacer"></div>
+
+    <!-- Swiper Content Area -->
+    <div class="swiper-area">
+      <swiper-container pagination="true" pagination-dynamic-bullets="true" class="premium-swiper">
         <!-- Slide 1: Success -->
         <swiper-slide>
-            <div class="slide-content">
-                <div class="emoji-container bounce">
-                    🎉
-                </div>
-                <h2>You are Premium!</h2>
-                <p>Welcome to the club! You've unlocked all the fun signs and features.</p>
-            </div>
+          <div class="slide-content">
+            <div class="emoji-container bounce">🎉</div>
+            <h2 class="modern-title">Premium Activated!</h2>
+            <p class="modern-desc">Welcome to the family! You've unlocked a world of fun and learning.</p>
+          </div>
         </swiper-slide>
 
         <!-- Slide 2: More to Learn -->
         <swiper-slide>
-            <div class="slide-content">
-                <div class="emoji-container float">
-                    🚀
-                </div>
-                <h2>More to Learn</h2>
-                <p>Access 200+ new signs and exclusive animations just for you.</p>
-            </div>
+          <div class="slide-content">
+            <div class="emoji-container float">🚀</div>
+            <h2 class="modern-title">200+ New Signs</h2>
+            <p class="modern-desc">Explore our massive library of animations and exclusive learning paths.</p>
+          </div>
         </swiper-slide>
 
-        <!-- Slide 3: Thumbs Up -->
+        <!-- Slide 3: Quiz Access -->
         <swiper-slide>
-            <div class="slide-content">
-                <div class="emoji-container pulse">
-                    👍
-                </div>
-                <h2>You're Awesome!</h2>
-                <p>Keep learning and having fun. We are so proud of you!</p>
-            </div>
+          <div class="slide-content">
+            <div class="emoji-container pulse">📝</div>
+            <h2 class="modern-title">Unlimited Quizzes</h2>
+            <p class="modern-desc">You now have unlimited quiz access! Test your skills anytime, anywhere.</p>
+          </div>
         </swiper-slide>
-    </swiper-container>
-</div>
+
+        <!-- Slide 4: Thumbs Up -->
+        <swiper-slide>
+          <div class="slide-content">
+            <div class="emoji-container pulse">👍</div>
+            <h2 class="modern-title">Ready to Start?</h2>
+            <p class="modern-desc">We're so excited to have you on this amazing learning journey!</p>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+
+    <!-- Action Button -->
+    <div class="action-area">
+      <button class="unlock-btn" (click)="dismiss()">
+        Start Learning <ion-icon name="chevron-forward"></ion-icon>
+      </button>
+    </div>
+  </div>
+</ion-content>

@@ -156,8 +156,8 @@ export class SettingsPage implements OnInit {
     if (newStatus) {
       const modal = await this.modalController.create({
         component: PremiumSuccessModalComponent,
-        breakpoints: [0, 0.6],
-        initialBreakpoint: 0.6,
+        breakpoints: [0, 1],
+        initialBreakpoint: 1,
         cssClass: 'premium-success-modal',
       });
       await modal.present();
