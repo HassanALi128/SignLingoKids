@@ -9,6 +9,7 @@ import {
   IonIcon,
   IonImg,
   IonProgressBar,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline, lockClosedOutline } from 'ionicons/icons';
@@ -16,6 +17,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QuizService, QuizResult } from '../../services/quiz';
 import { ProfileService } from '../../services/profile.service';
+import { ResultModalComponent } from './result-modal/result-modal.component';
 
 interface UserProfile {
   name: string;
@@ -72,7 +74,8 @@ export class QuizPage implements OnInit, OnDestroy {
   constructor(
     private quizService: QuizService,
     private router: Router,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private modalController: ModalController
   ) {
     addIcons({ personCircleOutline, lockClosedOutline });
   }
@@ -176,6 +179,19 @@ export class QuizPage implements OnInit, OnDestroy {
 
     // Navigate to quiz questions page
     this.router.navigate(['/tabs/quiz/quiz-questions']);
+  }
+
+  async openResultModal(result: ResultDisplay) {
+    const modal = await this.modalController.create({
+      component: ResultModalComponent,
+      componentProps: {
+        result: result,
+      },
+      cssClass: 'result-modal',
+      breakpoints: [0, 0.8, 1],
+      initialBreakpoint: 0.8,
+    });
+    await modal.present();
   }
 
   viewAllResults() {

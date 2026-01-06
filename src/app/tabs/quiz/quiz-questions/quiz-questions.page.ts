@@ -36,6 +36,7 @@ import {
   QuizQuestion,
   QuizOption,
   QuizResult,
+  QuizResultDetail,
 } from 'src/app/services/quiz';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { Haptics, NotificationType } from '@capacitor/haptics';
@@ -51,6 +52,7 @@ interface QuizState {
   isCorrect: boolean | null;
   isLoading: boolean;
   isAnimationLoading: boolean; // New state for animation loading
+  answers: QuizResultDetail[];
 }
 
 @Component({
@@ -83,6 +85,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     isCorrect: null,
     isLoading: true,
     isAnimationLoading: false,
+    answers: [],
   });
 
   private destroy$ = new Subject<void>();
@@ -313,10 +316,21 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     const isCorrect = state.selectedOption.isCorrect;
 
     // Update state
+    const currentQuestion = state.questions[state.currentIndex];
+    const correctAnswer = currentQuestion.options.find((o) => o.isCorrect);
+
+    const answerDetail: QuizResultDetail = {
+      question: correctAnswer?.text || 'Unknown Sign',
+      userAnswer: state.selectedOption.text,
+      correctAnswer: correctAnswer?.text || 'Unknown',
+      isCorrect: isCorrect,
+    };
+
     this.updateState({
       isChecked: true,
       isCorrect,
       score: isCorrect ? state.score + 1 : state.score,
+      answers: [...state.answers, answerDetail],
     });
 
     // Feedback
@@ -367,6 +381,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
       score: state.score,
       total: state.questions.length,
       percentage: percentage,
+      details: state.answers,
     };
 
     this.quizService.saveResult(result);

@@ -12,12 +12,20 @@ import {
 import { UserService } from './user.service';
 import { DeviceService } from './device.service';
 
+export interface QuizAttemptDetail {
+  question: string;
+  userAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+}
+
 export interface QuizAttempt {
   score: number;
   total: number;
   percentage: number;
   isPremiumQuiz: boolean;
   createdAt: string;
+  details?: QuizAttemptDetail[];
 }
 
 @Injectable({
@@ -33,7 +41,8 @@ export class QuizAttemptService {
   async recordAttempt(
     score: number,
     total: number,
-    isPremiumQuiz: boolean
+    isPremiumQuiz: boolean,
+    details?: QuizAttemptDetail[]
   ): Promise<void> {
     const uid = this.userService.getCurrentUserId();
     if (!uid) return;
@@ -54,6 +63,7 @@ export class QuizAttemptService {
       percentage: Math.round((score / total) * 100),
       isPremiumQuiz,
       createdAt: new Date().toISOString(),
+      details,
     };
 
     const attemptsRef = collection(

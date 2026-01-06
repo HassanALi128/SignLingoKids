@@ -23,11 +23,19 @@ export interface QuizQuestion {
   options: QuizOption[];
 }
 
+export interface QuizResultDetail {
+  question: string;
+  userAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+}
+
 export interface QuizResult {
   date: string;
   score: number;
   total: number;
   percentage: number;
+  details?: QuizResultDetail[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -101,6 +109,7 @@ export class QuizService {
         score: a.score,
         total: a.total,
         percentage: a.percentage,
+        details: a.details,
       }));
       this.resultsSubject.next(results);
     });
@@ -192,7 +201,8 @@ export class QuizService {
       await this.quizAttemptService.recordAttempt(
         result.score,
         result.total,
-        this.isPremium()
+        this.isPremium(),
+        result.details
       );
 
       // Update local state by fetching fresh results

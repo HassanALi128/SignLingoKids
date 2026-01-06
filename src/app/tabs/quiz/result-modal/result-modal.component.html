@@ -1,0 +1,70 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-title>Quiz Results</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close-outline" size="large"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <div class="summary-card">
+        <div class="score-circle">
+            <div class="score-text">
+                <span class="score">{{ result.score }}</span>
+                <span class="total">/ {{ result.total }}</span>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-item correct">
+                <ion-icon name="checkmark-circle"></ion-icon>
+                <span>{{ correctCount }} Correct</span>
+            </div>
+            <div class="stat-item wrong">
+                <ion-icon name="close-circle"></ion-icon>
+                <span>{{ wrongCount }} Wrong</span>
+            </div>
+        </div>
+    </div>
+
+    @if (result.details && result.details.length > 0) {
+    <div class="details-section">
+        @if (correctQuestions.length > 0) {
+        <h3 class="section-title correct-title">Correct Answers</h3>
+        <ion-list lines="none" class="result-list">
+            @for (item of correctQuestions; track item.question) {
+            <ion-item class="result-item correct-item">
+                <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+                <ion-label>
+                    <h2>{{ item.question }}</h2>
+                    <p>You answered: {{ item.userAnswer }}</p>
+                </ion-label>
+            </ion-item>
+            }
+        </ion-list>
+        }
+
+        @if (wrongQuestions.length > 0) {
+        <h3 class="section-title wrong-title">Incorrect Answers</h3>
+        <ion-list lines="none" class="result-list">
+            @for (item of wrongQuestions; track item.question) {
+            <ion-item class="result-item wrong-item">
+                <ion-icon name="close-circle" slot="start" color="danger"></ion-icon>
+                <ion-label>
+                    <h2>{{ item.question }}</h2>
+                    <p>You answered: <span class="wrong-text">{{ item.userAnswer }}</span></p>
+                    <p>Correct: <span class="correct-text">{{ item.correctAnswer }}</span></p>
+                </ion-label>
+            </ion-item>
+            }
+        </ion-list>
+        }
+    </div>
+    } @else {
+    <div class="no-details">
+        <p>Detailed results are not available for this quiz.</p>
+    </div>
+    }
+</ion-content>

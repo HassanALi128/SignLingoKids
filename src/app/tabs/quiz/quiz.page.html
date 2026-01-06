@@ -84,7 +84,7 @@
     } @else {
     <div class="results-list">
         @for(result of results; track result.date) {
-        <div class="result-card">
+        <div class="result-card" (click)="openResultModal(result)">
             <div class="result-image">
                 <img [src]="result.imageUrl" [alt]="result.label">
             </div>
