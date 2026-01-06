@@ -29,7 +29,7 @@ import {
   closeCircle,
   arrowForward,
 } from 'ionicons/icons';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
 import {
   QuizService,
@@ -128,19 +128,27 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     this.hideTabBar();
   }
 
+  private backButtonSubscription?: Subscription;
+
   ionViewWillLeave() {
     this.threeRenderer.pauseRendering();
     this.showTabBar();
-    // Unregister back button action if needed (Ionic handles this stack usually, but good to be safe)
+
+    // Unregister back button action
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+      this.backButtonSubscription = undefined;
+    }
   }
 
   ionViewDidEnter() {
     this.threeRenderer.resumeRendering();
 
     // Handle Hardware Back Button
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.confirmQuit();
-    });
+    this.backButtonSubscription =
+      this.platform.backButton.subscribeWithPriority(10, () => {
+        this.confirmQuit();
+      });
   }
 
   ngOnDestroy() {
@@ -148,6 +156,10 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     this.destroy$.complete();
     this.threeRenderer.dispose();
     this.showTabBar();
+
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
   }
 
   private async loadQuizQuestions() {
