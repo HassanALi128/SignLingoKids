@@ -153,4 +153,101 @@ export class UserService {
   getCurrentUserId(): string | null {
     return this.auth.currentUser?.uid || null;
   }
+
+  /**
+   * Initialize user from device
+   * This is the main entry point for app initialization
+   * Returns navigation path: 'onboarding', 'profile-setup', or 'home'
+   */
+  async initializeUserFromDevice(): Promise<string> {
+    try {
+      // Step 1: Get device ID
+      const deviceIdHash = await this.deviceService.getDeviceId().toPromise();
+
+      if (!deviceIdHash) {
+        throw new Error('Failed to get device ID');
+      }
+
+      // Step 2: Check if device exists in Firebase
+      const deviceExists = await this.checkDeviceExistsInFirebase(deviceIdHash);
+
+      // Step 3: Ensure Firebase auth
+      await this.ensureAuth();
+
+      // Step 4: Create or update user profile
+      const currentUser = this.auth.currentUser;
+      if (!currentUser) {
+        throw new Error('Failed to authenticate user');
+      }
+
+      if (!deviceExists) {
+        // New device - create profile and register device
+        await this.createUserProfile(currentUser);
+
+        // New user should go through onboarding
+        return 'onboarding';
+      } else {
+        // Existing device - load user data
+        await this.loadUserDataByDevice(deviceIdHash, currentUser.uid);
+
+        // Check if user has completed onboarding and profile setup
+        const onboardingCompleted =
+          localStorage.getItem('onboardingCompleted') === 'true';
+        const profileCompleted =
+          localStorage.getItem('profileCompleted') === 'true';
+
+        if (!onboardingCompleted) {
+          return 'onboarding';
+        } else if (!profileCompleted) {
+          return 'profile-setup';
+        } else {
+          return 'home';
+        }
+      }
+    } catch (error) {
+      console.error('Error initializing user from device:', error);
+      // On error, default to onboarding to ensure user can still use the app
+      return 'onboarding';
+    }
+  }
+
+  /**
+   * Check if device exists in Firebase devices collection
+   */
+  private async checkDeviceExistsInFirebase(
+    deviceIdHash: string
+  ): Promise<boolean> {
+    try {
+      const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
+      const deviceSnap = await (
+        await import('@angular/fire/firestore')
+      ).getDoc(deviceRef);
+      return deviceSnap.exists();
+    } catch (error) {
+      console.error('Error checking device existence:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Load user data by device hash
+   * This syncs the device with the user account
+   */
+  private async loadUserDataByDevice(
+    deviceIdHash: string,
+    currentUid: string
+  ): Promise<void> {
+    try {
+      // Update device record with current session
+      await this.deviceService.registerDevice(currentUid);
+
+      // The userData$ observable will automatically load the user data
+      // from Firestore based on the authenticated user's UID
+
+      // We just need to ensure the lastActiveAt is updated
+      await this.updateLastActive();
+    } catch (error) {
+      console.error('Error loading user data by device:', error);
+    }
+  }
 }

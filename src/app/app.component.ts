@@ -9,37 +9,89 @@ import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { MonetizationService } from './services/monetization.service';
+import { UserService } from './services/user.service';
+import { InitLoaderComponent } from './components/init-loader/init-loader.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet],
+  imports: [IonApp, IonRouterOutlet, InitLoaderComponent, CommonModule],
 })
 export class AppComponent implements OnInit {
+  showInitLoader = true;
+  initStatus = 'Starting up...';
+
   constructor(
     private platform: Platform,
     private router: Router,
     private alertController: AlertController,
-    private monetizationService: MonetizationService
-  ) {
+    private monetizationService: MonetizationService,
+    private userService: UserService
+  ) {}
+
+  ngOnInit() {
     this.initializeApp();
   }
 
-  ngOnInit() {}
+  async initializeApp() {
+    try {
+      // Wait for platform to be ready
+      await this.platform.ready();
 
-  initializeApp() {
-    this.platform.ready().then(() => {
+      // Update status
+      this.initStatus = 'Checking your device...';
+
+      // Initialize user from device (this handles Firebase auth and device check)
+      const navigationPath = await this.userService.initializeUserFromDevice();
+
+      // Update status
+      this.initStatus = 'Loading your data...';
+
+      // Give a brief moment for the status to show
+      await this.delay(500);
+
+      // Initialize monetization
       this.monetizationService.init();
-      this.handleNavigation();
+
+      // Setup back button handler
       this.handleBackButton();
+
+      // Update status
+      this.initStatus = 'Almost ready!';
+
+      // Give a brief moment before hiding loader
+      await this.delay(300);
+
+      // Hide the init loader
+      this.showInitLoader = false;
+
+      // Hide native splash screen
       SplashScreen.hide();
-    });
+
+      // Navigate to appropriate page
+      this.navigateBasedOnPath(navigationPath);
+    } catch (error) {
+      console.error('Error during app initialization:', error);
+
+      // Even on error, hide loaders and navigate to onboarding
+      this.showInitLoader = false;
+      SplashScreen.hide();
+      this.router.navigateByUrl('/onboarding');
+    }
   }
 
-  private handleNavigation() {
-    const completed = localStorage.getItem('onboardingCompleted') === 'true';
-    if (!completed) {
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private navigateBasedOnPath(path: string) {
+    if (path === 'onboarding') {
       this.router.navigateByUrl('/onboarding');
+    } else if (path === 'profile-setup') {
+      this.router.navigateByUrl('/profile-setup');
+    } else {
+      this.router.navigateByUrl('/tabs/home');
     }
   }
 

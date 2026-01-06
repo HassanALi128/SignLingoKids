@@ -64,6 +64,9 @@ export class ProfileSetupPage implements OnInit {
       createdAt: new Date().toISOString(),
     });
 
+    // Mark profile as completed
+    localStorage.setItem('profileCompleted', 'true');
+
     // Navigate to home/tabs or back to settings if editing
     // We can check if we have a previous route or just default to home
     this.router.navigateByUrl('tabs/home');
