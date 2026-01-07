@@ -8,6 +8,8 @@ import {
   orderBy,
   limit,
   getDocs,
+  deleteDoc,
+  doc,
 } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { DeviceService } from './device.service';
@@ -93,5 +95,18 @@ export class QuizAttemptService {
 
     const snapshot = await getDocs(q);
     return snapshot.docs.map((d) => d.data() as QuizAttempt);
+  }
+
+  async resetQuizAttempts() {
+    const deviceId = await this.deviceService.getDeviceId().toPromise();
+    if (!deviceId) return;
+
+    const attemptsRef = collection(
+      this.firestore,
+      `quizAttempts/${deviceId}/attempts`
+    );
+    const snapshot = await getDocs(attemptsRef);
+    const deletePromises = snapshot.docs.map((d) => deleteDoc(d.ref));
+    await Promise.all(deletePromises);
   }
 }

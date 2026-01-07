@@ -102,4 +102,12 @@ export class DeviceService {
     const data = deviceSnap.data() as DeviceData;
     return data.freeQuizAttempts < this.MAX_FREE_QUIZZES;
   }
+  async resetDeviceProgress() {
+    const deviceIdHash = await this.getDeviceIdHash();
+    const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
+    await updateDoc(deviceRef, {
+      freeQuizAttempts: 0,
+      freeLearningCount: 0,
+    });
+  }
 }

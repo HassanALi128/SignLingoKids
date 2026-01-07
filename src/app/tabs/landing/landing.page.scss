@@ -30,7 +30,7 @@ ion-header {
       color: #1a1a1a;
 
       .user-name {
-        color: var(--ion-color-primary);
+        color: #F34F27;
       }
     }
 
@@ -135,8 +135,8 @@ ion-header {
 }
 
 .premium-btn {
-  --background: linear-gradient(to bottom, #D13D32, #6D1A65);
-  background: linear-gradient(to bottom, #D13D32, #6D1A65);
+  --background: var(--primary-gradient);
+  background: var(--primary-gradient);
   --border-radius: 24px;
   --padding-top: 12px;
   --padding-bottom: 12px;

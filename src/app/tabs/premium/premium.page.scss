@@ -40,7 +40,8 @@
 }
 
 .premium-btn {
-  --background: linear-gradient(to bottom, #D13D32, #6D1A65);
+  --background: var(--primary-gradient);
+  background: var(--primary-gradient);
   --border-radius: 24px;
   --padding-top: 12px;
   --padding-bottom: 12px;
@@ -53,7 +54,8 @@
 }
 
 .restore-premium-btn {
-  --background: linear-gradient(to bottom, #D13D32, #6D1A65);
+  --background: var(--primary-gradient);
+  background: var(--primary-gradient);
   --border-radius: 24px;
   --padding-top: 24px;
   --padding-bottom: 24px;

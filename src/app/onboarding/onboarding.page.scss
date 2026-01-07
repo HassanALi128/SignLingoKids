@@ -66,8 +66,8 @@
 }
 
 .cta {
-  --background: linear-gradient(to right, #E64522, #801669);
-  background: linear-gradient(to right, #E64522, #801669);
+  --background: var(--primary-gradient);
+  background: var(--primary-gradient);
   --border-radius: 30px;
   border-radius: 30px;
   --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -109,7 +109,8 @@ ion-header {
 }
 
 .lets-learn-btn {
-  --background: linear-gradient(to right, #E64522, #801669);
+  --background: var(--primary-gradient);
+  background: var(--primary-gradient);
   --border-radius: 30px;
   --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   --padding-top: 18px;

@@ -212,6 +212,67 @@ ion-header {
   box-shadow: none !important;
 }
 
+// Kids-friendly Alert Styles
+::ng-deep .kids-alert {
+  --background: #ffffff;
+  --border-radius: 24px;
+
+  .alert-wrapper {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 3px solid #f0f0f0;
+    border-radius: 35px;
+  }
+
+  .alert-head {
+    padding-top: 25px;
+    padding-bottom: 10px;
+
+    .alert-title {
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+    }
+  }
+
+  .alert-message {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    padding: 0 20px 20px;
+    line-height: 1.5;
+  }
+
+  .alert-button-group {
+    padding: 10px 15px 20px;
+    display: flex;
+    justify-content: space-around;
+
+    button {
+      border-radius: 15px;
+      font-weight: 600;
+      text-transform: none;
+      font-size: 16px;
+      height: 45px;
+      flex: 1;
+      margin: 0 5px;
+    }
+
+    .cancel-button {
+      --background: #f0f0f0;
+      --color: #666;
+      color: #666;
+      background: #f0f0f0;
+    }
+
+    .reset-button {
+      --background: var(--primary-gradient);
+      --color: white;
+      color: white;
+      background: var(--primary-gradient);
+    }
+  }
+}
+
 // Edit Profile Modal Styles
 ion-modal.edit-profile-modal {
   --width: 92%;
@@ -432,10 +493,14 @@ ion-modal.edit-profile-modal {
       }
 
       .save-btn {
-        --background: linear-gradient(135deg, #EF8D1B 0%, #F34F27 100%);
+        --background: var(--primary-gradient);
         --color: white;
         box-shadow: 0 8px 20px rgba(243, 79, 39, 0.35);
       }
     }
   }
+}
+
+::ng-deep .alert-button-inner.sc-ion-alert-md {
+  justify-content: center !important;
 }

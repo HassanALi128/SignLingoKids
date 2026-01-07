@@ -26,6 +26,9 @@ import { ModalController } from '@ionic/angular';
 import { PremiumSuccessModalComponent } from '../../components/premium-success-modal/premium-success-modal.component';
 import { FormsModule } from '@angular/forms';
 import { QuizService } from '../../services/quiz';
+import { QuizAttemptService } from '../../services/quiz-attempt.service';
+import { DeviceService } from '../../services/device.service';
+import { ProgressService } from '../../services/progress.service';
 
 @Component({
   selector: 'app-settings',
@@ -63,7 +66,11 @@ export class SettingsPage implements OnInit {
     private modalController: ModalController,
     private platform: Platform,
     private quizService: QuizService,
-    private userService: UserService
+    private userService: UserService,
+    private quizAttemptService: QuizAttemptService,
+    private deviceService: DeviceService,
+    private progressService: ProgressService,
+    private alertController: AlertController
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -160,12 +167,53 @@ export class SettingsPage implements OnInit {
   }
 
   async restoreProgress() {
-    this.commonService.messageWithToast(
-      'Restoring your progress...',
-      2000,
-      'primary',
-      'bottom'
-    );
+    const alert = await this.alertController.create({
+      header: 'Reset Your Progress?',
+      message:
+        'This will clear all your learning progress and quiz history. You can start fresh anytime.',
+      cssClass: 'kids-alert',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'cancel-button',
+          handler: () => {
+            console.log('Reset cancelled');
+          },
+        },
+        {
+          text: 'Reset',
+          role: 'destructive',
+          cssClass: 'reset-button',
+          handler: async () => {
+            try {
+              await Promise.all([
+                this.progressService.resetProgress(),
+                this.quizAttemptService.resetQuizAttempts(),
+                this.deviceService.resetDeviceProgress(),
+              ]);
+
+              this.commonService.messageWithToast(
+                'Progress reset successfully ✨',
+                2000,
+                'success',
+                'bottom'
+              );
+            } catch (error) {
+              console.error('Error resetting progress:', error);
+              this.commonService.messageWithToast(
+                'Failed to reset progress. Please try again.',
+                2000,
+                'danger',
+                'bottom'
+              );
+            }
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   async openPrivacyPolicy() {

@@ -91,4 +91,16 @@ export class ProgressService {
       { merge: true }
     );
   }
+
+  async resetProgress() {
+    const deviceId = await this.deviceService.getDeviceId().toPromise();
+    if (!deviceId) return;
+
+    const docRef = doc(this.firestore, `progress/${deviceId}`);
+    await setDoc(docRef, {
+      learnedItemIds: [],
+      activeCategoryIds: [],
+      lastAccessed: Date.now(),
+    });
+  }
 }

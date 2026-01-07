@@ -9,7 +9,7 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 :root {
-    --primary-gradient: linear-gradient(to bottom, #EB333C, #6D1F60);
+    --primary-gradient: linear-gradient(135deg, #EF8D1B 0%, #F34F27 50%, #6E1664 100%);
     --ion-font-family: 'Rubik', sans-serif;
 }
 
@@ -138,22 +138,22 @@ ion-toolbar {
             text-transform: none;
 
             &.alert-button-cancel {
-                background: #22c55e; // Green
-                color: white;
-                --background: #22c55e;
+                background: #f3f4f6;
+                color: #666;
+                --background: #f3f4f6;
 
                 .alert-button-inner {
-                    color: white;
+                    color: #666;
                 }
             }
 
             &.alert-button-confirm {
-                background: #f3f4f6; // Light Gray
-                color: #ef4444; // Red text
-                --background: #f3f4f6;
+                background: var(--primary-gradient);
+                color: white;
+                --background: var(--primary-gradient);
 
                 .alert-button-inner {
-                    color: #ef4444;
+                    color: white;
                 }
             }
         }
