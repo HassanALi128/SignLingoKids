@@ -12,6 +12,7 @@ import { MonetizationService } from './services/monetization.service';
 import { UserService } from './services/user.service';
 import { InitLoaderComponent } from './components/init-loader/init-loader.component';
 import { CommonModule } from '@angular/common';
+import { NetworkService } from './services/network.service';
 
 @Component({
   selector: 'app-root',

@@ -7,13 +7,7 @@
       <ion-button fill="clear" id="help-trigger" class="help-btn">
         <ion-icon name="help-circle-outline" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-popover
-        trigger="help-trigger"
-        triggerAction="click"
-        side="bottom"
-        alignment="end"
-        class="help-popover"
-      >
+      <ion-popover trigger="help-trigger" triggerAction="click" side="bottom" alignment="end" class="help-popover">
         <ng-template>
           <div class="help-content">
             <h3>How to play ?</h3>
@@ -42,10 +36,7 @@
   </div>
   } @if((quizState$ | async); as state) {
   <!-- 3D Character Section -->
-  <div
-    class="character-section"
-    [style.visibility]="(isLoading$ | async) ? 'hidden' : 'visible'"
-  >
+  <div class="character-section" [style.visibility]="(isLoading$ | async) ? 'hidden' : 'visible'">
     <canvas #canvas class="character-canvas"></canvas>
   </div>
 
@@ -55,11 +46,7 @@
     <div class="question-header">
       <h2 class="question-text">Select the answer!</h2>
       <!-- Play Button Overlay -->
-      <button
-        class="play-button"
-        (click)="playQuestionAnimation()"
-        [disabled]="(isAnimationLoading$ | async)"
-      >
+      <button class="play-button" (click)="playQuestionAnimation()" [disabled]="(isAnimationLoading$ | async)">
         @if((isAnimationLoading$ | async)) {
         <ion-spinner name="crescent" color="light"></ion-spinner>
         } @else {
@@ -71,13 +58,8 @@
     <!-- Answer Options -->
     <div class="answers-grid">
       @for(option of question.options; track option.id) {
-      <div
-        class="answer-option"
-        [class.selected]="isOptionSelected(option)"
-        [class.correct]="isOptionCorrect(option)"
-        [class.wrong]="isOptionWrong(option)"
-        (click)="selectAnswer(option)"
-      >
+      <div class="answer-option" [class.selected]="isOptionSelected(option)" [class.correct]="isOptionCorrect(option)"
+        [class.wrong]="isOptionWrong(option)" (click)="selectAnswer(option)">
         <div class="option-image">
           <img [src]="option.imageUrl" [alt]="option.text" />
         </div>
@@ -88,27 +70,15 @@
 
     <!-- Actions -->
     <div class="actions-section">
-      @if(!state.isChecked) {
-      <ion-button
-        expand="block"
-        (click)="checkAnswer()"
-        class="action-btn check-btn"
-        [disabled]="!state.selectedOption"
-      >
-        Check Answer
+      <ion-button expand="block" (click)="checkAnswer()" class="action-btn check-btn"
+        [disabled]="!state.selectedOption || state.isChecked || state.isTransitioning">
+        @if(state.isTransitioning) {
+        Next Question...
+        <ion-spinner name="dots" slot="end"></ion-spinner>
+        } @else { Check Answer
         <ion-icon name="checkmark-circle" slot="end"></ion-icon>
+        }
       </ion-button>
-      } @else {
-      <ion-button
-        expand="block"
-        (click)="nextQuestion()"
-        class="action-btn next-btn"
-        [color]="state.isCorrect ? 'success' : 'danger'"
-      >
-        {{ state.currentIndex < state.questions.length - 1 ? 'Next Question' :
-        'Finish Quiz' }} <ion-icon name="arrow-forward" slot="end"></ion-icon>
-      </ion-button>
-      }
     </div>
 
     <!-- Progress Indicator -->

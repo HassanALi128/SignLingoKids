@@ -52,6 +52,7 @@ interface QuizState {
   isCorrect: boolean | null;
   isLoading: boolean;
   isAnimationLoading: boolean; // New state for animation loading
+  isTransitioning: boolean; // New state for automatic transition
   answers: QuizResultDetail[];
 }
 
@@ -85,6 +86,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     isCorrect: null,
     isLoading: true,
     isAnimationLoading: false,
+    isTransitioning: false,
     answers: [],
   });
 
@@ -343,6 +345,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
       isCorrect,
       score: isCorrect ? state.score + 1 : state.score,
       answers: [...state.answers, answerDetail],
+      isTransitioning: true,
     });
 
     // Feedback
@@ -364,6 +367,11 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
       // Vibrate for wrong answer
       await Haptics.notification({ type: NotificationType.Error });
     }
+
+    // Automatically move to next question after a delay
+    setTimeout(() => {
+      this.nextQuestion();
+    }, 1500);
   }
 
   nextQuestion() {
@@ -375,6 +383,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
         selectedOption: null,
         isChecked: false,
         isCorrect: null,
+        isTransitioning: false,
       });
 
       // Pre-check/load next animation
