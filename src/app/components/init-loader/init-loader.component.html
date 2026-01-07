@@ -1,13 +1,11 @@
 <div class="init-loader-overlay" *ngIf="show">
-    <div class="init-loader-content">
-        <!-- Simple Spinner -->
-        <div class="spinner-container">
-            <ion-spinner name="crescent" color="primary"></ion-spinner>
-        </div>
-
-        <!-- Status Message -->
-        <div class="status-message">
-            <p class="status-text">{{ status }}</p>
-        </div>
+    <div class="splash-image-container">
+        <img src="assets/Splash-2.png" alt="Splash Screen" class="splash-image">
     </div>
+
+    <!-- Optional: Keep spinner subtle at the bottom if needed, or remove completely if user wants just image -->
+    <!-- <div class="loader-content">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+        <p class="status-text">{{ status }}</p>
+    </div> -->
 </div>

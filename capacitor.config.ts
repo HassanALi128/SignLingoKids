@@ -7,12 +7,12 @@ const config: CapacitorConfig = {
   webDir: 'www',
   plugins: {
     SplashScreen: {
-      launchShowDuration: 3000,
+      launchShowDuration: 0,
       launchAutoHide: true,
       backgroundColor: '#ffffffff',
       androidSplashResourceName: 'splash',
       androidScaleType: 'CENTER_CROP',
-      showSpinner: true,
+      showSpinner: false,
       androidSpinnerStyle: 'large',
       iosSpinnerStyle: 'small',
       spinnerColor: '#999999',
