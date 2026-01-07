@@ -7,6 +7,7 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  getDoc,
 } from '@angular/fire/firestore';
 import { Observable, of, switchMap } from 'rxjs';
 import { DeviceService } from './device.service';
@@ -43,16 +44,16 @@ export class ProgressService {
     if (!deviceId) return;
 
     const docRef = doc(this.firestore, `progress/${deviceId}`);
-    // Initialize if not exists, but don't overwrite
-    await setDoc(
-      docRef,
-      {
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      // Initialize ONLY if not exists
+      await setDoc(docRef, {
         learnedItemIds: [],
         activeCategoryIds: [],
         lastAccessed: Date.now(),
-      },
-      { merge: true }
-    );
+      });
+    }
   }
 
   async markAsLearned(itemId: string, categoryId: string) {

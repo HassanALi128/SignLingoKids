@@ -16,7 +16,7 @@ import {
   Platform,
 } from '@ionic/angular';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { DataService } from 'src/app/services/data';
 import { LearningService } from 'src/app/services/learning.service';
@@ -80,6 +80,7 @@ export class LandingPage implements OnInit, OnDestroy {
   private favoritesSubscription?: Subscription;
 
   categories: Category[] = [];
+  private categoriesSubject = new BehaviorSubject<Category[]>([]);
 
   featuredItems: (FavoriteItem & { isFavorite: boolean })[] = [];
 
@@ -145,12 +146,28 @@ export class LandingPage implements OnInit, OnDestroy {
       }
     });
 
+    // Subscribe to premium status
+    this.quizService.isPremium$.subscribe((status) => {
+      this.isPremium = status;
+    });
+
+    // Reactive setup for Recent Learning & Certificate Progress
+    // We combine progress updates and categories loading to ensure data is ready
+    combineLatest([
+      this.learningService.progress$,
+      this.categoriesSubject,
+    ]).subscribe(([progress, categories]) => {
+      if (progress && categories.length > 0) {
+        this.loadRecentLearning();
+        this.updateCertificateProgress();
+      }
+    });
+
     // Load Categories
     try {
       this.categories = await this.dataService.loadCategories();
       console.log('Loaded categories:', this.categories);
-      this.loadRecentLearning(); // Load recent learning after categories
-      this.updateCertificateProgress();
+      this.categoriesSubject.next(this.categories);
     } catch (error) {
       console.error('Error loading categories:', error);
     }
@@ -160,11 +177,6 @@ export class LandingPage implements OnInit, OnDestroy {
       this.progressCircumference -
       (this.certificateProgress / 100) * this.progressCircumference;
 
-    // Subscribe to premium status
-    this.quizService.isPremium$.subscribe((status) => {
-      this.isPremium = status;
-    });
-
     // Subscribe to favorites updates
     this.favoritesSubscription = this.favoritesService.favorites$.subscribe(
       (favorites) => {
@@ -172,19 +184,11 @@ export class LandingPage implements OnInit, OnDestroy {
           .getRecentFavorites(4)
           .map((f) => ({
             ...f,
-            isFavorite: this.favoritesService.isFavorite(f.id), // boolean
+            isFavorite: this.favoritesService.isFavorite(f.id),
             bgColor: f.bgColor ?? '#ffffff',
           }));
       }
     );
-
-    // Load initial favorites
-    this.featuredItems = this.favoritesService
-      .getRecentFavorites(4)
-      .map((f) => ({
-        ...f,
-        isFavorite: this.favoritesService.isFavorite(f.id),
-      }));
   }
 
   ionViewWillLeave() {
