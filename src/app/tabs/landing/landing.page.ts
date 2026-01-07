@@ -15,6 +15,7 @@ import {
   AlertController,
   Platform,
 } from '@ionic/angular';
+import { App } from '@capacitor/app';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
@@ -209,11 +210,29 @@ export class LandingPage implements OnInit, OnDestroy {
     this.backButtonSubscription =
       this.platform.backButton.subscribeWithPriority(
         20,
-        (processNextHandler) => {
+        async (processNextHandler) => {
           if (this.selectedCategory) {
             this.closeCategoryDetail();
           } else {
-            processNextHandler();
+            // Show Exit Alert
+            const alert = await this.alertController.create({
+              header: 'Exit App',
+              message: 'Do you want to exit the app?',
+              buttons: [
+                {
+                  text: 'Cancel',
+                  role: 'cancel',
+                  cssClass: 'secondary',
+                },
+                {
+                  text: 'Exit',
+                  handler: () => {
+                    App.exitApp();
+                  },
+                },
+              ],
+            });
+            await alert.present();
           }
         }
       );

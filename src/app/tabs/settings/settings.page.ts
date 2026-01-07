@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { ToastController, AlertController } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import {
   cardOutline,
   refreshCircleOutline,
@@ -40,6 +41,7 @@ export class SettingsPage implements OnInit {
   editName = '';
   editAvatar = '';
   isPremium = false;
+  private backButtonSubscription?: Subscription;
 
   avatars: string[] = [
     'assets/images/avaters/blode.webp',
@@ -58,9 +60,10 @@ export class SettingsPage implements OnInit {
     private router: Router,
     public profileService: ProfileService,
     private commonService: CommonService,
+    private modalController: ModalController,
+    private platform: Platform,
     private quizService: QuizService,
-    private userService: UserService,
-    private modalController: ModalController
+    private userService: UserService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -86,6 +89,19 @@ export class SettingsPage implements OnInit {
     });
   }
 
+  ionViewDidEnter() {
+    this.backButtonSubscription =
+      this.platform.backButton.subscribeWithPriority(10, () => {
+        this.router.navigate(['/tabs/home']);
+      });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
+  }
+
   openPremium() {
     this.router.navigate(['/tabs/premium']);
   }
@@ -109,6 +125,16 @@ export class SettingsPage implements OnInit {
 
   async saveProfile() {
     if (!this.editName || !this.editAvatar) return;
+
+    if (this.editName.length > 10) {
+      this.commonService.messageWithToast(
+        'Name cannot exceed 10 characters',
+        2000,
+        'warning',
+        'bottom'
+      );
+      return;
+    }
 
     this.profileService.updateProfile({
       name: this.editName,

@@ -10,10 +10,11 @@ import {
   IonImg,
   IonProgressBar,
   ModalController,
+  Platform,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline, lockClosedOutline } from 'ionicons/icons';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QuizService, QuizResult } from '../../services/quiz';
 import { ProfileService } from '../../services/profile.service';
@@ -55,6 +56,7 @@ export class QuizPage implements OnInit, OnDestroy {
   private recentResultsSubject = new BehaviorSubject<ResultDisplay[]>([]);
   private isPremiumSubject = new BehaviorSubject<boolean>(false);
   private destroy$ = new Subject<void>();
+  private backButtonSubscription?: Subscription;
 
   // Public Observables
   userName$: Observable<string> = this.userNameSubject.asObservable();
@@ -75,7 +77,8 @@ export class QuizPage implements OnInit, OnDestroy {
     private quizService: QuizService,
     private router: Router,
     private profileService: ProfileService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private platform: Platform
   ) {
     addIcons({ personCircleOutline, lockClosedOutline });
   }
@@ -84,6 +87,20 @@ export class QuizPage implements OnInit, OnDestroy {
     this.subscribeToProfile();
     this.loadRecentResults();
     this.subscribeToPremiumStatus();
+    this.subscribeToPremiumStatus();
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSubscription =
+      this.platform.backButton.subscribeWithPriority(10, () => {
+        this.router.navigate(['/tabs/home']);
+      });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
   }
 
   ngOnDestroy() {
