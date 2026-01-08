@@ -73,7 +73,7 @@
       <ion-button expand="block" (click)="checkAnswer()" class="action-btn check-btn"
         [disabled]="!state.selectedOption || state.isChecked || state.isTransitioning">
         @if(state.isTransitioning) {
-        Next Question...
+        Next Question
         <ion-spinner name="dots" slot="end"></ion-spinner>
         } @else { Check Answer
         <ion-icon name="checkmark-circle" slot="end"></ion-icon>

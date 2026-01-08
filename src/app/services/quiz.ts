@@ -313,4 +313,10 @@ export class QuizService {
     const progress = this.learningService.getOverallProgress();
     return progress >= this.PROGRESS_THRESHOLD;
   }
+
+  async resetQuizData() {
+    await this.quizAttemptService.resetQuizAttempts();
+    this.resultsSubject.next([]);
+    await this.checkFreeAttempts();
+  }
 }

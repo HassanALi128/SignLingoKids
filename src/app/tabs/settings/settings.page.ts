@@ -192,8 +192,7 @@ export class SettingsPage implements OnInit {
               );
               await Promise.all([
                 this.progressService.resetProgress(),
-                this.quizAttemptService.resetQuizAttempts(),
-                this.deviceService.resetDeviceProgress(),
+                this.quizService.resetQuizData(),
               ]);
 
               this.commonService.messageWithToast(
