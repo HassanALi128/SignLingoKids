@@ -11,6 +11,8 @@ import {
   IonProgressBar,
   ModalController,
   Platform,
+  AlertController,
+  LoadingController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline, lockClosedOutline } from 'ionicons/icons';
@@ -19,6 +21,7 @@ import { takeUntil } from 'rxjs/operators';
 import { QuizService, QuizResult } from '../../services/quiz';
 import { ProfileService } from '../../services/profile.service';
 import { ResultModalComponent } from './result-modal/result-modal.component';
+import { MonetizationService } from '../../services/monetization.service';
 
 interface UserProfile {
   name: string;
@@ -78,7 +81,10 @@ export class QuizPage implements OnInit, OnDestroy {
     private router: Router,
     private profileService: ProfileService,
     private modalController: ModalController,
-    private platform: Platform
+    private platform: Platform,
+    private alertController: AlertController,
+    private monetizationService: MonetizationService,
+    private loadingController: LoadingController
   ) {
     addIcons({ personCircleOutline, lockClosedOutline });
   }
@@ -174,10 +180,9 @@ export class QuizPage implements OnInit, OnDestroy {
     };
   }
 
-  startQuiz() {
+  async startQuiz() {
     // Check if quiz is accessible (soft-lock check)
     if (!this.quizService.canStartQuizNow()) {
-      // Quiz is locked, do nothing (UI already shows lock state)
       return;
     }
 
@@ -185,17 +190,73 @@ export class QuizPage implements OnInit, OnDestroy {
     const isPremium = this.isPremiumSubject.value;
     const attempts = this.quizService.getAttempts();
 
-    if (!isPremium && attempts >= 5) {
-      // Show premium modal or alert
-      this.router.navigate(['/tabs/premium']);
+    // Strategy: Free users get 1 free attempt per session
+    // After that, they must watch a rewarded ad to continue
+    if (!isPremium && attempts >= 1) {
+      await this.promptForRewardAd();
       return;
     }
 
-    // Increment attempts
-    this.quizService.incrementAttempts();
+    // Start quiz immediately
+    this.launchQuiz();
+  }
 
-    // Navigate to quiz questions page
+  private launchQuiz() {
+    this.quizService.incrementAttempts();
     this.router.navigate(['/tabs/quiz/quiz-questions']);
+  }
+
+  private async promptForRewardAd() {
+    const alert = await this.alertController.create({
+      header: 'One More Try? 🌟',
+      message: 'Watch a short video to retake the quiz!',
+      cssClass: 'modern-alert',
+      buttons: [
+        {
+          text: 'No Thanks',
+          role: 'cancel',
+          cssClass: 'alert-button-cancel',
+        },
+        {
+          text: 'Watch Video',
+          role: 'confirm',
+          cssClass: 'alert-button-confirm',
+          handler: () => {
+            this.showRewardAd();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  private async showRewardAd() {
+    const loading = await this.loadingController.create({
+      message: 'Loading video...',
+      duration: 5000,
+    });
+    await loading.present();
+
+    // Prepare ad just in case
+    await this.monetizationService.prepareReward();
+
+    const result = await this.monetizationService.showReward();
+    await loading.dismiss();
+
+    if (result) {
+      // Success! Launch quiz (and increment attempts again, though logic might just be "allow entrance")
+      // Actually we just navigate
+      this.launchQuiz();
+    } else {
+      // Failed to show ad
+      const errorAlert = await this.alertController.create({
+        header: 'Oops!',
+        message: 'Could not load the video. Please try again later.',
+        buttons: ['OK'],
+      });
+      await errorAlert.present();
+    }
   }
 
   async openResultModal(result: ResultDisplay) {

@@ -15,4 +15,16 @@ export const environment = {
     apiKeyIOS: 'YOUR_IOS_API_KEY_HERE',
     apiKeyAndroid: 'YOUR_ANDROID_API_KEY_HERE',
   },
+  admob: {
+    android: {
+      banner: 'ca-app-pub-4296184061584014/4833382982',
+      interstitial: 'ca-app-pub-4296184061584014/8049561507',
+      rewarded: 'ca-app-pub-4296184061584014/5194483241',
+    },
+    ios: {
+      banner: 'YOUR_IOS_BANNER_ID',
+      interstitial: 'YOUR_IOS_INTERSTITIAL_ID',
+      rewarded: 'YOUR_IOS_REWARDED_ID',
+    },
+  },
 };

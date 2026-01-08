@@ -9,6 +9,8 @@ import {
   BannerAdSize,
   BannerAdPosition,
   BannerAdPluginEvents,
+  RewardAdOptions,
+  RewardAdPluginEvents,
   AdMobError,
 } from '@capacitor-community/admob';
 import { PurchasesService } from './purchases.service';
@@ -16,6 +18,7 @@ import {
   PurchasesOfferings,
   PurchasesPackage,
 } from '@revenuecat/purchases-typescript-internal-esm';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -23,12 +26,13 @@ import {
 export class MonetizationService {
   // Placeholder Ad Units - REPLACE WITH REAL UNITS
   // Test IDs provided by Google
-  private readonly BANNER_ID_ANDROID = 'ca-app-pub-3940256099942544/6300978111';
-  private readonly BANNER_ID_IOS = 'ca-app-pub-3940256099942544/2934735716';
+  private readonly BANNER_ID_ANDROID = environment.admob.android.banner;
+  private readonly BANNER_ID_IOS = environment.admob.ios.banner;
   private readonly INTERSTITIAL_ID_ANDROID =
-    'ca-app-pub-3940256099942544/1033173712';
-  private readonly INTERSTITIAL_ID_IOS =
-    'ca-app-pub-3940256099942544/4411468910';
+    environment.admob.android.interstitial;
+  private readonly INTERSTITIAL_ID_IOS = environment.admob.ios.interstitial;
+  private readonly REWARDED_ID_ANDROID = environment.admob.android.rewarded;
+  private readonly REWARDED_ID_IOS = environment.admob.ios.rewarded;
 
   public isPro = false; // Synced with RevenueCat
 
@@ -75,6 +79,9 @@ export class MonetizationService {
 
       // Preload Interstitial
       await this.prepareInterstitial();
+
+      // Preload Reward
+      await this.prepareReward();
 
       // Show Banner
       this.showBanner();
@@ -136,8 +143,51 @@ export class MonetizationService {
       await AdMob.showInterstitial();
     } catch (e) {
       console.error('Show Interstitial Error, trying to prepare again:', e);
-      await this.prepareInterstitial();
     }
+  }
+
+  async prepareReward() {
+    const adId = this.platform.is('ios')
+      ? this.REWARDED_ID_IOS
+      : this.REWARDED_ID_ANDROID;
+
+    if (!adId || adId.includes('xxx')) {
+      console.warn('Rewarded Ad ID not set');
+      return;
+    }
+
+    const options: RewardAdOptions = {
+      adId: adId,
+    };
+
+    try {
+      await AdMob.prepareRewardVideoAd(options);
+    } catch (e) {
+      console.error('Prepare Reward Error:', e);
+    }
+  }
+
+  async showReward(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      try {
+        // Register event listener for reward
+        const handler = AdMob.addListener(
+          RewardAdPluginEvents.Rewarded,
+          (rewardItem) => {
+            console.log('User rewarded:', rewardItem);
+            resolve(true); // User watched and got reward
+          }
+        );
+
+        // Show the ad
+        await AdMob.showRewardVideoAd();
+      } catch (e) {
+        console.error('Show Reward Error:', e);
+        // Try to prepare again for next time
+        this.prepareReward();
+        resolve(false); // Failed to show or complete
+      }
+    });
   }
 
   // REVENUECAT METHODS - Exposed for premium page

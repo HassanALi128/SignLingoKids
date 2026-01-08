@@ -262,14 +262,14 @@ export class QuizService {
       .map(({ value }) => value);
   }
 
+  private sessionAttempts = 0;
+
   getAttempts(): number {
-    // This was local storage based, now we rely on backend limits or local cache if needed.
-    // For now returning 0 or we could fetch from DeviceService if we exposed it.
-    return 0;
+    return this.sessionAttempts;
   }
 
   incrementAttempts(): void {
-    // Handled by backend in recordAttempt
+    this.sessionAttempts++;
   }
 
   isPremium(): boolean {

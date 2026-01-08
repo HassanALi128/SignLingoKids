@@ -19,6 +19,18 @@ export const environment = {
     apiKeyIOS: 'YOUR_IOS_API_KEY_HERE',
     apiKeyAndroid: 'YOUR_ANDROID_API_KEY_HERE',
   },
+  admob: {
+    android: {
+      banner: 'ca-app-pub-4296184061584014/4833382982',
+      interstitial: 'ca-app-pub-4296184061584014/8049561507',
+      rewarded: 'ca-app-pub-4296184061584014/5194483241',
+    },
+    ios: {
+      banner: 'ca-app-pub-3940256099942544/2934735716', // Test ID
+      interstitial: 'ca-app-pub-3940256099942544/4411468910', // Test ID
+      rewarded: 'ca-app-pub-3940256099942544/1712485313', // Test ID
+    },
+  },
 };
 
 /*
