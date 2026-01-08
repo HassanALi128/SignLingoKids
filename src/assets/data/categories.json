@@ -702,11 +702,11 @@
         "isPremium": true
       },
       {
-        "id": "jecket",
+        "id": "jacket",
         "label": "Jacket",
         "thumbUrl": "assets/images/categories/basic/permium/jecket.webp",
-        "audioUrl": "assets/audio/jecket.m4a",
-        "actionName": "jecket",
+        "audioUrl": "assets/audio/jacket.m4a",
+        "actionName": "jacket",
         "isPremium": true
       },
       {
@@ -1238,11 +1238,11 @@
         "isPremium": true
       },
       {
-        "id": "gray",
-        "label": "Gray",
+        "id": "grey",
+        "label": "Grey",
         "thumbUrl": "assets/images/categories/expression-and-color/permium/gray.webp",
-        "audioUrl": "assets/audio/gray.m4a",
-        "actionName": "gray",
+        "audioUrl": "assets/audio/grey.m4a",
+        "actionName": "grey",
         "isPremium": true
       },
       {
