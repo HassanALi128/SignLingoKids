@@ -187,6 +187,9 @@ export class SettingsPage implements OnInit {
           cssClass: 'reset-button',
           handler: async () => {
             try {
+              await this.commonService.showLoadingSpinner(
+                'Resetting progress...'
+              );
               await Promise.all([
                 this.progressService.resetProgress(),
                 this.quizAttemptService.resetQuizAttempts(),
@@ -207,6 +210,8 @@ export class SettingsPage implements OnInit {
                 'danger',
                 'bottom'
               );
+            } finally {
+              await this.commonService.hideLoadingSpinner();
             }
           },
         },
