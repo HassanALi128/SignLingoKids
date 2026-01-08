@@ -47,7 +47,7 @@ export class QuizService {
   private premiumSubject = new BehaviorSubject<boolean>(false);
   public isPremium$ = this.premiumSubject.asObservable();
 
-  private freeAttemptsLeftSubject = new BehaviorSubject<boolean>(true);
+  private firstQuizCompletedSubject = new BehaviorSubject<boolean>(false);
 
   // RxJS for Results
   private resultsSubject = new BehaviorSubject<QuizResult[]>([]);
@@ -56,18 +56,17 @@ export class QuizService {
   // Quiz unlock state: combines progress and first quiz check
   public canStartQuiz$: Observable<boolean> = combineLatest([
     this.premiumSubject,
-    this.resultsSubject,
+    this.firstQuizCompletedSubject,
     this.learningService.overallProgress$,
-    this.freeAttemptsLeftSubject,
   ]).pipe(
-    map(([isPremium, results, progress, hasFreeAttempts]) => {
+    map(([isPremium, firstCompleted, progress]) => {
       // Premium users always have access
       if (isPremium) return true;
 
-      // If user has free attempts left, they can start
-      if (hasFreeAttempts) return true;
+      // If user hasn't completed their first quiz, they can start
+      if (!firstCompleted) return true;
 
-      // After limit reached, check progress threshold
+      // After first quiz, check progress threshold
       return progress >= this.PROGRESS_THRESHOLD;
     })
   );
@@ -105,20 +104,32 @@ export class QuizService {
       if (user) {
         this.premiumSubject.next(user.isPremium || false);
         this.loadResults();
-        this.checkFreeAttempts();
+        this.checkFirstQuizStatus();
       } else {
         // Clear results if no user (e.g. logout)
         this.resultsSubject.next([]);
         this.premiumSubject.next(false);
+        this.firstQuizCompletedSubject.next(false);
       }
     });
 
     this.initializeTotalItemsCount();
   }
 
-  private async checkFreeAttempts() {
-    const hasLeft = await this.deviceService.checkQuizLimit();
-    this.freeAttemptsLeftSubject.next(hasLeft);
+  private async checkFirstQuizStatus() {
+    // Check local storage first for immediate UI update
+    const localStatus = localStorage.getItem('quiz_ever_attempted') === 'true';
+    if (localStatus) {
+      this.firstQuizCompletedSubject.next(true);
+      return;
+    }
+
+    // Double check with Firestore results
+    const attempts = await this.quizAttemptService.getRecentAttempts(1);
+    if (attempts.length > 0) {
+      this.firstQuizCompletedSubject.next(true);
+      localStorage.setItem('quiz_ever_attempted', 'true');
+    }
   }
 
   // Renamed from loadInitialResults to be more generic
@@ -229,6 +240,10 @@ export class QuizService {
         isUnlockedByLearning
       );
 
+      // Mark first quiz as completed and persist
+      this.firstQuizCompletedSubject.next(true);
+      localStorage.setItem('quiz_ever_attempted', 'true');
+
       // Update local state by fetching fresh results
       this.loadResults();
     } catch (error) {
@@ -307,8 +322,8 @@ export class QuizService {
     const isPremium = this.premiumSubject.value;
     if (isPremium) return true;
 
-    const hasFreeAttempts = this.freeAttemptsLeftSubject.value;
-    if (hasFreeAttempts) return true;
+    const firstCompleted = this.firstQuizCompletedSubject.value;
+    if (!firstCompleted) return true;
 
     const progress = this.learningService.getOverallProgress();
     return progress >= this.PROGRESS_THRESHOLD;
@@ -317,6 +332,8 @@ export class QuizService {
   async resetQuizData() {
     await this.quizAttemptService.resetQuizAttempts();
     this.resultsSubject.next([]);
-    await this.checkFreeAttempts();
+    // Note: We DO NOT reset firstQuizCompletedSubject here
+    // because the user has still attempted a quiz before.
+    // The lock should persist if they haven't reached 25% learning.
   }
 }
