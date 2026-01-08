@@ -437,6 +437,12 @@ export class LandingPage implements OnInit, OnDestroy {
 
   async markAsLearned() {
     if (this.currentSign && this.selectedCategory) {
+      // Check Premium Status
+      if (this.currentSign.isPremium && !this.isPremium) {
+        this.openSubscriptionModal();
+        return;
+      }
+
       const signId = this.currentSign.id;
       const categoryId = this.selectedCategory.id;
 
