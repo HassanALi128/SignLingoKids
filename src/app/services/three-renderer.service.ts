@@ -31,6 +31,13 @@ export class ThreeRenderer implements OnDestroy {
   private globalActions = new Map<string, THREE.AnimationClip>();
   private loadedFiles = new Set<string>();
 
+  // Idle Scheduler
+  private idleTimeoutId?: any;
+  private lastRandomIdle?: string;
+  private isIdleSchedulerActive = false;
+  private readonly IDLE_COMMON = 'idel-common';
+  private readonly RANDOM_IDLES = ['idel-hi', 'idel-one', 'idel-spiderman'];
+
   constructor(private ngZone: NgZone) {
     this.loader.setPath('');
     // Mobile only: No detection needed, we assume mobile constraints
@@ -50,7 +57,7 @@ export class ThreeRenderer implements OnDestroy {
 
     // Camera
     this.camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 1000);
-    this.camera.position.set(1.0, 2.2, 5.5);
+    this.camera.position.set(0, 1.6, 4.5);
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -94,7 +101,7 @@ export class ThreeRenderer implements OnDestroy {
   }
 
   async loadModel(
-    url: string = 'assets/aslkidanimation/models/asl_new_Modle.glb'
+    url: string = 'assets/aslkidanimation/models/new-asl-model.glb'
   ): Promise<THREE.Object3D> {
     this.disposeCurrentModel();
 
@@ -126,8 +133,16 @@ export class ThreeRenderer implements OnDestroy {
         this.mixer = new THREE.AnimationMixer(model);
         for (const clip of gltf.animations) {
           const action = this.mixer.clipAction(clip);
-          action.clampWhenFinished = true;
-          action.loop = THREE.LoopOnce;
+
+          // idle-common should loop, others play once
+          if (clip.name === this.IDLE_COMMON) {
+            action.loop = THREE.LoopRepeat;
+            action.clampWhenFinished = false;
+          } else {
+            action.loop = THREE.LoopOnce;
+            action.clampWhenFinished = true;
+          }
+
           this.actions.set(clip.name, action);
         }
       }
@@ -145,7 +160,7 @@ export class ThreeRenderer implements OnDestroy {
   centerModel(): void {
     if (!this.currentModel) return;
 
-    // Reset model position
+    // Reset model position and scale first to get accurate bounds
     this.currentModel.position.set(0, 0, 0);
 
     // Calculate bounding box
@@ -206,6 +221,7 @@ export class ThreeRenderer implements OnDestroy {
   }
 
   stop(): void {
+    this.stopIdleScheduler();
     this.activeAction?.stop();
     this.activeAction = undefined;
   }
@@ -268,8 +284,16 @@ export class ThreeRenderer implements OnDestroy {
     this.globalActions.forEach((clip, name) => {
       if (!this.actions.has(name)) {
         const action = this.mixer!.clipAction(clip, this.currentModel);
-        action.clampWhenFinished = true;
-        action.loop = THREE.LoopOnce;
+
+        // idle-common should loop, others play once
+        if (name === this.IDLE_COMMON) {
+          action.loop = THREE.LoopRepeat;
+          action.clampWhenFinished = false;
+        } else {
+          action.loop = THREE.LoopOnce;
+          action.clampWhenFinished = true;
+        }
+
         this.actions.set(name, action);
       }
     });
@@ -295,6 +319,109 @@ export class ThreeRenderer implements OnDestroy {
       }
     }
   }
+
+  // --------------------------------------------------------------------------
+  // 💤 Idle Scheduler Logic
+  // --------------------------------------------------------------------------
+
+  /**
+   * Starts the idle animation scheduler.
+   * Plays 'idle-common' as base and triggers random idles at intervals.
+   */
+  startIdleScheduler(): void {
+    if (this.isIdleSchedulerActive) return;
+    this.isIdleSchedulerActive = true;
+
+    console.log('💤 Starting Idle Scheduler...');
+
+    // 1. Play base idle-common
+    this.play(this.IDLE_COMMON, 0.5);
+
+    // 2. Schedule first random idle
+    this.scheduleNextRandomIdle();
+  }
+
+  /**
+   * Stops the idle scheduler and clears any pending timeouts.
+   */
+  stopIdleScheduler(): void {
+    this.isIdleSchedulerActive = false;
+    if (this.idleTimeoutId) {
+      clearTimeout(this.idleTimeoutId);
+      this.idleTimeoutId = undefined;
+    }
+
+    // Remove listener if any
+    if (this.mixer) {
+      this.mixer.removeEventListener('finished', this.onRandomIdleFinished);
+    }
+  }
+
+  private scheduleNextRandomIdle(): void {
+    if (!this.isIdleSchedulerActive) return;
+
+    // Random interval between 6 and 12 seconds
+    const delay = Math.random() * (12000 - 6000) + 6000;
+
+    this.idleTimeoutId = setTimeout(() => {
+      this.playRandomIdle();
+    }, delay);
+  }
+
+  private playRandomIdle(): void {
+    if (!this.isIdleSchedulerActive || !this.mixer) return;
+
+    // Filter out the last played random idle to avoid back-to-back repeats
+    const availableIdles = this.RANDOM_IDLES.filter(
+      (id) => id !== this.lastRandomIdle
+    );
+    const randomIndex = Math.floor(Math.random() * availableIdles.length);
+    const nextIdle = availableIdles[randomIndex];
+
+    console.log(`🎲 Playing random idle: ${nextIdle}`);
+    this.lastRandomIdle = nextIdle;
+
+    const commonAction = this.actions.get(this.IDLE_COMMON);
+    const randomAction = this.actions.get(nextIdle);
+
+    if (!commonAction || !randomAction) {
+      this.scheduleNextRandomIdle();
+      return;
+    }
+
+    // Smooth cross-fade
+    randomAction.reset();
+    randomAction.setEffectiveTimeScale(1);
+    randomAction.setEffectiveWeight(1);
+
+    // Crossfade from common to random
+    commonAction.crossFadeTo(randomAction, 0.5, true);
+    randomAction.play();
+
+    this.activeAction = randomAction;
+
+    // When random idle finishes, fade back to common
+    const onFinished = (e: any) => {
+      if (e.action === randomAction) {
+        this.mixer?.removeEventListener('finished', onFinished);
+
+        if (this.isIdleSchedulerActive) {
+          randomAction.crossFadeTo(commonAction, 0.5, true);
+          commonAction.play();
+          this.activeAction = commonAction;
+
+          // Schedule next
+          this.scheduleNextRandomIdle();
+        }
+      }
+    };
+
+    this.mixer.addEventListener('finished', onFinished);
+  }
+
+  private onRandomIdleFinished = (e: any) => {
+    // This is a placeholder for the listener logic if needed globally
+  };
 
   // --------------------------------------------------------------------------
   // 🔄 Render Loop & Lifecycle

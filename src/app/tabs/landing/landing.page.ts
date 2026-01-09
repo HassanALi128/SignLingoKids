@@ -327,7 +327,7 @@ export class LandingPage implements OnInit, OnDestroy {
 
       // Load the main character model
       await this.three.loadModel(
-        'assets/aslkidanimation/models/asl_new_Modle.glb'
+        'assets/aslkidanimation/models/new-asl-model.glb'
       );
 
       // Load category-specific actions if available
@@ -342,6 +342,14 @@ export class LandingPage implements OnInit, OnDestroy {
       }
 
       this.three.centerModel();
+
+      // Load idle animations from the default animation file
+      await this.three.loadActions(
+        'assets/aslkidanimation/actions/new-asl-default-animation.glb'
+      );
+
+      // Start Idle Scheduler for the character
+      this.three.startIdleScheduler();
     } catch (error) {
       console.error('Error initializing 3D model:', error);
     } finally {
@@ -350,6 +358,7 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   closeCategoryDetail(): void {
+    this.three.stopIdleScheduler();
     this.selectedCategory = null;
     this.categoryItems = [];
     this.stopAudio();
@@ -617,6 +626,8 @@ export class LandingPage implements OnInit, OnDestroy {
       }
 
       if (this.currentSign.actionName) {
+        // Stop idle scheduler when playing a specific sign
+        this.three.stopIdleScheduler();
         this.three.play(this.currentSign.actionName);
         console.log('Playing current sign:', this.currentSign.actionName);
       }

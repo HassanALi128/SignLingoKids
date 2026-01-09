@@ -16,6 +16,7 @@ import {
   PurchasesOfferings,
   PurchasesPackage,
 } from '@revenuecat/purchases-typescript-internal-esm';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,7 @@ export class MonetizationService {
     'ca-app-pub-3940256099942544/4411468910';
 
   public isPro = false; // Synced with RevenueCat
+  private isAdMobInitialized = false;
 
   // RevenueCat offerings - exposed for premium page
   public offerings: PurchasesOfferings | null = null;
@@ -46,12 +48,20 @@ export class MonetizationService {
     // Initialize RevenueCat first
     await this.purchasesService.init();
 
-    // Subscribe to premium status from RevenueCat
+    // Wait for the first resolved premium status before proceeding
+    try {
+      this.isPro = await firstValueFrom(this.purchasesService.isPremium$);
+      console.log('Initial premium status resolved:', this.isPro);
+    } catch (e) {
+      console.error('Error resolving initial premium status:', e);
+    }
+
+    // Subscribe to premium status from RevenueCat for runtime updates
     this.purchasesService.isPremium$.subscribe((isPremium) => {
       this.isPro = isPremium;
-      console.log('Premium status updated:', isPremium);
+      console.log('Premium status updated at runtime:', isPremium);
 
-      // Hide ads if user is premium
+      // Hide ads immediately if user becomes premium
       if (isPremium) {
         this.hideBanner();
       }
@@ -62,29 +72,35 @@ export class MonetizationService {
       this.offerings = offerings;
     });
 
-    // Initialize AdMob if not premium
+    // Initialize AdMob ONLY if not premium
     if (!this.isPro) {
       await this.initAdMob();
+    } else {
+      console.log('User is premium, skipping AdMob initialization');
     }
   }
 
   // ADMOB
   private async initAdMob() {
+    if (this.isAdMobInitialized || this.isPro) return;
+
     try {
       await AdMob.initialize();
+      this.isAdMobInitialized = true;
+      console.log('AdMob initialized successfully');
 
       // Preload Interstitial
       await this.prepareInterstitial();
 
       // Show Banner
-      this.showBanner();
+      await this.showBanner();
     } catch (e) {
       console.error('AdMob Init Error:', e);
     }
   }
 
   async showBanner() {
-    if (this.isPro) return;
+    if (this.isPro || !this.isAdMobInitialized) return;
 
     const adId = this.platform.is('ios')
       ? this.BANNER_ID_IOS
@@ -112,7 +128,7 @@ export class MonetizationService {
   }
 
   async prepareInterstitial() {
-    if (this.isPro) return;
+    if (this.isPro || !this.isAdMobInitialized) return;
 
     const adId = this.platform.is('ios')
       ? this.INTERSTITIAL_ID_IOS
@@ -129,7 +145,7 @@ export class MonetizationService {
   }
 
   async showInterstitial(): Promise<void> {
-    if (this.isPro) return;
+    if (this.isPro || !this.isAdMobInitialized) return;
 
     try {
       // Check if ready, if not prepare
