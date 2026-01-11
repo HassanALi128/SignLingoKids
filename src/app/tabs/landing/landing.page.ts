@@ -327,7 +327,7 @@ export class LandingPage implements OnInit, OnDestroy {
 
       // Load the main character model
       await this.three.loadModel(
-        'assets/aslkidanimation/models/new-asl-model.glb'
+        'assets/aslkidanimation/models/asl_new_modle.glb'
       );
 
       // Load category-specific actions if available

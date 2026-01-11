@@ -101,7 +101,7 @@ export class ThreeRenderer implements OnDestroy {
   }
 
   async loadModel(
-    url: string = 'assets/aslkidanimation/models/new-asl-model.glb'
+    url: string = 'assets/aslkidanimation/models/asl_new_modle.glb'
   ): Promise<THREE.Object3D> {
     this.disposeCurrentModel();
 

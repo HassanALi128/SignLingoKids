@@ -207,7 +207,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
 
       // Load the 3D character model
       await this.threeRenderer.loadModel(
-        'assets/aslkidanimation/models/new-asl-model.glb'
+        'assets/aslkidanimation/models/asl_new_modle.glb'
       );
 
       // Load animations
