@@ -62,39 +62,54 @@ export class ThreeRenderer implements OnDestroy {
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvas.nativeElement,
-      antialias: false, // 🚀 Disable antialias for performance (Mobile only)
+      antialias: true, // ✅ Enable antialias for smooth edges
       alpha: true,
       powerPreference: 'high-performance', // Hint to browser
     });
     this.renderer.setSize(width, height, false);
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace; // ✅ Accurate colors
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping; // ✅ Cinematic tone mapping
+    this.renderer.toneMappingExposure = 1.0;
 
-    // 🚀 Mobile-specific optimizations (Always applied)
-    const pixelRatio = Math.min(window.devicePixelRatio, 1.2); // Cap at 1.2 for better performance
-
+    // ✅ Use full device pixel ratio for sharpness
+    const pixelRatio = window.devicePixelRatio;
     this.renderer.setPixelRatio(pixelRatio);
     console.log('🎨 Pixel ratio set to:', pixelRatio);
 
-    // 🚀 Disable shadows (Mobile only)
-    this.renderer.shadowMap.enabled = false;
+    // ✅ Enable shadows
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // Lights
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 4.0);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 2.0); // Increased intensity
     this.scene.add(hemi);
 
-    const ambient = new THREE.AmbientLight(0xfff7e6, 0.8);
-    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    const ambient = new THREE.AmbientLight(0xfff7e6, 0.5); // Softer ambient
+
+    const dir = new THREE.DirectionalLight(0xffffff, 1.5); // Stronger key light
     dir.position.set(3, 6, 4);
+    dir.castShadow = true; // ✅ Enable shadow casting
+    dir.shadow.mapSize.width = 1024;
+    dir.shadow.mapSize.height = 1024;
+    dir.shadow.bias = -0.0001;
     this.scene.add(ambient, dir);
 
     // Controls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.05;
     this.controls.target.set(0, 1, 0);
     this.controls.update();
+
+    // ✅ Updated Controller Settings
     this.controls.enablePan = false;
-    this.controls.enableZoom = false;
-    this.controls.minPolarAngle = Math.PI / 2;
-    this.controls.maxPolarAngle = Math.PI / 2;
+    this.controls.enableZoom = true; // ✅ Allow zooming
+    this.controls.minDistance = 2; // Limit zoom in
+    this.controls.maxDistance = 6; // Limit zoom out
+
+    // ✅ Allow more vertical rotation but keep it reasonable
+    this.controls.minPolarAngle = Math.PI / 4; // 45 degrees
+    this.controls.maxPolarAngle = Math.PI / 1.8; // Slightly below horizontal
 
     // Start rendering loop (but it will only render if needed)
     this.startRendering();
@@ -149,6 +164,14 @@ export class ThreeRenderer implements OnDestroy {
 
       this.scene.add(model);
       this.currentModel = model;
+
+      // ✅ Enable shadows for the model
+      model.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
 
       return model;
     } catch (error) {
