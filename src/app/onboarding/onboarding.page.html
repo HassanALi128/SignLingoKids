@@ -4,10 +4,11 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true" class="onboarding-content">
-  <swiper-container pagination="true" #slides (slidechange)="onSlideDidChange(slides)">
+  <swiper-container pagination="true" #slides (slidechange)="onSlideDidChange(slides)" effect="fade"
+    fade-effect-cross-fade="true" speed="1000">
     <swiper-slide>
       <div class="card">
-        <img class="illustration" src="assets/logo.png" alt="Welcome" />
+        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/first.png" alt="Welcome" />
         <h2 class="title">Welcome to 🤘 Hand Hero 3D ASL</h2>
         <p class="subtitle">Explore American Sign Language through clear,
           visually accurate demonstrations by 3D characters.</p>
@@ -15,7 +16,8 @@
     </swiper-slide>
     <swiper-slide>
       <div class="card">
-        <img class="illustration" src="assets/logo.png" alt="Learn Step by Step" />
+        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/second.png"
+          alt="Learn Step by Step" />
         <h2 class="title">Learn Step by Step 😎✌️</h2>
         <p class="subtitle">Explore ASL signs through precise and
           easy-to-follow 3D character demonstrations.</p>
@@ -23,7 +25,8 @@
     </swiper-slide>
     <swiper-slide>
       <div class="card">
-        <img class="illustration" src="assets/logo.png" alt="Grow Your Skills" />
+        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/third.png"
+          alt="Grow Your Skills" />
         <h2 class="title">Grow Your Skills 📈</h2>
         <p class="subtitle">Practice regularly, test your knowledge,
           and improve your signing confidence over time.</p>
@@ -31,7 +34,7 @@
     </swiper-slide>
     <swiper-slide>
       <div class="card">
-        <img class="illustration" src="assets/logo.png" alt="Let’s Begin" />
+        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/fourth.png" alt="Let’s Begin" />
         <h2 class="title">✨ Let’s Begin</h2>
         <p class="subtitle">You’re ready to start learning ASL
           and communicate with confidence.</p>

@@ -191,15 +191,11 @@
 
       <div class="action-buttons" [class.lowered]="isFullscreen">
         <div class="action-btn-wrapper">
-          <button class="action-btn expand" (click)="toggleFullscreen()">
-            <ion-icon name="resize"></ion-icon>
-          </button>
+          <img src="assets/images/categories/resize.png" alt="Resize" (click)="toggleFullscreen()" />
         </div>
 
         <div class="action-btn-wrapper center">
-          <button class="action-btn play" (click)="playAnimation()">
-            <ion-icon name="play"></ion-icon>
-          </button>
+          <img src="assets/images/categories/play.png" alt="Play" (click)="playAnimation()" />
         </div>
         <!-- <div class="action-btn-wrapper">
           <button class="action-btn sound" (click)="playSound()">
@@ -207,10 +203,8 @@
           </button>
         </div> -->
         <div class="action-btn-wrapper">
-          <button class="action-btn hat" (click)="markAsLearned()"
-            [class.active-learned]="currentSign && isItemLearned(currentSign)">
-            <ion-icon name="school"></ion-icon>
-          </button>
+          <img src="assets/images/categories/learning.png" alt="Learn" (click)="markAsLearned()"
+            [class.active-learned]="currentSign && isItemLearned(currentSign)" />
         </div>
       </div>
     </div>

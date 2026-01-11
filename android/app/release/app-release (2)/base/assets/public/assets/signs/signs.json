@@ -1,0 +1,22 @@
+[
+  {
+    "id": "Afraid",
+    "label": "Afraid",
+    "description": "Sign for being afraid",
+    "thumbUrl": "assets/thumbs/afraid.png",
+    "pose": {
+      "mixamorigRightArm": { "x": 1.57, "y": 0, "z": 0 },
+      "mixamorigLeftArm": { "x": 1.2, "y": 0.1, "z": 0 }
+    }
+  },
+  {
+    "id": "Ball",
+    "label": "Ball",
+    "description": "Sign for ball",
+    "thumbUrl": "assets/thumbs/ball.png",
+    "pose": {
+      "mixamorigRightHand": { "x": 0.5, "y": 0.2, "z": 0 },
+      "mixamorigLeftHand": { "x": 0.5, "y": -0.2, "z": 0 }
+    }
+  }
+]

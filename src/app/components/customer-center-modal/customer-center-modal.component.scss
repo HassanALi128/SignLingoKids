@@ -1,0 +1,249 @@
+.customer-center-content {
+    --background: #f6f8fc;
+}
+
+.customer-center-container {
+    padding: 0;
+    position: relative;
+    min-height: 100%;
+}
+
+// Header with gradient background
+.header-section {
+    --background: var(--primary-gradient);
+    background: var(--primary-gradient);
+    padding: 24px 20px 32px 20px;
+    border-radius: 0 0 24px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    h2 {
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        text-align: center;
+    }
+
+    p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        margin: 0;
+        text-align: center;
+    }
+}
+
+// Status Card with modern design
+.status-card {
+    margin: 0 16px 20px 16px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    ion-card-header {
+        --background: var(--primary-gradient);
+        background: var(--primary-gradient);
+        padding: 16px 20px;
+
+        ion-card-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+    }
+
+    ion-card-content {
+        padding: 20px;
+    }
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    .label {
+        font-weight: 600;
+        color: #5f5f5f;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        ion-icon {
+            font-size: 20px;
+            color: #77bef0;
+        }
+    }
+
+    .value {
+        font-weight: 700;
+        color: #2f2f2f;
+        font-size: 15px;
+        text-align: right;
+
+        &.active {
+            color: #2dd55b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            &::before {
+                content: '';
+                width: 8px;
+                height: 8px;
+                background: #2dd55b;
+                border-radius: 50%;
+                display: inline-block;
+                animation: pulse 2s infinite;
+            }
+        }
+
+        &.inactive {
+            color: #c5000f;
+        }
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+// Action Buttons with gradient
+.action-buttons {
+    padding: 0 16px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    ion-button {
+        margin: 0;
+        font-weight: 700;
+        font-size: 16px;
+        text-transform: none;
+        height: 56px;
+        --border-radius: 16px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        // Primary button (Manage Subscription)
+        &:not([fill="outline"]) {
+            --background: var(--primary-gradient);
+            background: var(--primary-gradient);
+            color: white;
+
+            ion-icon {
+                font-size: 24px;
+                margin-right: 4px;
+            }
+        }
+
+        // Secondary button (Restore Purchases)
+        &[fill="outline"] {
+            --border-color: #77bef0;
+            --border-width: 2px;
+            --color: #0163aa;
+            border: 2px solid #77bef0;
+            color: #0163aa;
+            background: white;
+
+            ion-icon {
+                font-size: 22px;
+                margin-right: 4px;
+            }
+
+            &:hover {
+                --background: rgba(119, 190, 240, 0.1);
+            }
+        }
+    }
+}
+
+// Loading Overlay
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+
+    ion-spinner {
+        transform: scale(1.5);
+        --color: #77bef0;
+    }
+
+    p {
+        margin-top: 16px;
+        color: #2f2f2f;
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+// Premium badge
+.premium-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #ffc409 0%, #ff9800 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(255, 196, 9, 0.3);
+
+    ion-icon {
+        font-size: 16px;
+    }
+}
+
+// Info section
+.info-section {
+    margin: 0 16px 20px 16px;
+    padding: 16px;
+    background: rgba(119, 190, 240, 0.1);
+    border-radius: 16px;
+    border-left: 4px solid #77bef0;
+
+    p {
+        margin: 0;
+        color: #2f2f2f;
+        font-size: 14px;
+        line-height: 1.5;
+
+        ion-icon {
+            vertical-align: middle;
+            margin-right: 6px;
+            color: #77bef0;
+        }
+    }
+}

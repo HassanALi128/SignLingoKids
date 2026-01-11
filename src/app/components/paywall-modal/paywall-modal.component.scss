@@ -1,0 +1,43 @@
+.paywall-content {
+  --background: transparent;
+}
+
+.paywall-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 1rem;
+
+  ion-spinner {
+    transform: scale(1.5);
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+}
+
+.restore-container {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+
+  ion-button {
+    --color: var(--ion-color-medium);
+    font-size: 0.85rem;
+  }
+}

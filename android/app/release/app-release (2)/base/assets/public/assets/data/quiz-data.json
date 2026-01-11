@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1",
+    "question": "Which sign is this?",
+    "mediaUrl": "assets/audio/deer.m4a",
+    "options": [
+      {
+        "id": "grass",
+        "text": "Grass",
+        "imageUrl": "assets/images/categories/nature/grass.webp",
+        "isCorrect": false
+      },
+      {
+        "id": "bicycle",
+        "text": "Cycle",
+        "imageUrl": "assets/images/categories/playtime/cycle.webp",
+        "isCorrect": false
+      },
+      {
+        "id": "deer",
+        "text": "Deer",
+        "imageUrl": "assets/images/categories/animals/deer.webp",
+        "isCorrect": true
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "question": "Which sign is this?",
+    "mediaUrl": "assets/audio/dog.m4a",
+    "options": [
+      {
+        "id": "cat",
+        "text": "Cat",
+        "imageUrl": "assets/images/categories/animals/cat.webp",
+        "isCorrect": false
+      },
+      {
+        "id": "dog",
+        "text": "Dog",
+        "imageUrl": "assets/images/categories/animals/dog.webp",
+        "isCorrect": true
+      },
+      {
+        "id": "bird",
+        "text": "Bird",
+        "imageUrl": "assets/images/categories/animals/bird.webp",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "question": "Which sign is this?",
+    "mediaUrl": "assets/audio/fish.m4a",
+    "options": [
+      {
+        "id": "fish",
+        "text": "Fish",
+        "imageUrl": "assets/images/categories/animals/fish.webp",
+        "isCorrect": true
+      },
+      {
+        "id": "butterfly",
+        "text": "Butterfly",
+        "imageUrl": "assets/images/categories/animals/butterfly.webp",
+        "isCorrect": false
+      },
+      {
+        "id": "bee",
+        "text": "Owl",
+        "imageUrl": "assets/images/categories/animals/owl.webp",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "question": "Which sign is this?",
+    "mediaUrl": "assets/audio/bird.m4a",
+    "options": [
+      {
+        "id": "tree",
+        "text": "Forest",
+        "imageUrl": "assets/images/categories/nature/forest.webp",
+        "isCorrect": false
+      },
+      {
+        "id": "bird",
+        "text": "Bird",
+        "imageUrl": "assets/images/categories/animals/bird.webp",
+        "isCorrect": true
+      },
+      {
+        "id": "flower",
+        "text": "Autumn",
+        "imageUrl": "assets/images/categories/nature/autumn.webp",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "question": "Which sign is this?",
+    "mediaUrl": "assets/audio/cat.m4a",
+    "options": [
+      {
+        "id": "cat",
+        "text": "Cat",
+        "imageUrl": "assets/images/categories/animals/cat.webp",
+        "isCorrect": true
+      },
+      {
+        "id": "lion",
+        "text": "Lion",
+        "imageUrl": "assets/images/categories/animals/lion.webp",
+        "isCorrect": false
+      },
+      {
+        "id": "tiger",
+        "text": "Panda",
+        "imageUrl": "assets/images/categories/animals/panda.webp",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "question": "Which sign is this?",
+    "mediaUrl": "assets/audio/lion.m4a",
+    "options": [
+      {
+        "id": "lion",
+        "text": "Lion",
+        "imageUrl": "assets/images/categories/animals/lion.webp",
+        "isCorrect": true
+      },
+      {
+        "id": "dog",
+        "text": "Dog",
+        "imageUrl": "assets/images/categories/animals/dog.webp",
+        "isCorrect": false
+      },
+      {
+        "id": "tiger",
+        "text": "Panda",
+        "imageUrl": "assets/images/categories/animals/panda.webp",
+        "isCorrect": false
+      }
+    ]
+  }
+]

@@ -1,80 +1,9 @@
-<ion-content class="ion-no-padding">
-  <div class="modal-container">
-    <!-- Close Button -->
-    <div class="close-button" (click)="close()">
-      <ion-icon name="close"></ion-icon>
-    </div>
-
-    <!-- Header Content -->
-    <div class="header-content">
-      <h1>Unlimited Access</h1>
-      <p>Access the most advanced AI research assistant</p>
-    </div>
-
-    <!-- Hero Image Area (Background is handled in SCSS) -->
-    <div class="hero-spacer"></div>
-
-    <!-- Benefits List -->
-    <div class="benefits-list">
-      <div class="benefit-item">
-        <div class="checkbox checked">
-          <ion-icon name="checkmark"></ion-icon>
-        </div>
-        <span>Ads Free!</span>
-      </div>
-      <div class="benefit-item">
-        <div class="checkbox checked">
-          <ion-icon name="checkmark"></ion-icon>
-        </div>
-        <span>200+ Animations</span>
-      </div>
-      <div class="benefit-item">
-        <div class="checkbox checked">
-          <ion-icon name="checkmark"></ion-icon>
-        </div>
-        <span>Unlimited quiz</span>
-      </div>
-      <div class="benefit-item">
-        <div class="checkbox checked">
-          <ion-icon name="checkmark"></ion-icon>
-        </div>
-        <span>Future update</span>
-      </div>
-    </div>
-
-    <!-- Pricing Cards -->
-    <div class="pricing-cards">
-      <!-- Weekly Plan -->
-      <div class="plan-card" [class.selected]="selectedPlan === 'week'" (click)="selectPlan('week')">
-        <div class="plan-header">
-          <span class="plan-title">3-Day Free Trial</span>
-          <div class="checkbox-circle">
-            <ion-icon name="checkmark" *ngIf="selectedPlan === 'week'"></ion-icon>
-          </div>
-        </div>
-        <div class="plan-price">Rs:- 1,299/-</div>
-        <div class="plan-period">Week</div>
-      </div>
-
-      <!-- Yearly Plan -->
-      <div class="plan-card" [class.selected]="selectedPlan === 'year'" (click)="selectPlan('year')">
-        <div class="plan-header">
-          <span class="plan-title">Yearly Access</span>
-          <div class="checkbox-circle">
-            <ion-icon name="checkmark" *ngIf="selectedPlan === 'year'"></ion-icon>
-          </div>
-        </div>
-        <div class="plan-price">RS:- 12,999/-</div>
-        <div class="save-badge">Save Rs:-2589/-</div>
-        <div class="plan-period">Year</div>
-      </div>
-    </div>
-
-    <!-- Unlock Button -->
-    <div class="action-area">
-      <button class="unlock-btn" (click)="unlockAccess()">
-        Unlock Access <ion-icon name="chevron-forward"></ion-icon>
-      </button>
+<ion-content class="subscription-content">
+  <div class="subscription-container">
+    <!-- Loading state while paywall is being presented -->
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading subscription options...</p>
     </div>
   </div>
 </ion-content>

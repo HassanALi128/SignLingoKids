@@ -1,0 +1,108 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="transparent">
+        <ion-buttons slot="start">
+            <ion-button (click)="close()" fill="clear">
+                <ion-icon name="close" slot="icon-only" style="color: black; font-size: 28px;"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="customer-center-content">
+    <div class="customer-center-container">
+        <!-- Header Section with Gradient -->
+        <div class="header-section">
+            <h2>Manage Subscription</h2>
+            <p>View and manage your premium subscription</p>
+        </div>
+
+        <!-- Subscription Status Card -->
+        <ion-card *ngIf="subscriptionStatus" class="status-card">
+            <ion-card-header>
+                <ion-card-title>
+                    <ion-icon name="shield-checkmark" style="vertical-align: middle; margin-right: 8px;"></ion-icon>
+                    Subscription Status
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <div class="status-item">
+                    <span class="label">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        Status
+                    </span>
+                    <span class="value" [class.active]="subscriptionStatus.isActive"
+                        [class.inactive]="!subscriptionStatus.isActive">
+                        {{ subscriptionStatus.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+
+                <div class="status-item" *ngIf="subscriptionStatus.isActive">
+                    <span class="label">
+                        <ion-icon name="star"></ion-icon>
+                        Type
+                    </span>
+                    <span class="value">
+                        <span class="premium-badge" *ngIf="subscriptionStatus.isTrial">
+                            <ion-icon name="time"></ion-icon>
+                            Trial
+                        </span>
+                        <span *ngIf="!subscriptionStatus.isTrial">Premium</span>
+                    </span>
+                </div>
+
+                <div class="status-item" *ngIf="subscriptionStatus.isActive">
+                    <span class="label">
+                        <ion-icon name="refresh-circle"></ion-icon>
+                        Renewal
+                    </span>
+                    <span class="value">
+                        {{ subscriptionStatus.willRenew ? 'Auto-renew enabled' : 'Cancelled' }}
+                    </span>
+                </div>
+
+                <div class="status-item" *ngIf="subscriptionStatus.expirationDate">
+                    <span class="label">
+                        <ion-icon name="calendar"></ion-icon>
+                        {{ subscriptionStatus.willRenew ? 'Renews on' : 'Expires on' }}
+                    </span>
+                    <span class="value">{{ formattedExpirationDate }}</span>
+                </div>
+
+                <div class="status-item" *ngIf="subscriptionStatus.productIdentifier">
+                    <span class="label">
+                        <ion-icon name="pricetag"></ion-icon>
+                        Plan
+                    </span>
+                    <span class="value">{{ subscriptionStatus.productIdentifier }}</span>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Info Section -->
+        <div class="info-section" *ngIf="subscriptionStatus?.isActive">
+            <p>
+                <ion-icon name="information-circle"></ion-icon>
+                You can manage your subscription, change plans, or cancel anytime from the subscription center.
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <ion-button expand="block" (click)="presentCustomerCenter()" [disabled]="isLoading">
+                <ion-icon slot="start" name="settings"></ion-icon>
+                Open Subscription Center
+            </ion-button>
+
+            <ion-button expand="block" fill="outline" (click)="restorePurchases()" [disabled]="isLoading">
+                <ion-icon slot="start" name="refresh"></ion-icon>
+                Restore Purchases
+            </ion-button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoading" class="loading-overlay">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Loading...</p>
+        </div>
+    </div>
+</ion-content>

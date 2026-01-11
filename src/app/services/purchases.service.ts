@@ -10,6 +10,14 @@ import {
 } from '@revenuecat/purchases-typescript-internal-esm';
 import { environment } from '../../environments/environment';
 
+export interface SubscriptionStatus {
+  isActive: boolean;
+  isTrial: boolean;
+  willRenew: boolean;
+  expirationDate: Date | null;
+  productIdentifier: string | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -57,6 +65,10 @@ export class PurchasesService {
       }
 
       // Initialize Purchases SDK
+      console.log(
+        '🔑 Configuring RevenueCat with API Key:',
+        apiKey.substring(0, 8) + '...'
+      );
       await Purchases.configure({
         apiKey,
         appUserID: undefined, // Will be set later when user logs in
@@ -113,10 +125,61 @@ export class PurchasesService {
    * Update premium status based on customer info
    */
   private updatePremiumStatus(customerInfo: CustomerInfo): void {
-    // Check if user has any active entitlements
+    // Check if user has the "Hand Hero 3D ASL Pro" entitlement
     const hasPremium =
-      customerInfo.entitlements.active['premium'] !== undefined;
+      customerInfo.entitlements.active[environment.revenuecat.entitlementId] !==
+      undefined;
     this.isPremiumSubject.next(hasPremium);
+  }
+
+  /**
+   * Check if user has "Hand Hero 3D ASL Pro" entitlement
+   */
+  hasProEntitlement(): boolean {
+    const customerInfo = this.customerInfoSubject.value;
+    if (!customerInfo) return false;
+
+    return (
+      customerInfo.entitlements.active[environment.revenuecat.entitlementId] !==
+      undefined
+    );
+  }
+
+  /**
+   * Get detailed subscription status
+   */
+  getSubscriptionStatus(): SubscriptionStatus {
+    const customerInfo = this.customerInfoSubject.value;
+    const defaultStatus: SubscriptionStatus = {
+      isActive: false,
+      isTrial: false,
+      willRenew: false,
+      expirationDate: null,
+      productIdentifier: null,
+    };
+
+    if (!customerInfo) return defaultStatus;
+
+    const entitlement =
+      customerInfo.entitlements.active[environment.revenuecat.entitlementId];
+    if (!entitlement) return defaultStatus;
+
+    return {
+      isActive: true,
+      isTrial: entitlement.periodType === 'TRIAL',
+      willRenew: entitlement.willRenew,
+      expirationDate: entitlement.expirationDate
+        ? new Date(entitlement.expirationDate)
+        : null,
+      productIdentifier: entitlement.productIdentifier,
+    };
+  }
+
+  /**
+   * Check if user is in trial period
+   */
+  isInTrial(): boolean {
+    return this.getSubscriptionStatus().isTrial;
   }
 
   /**
@@ -125,12 +188,61 @@ export class PurchasesService {
   async fetchOfferings(): Promise<PurchasesOfferings | null> {
     try {
       const offerings = await Purchases.getOfferings();
+      console.log(
+        '📦 RevenueCat Offerings:',
+        JSON.stringify(offerings, null, 2)
+      );
+
+      if (!offerings || !offerings.current) {
+        console.warn('⚠️ No current offering found in RevenueCat offerings.');
+      } else {
+        console.log('✅ Current offering found:', offerings.current);
+      }
+
       this.offeringsSubject.next(offerings);
       return offerings;
     } catch (error) {
-      console.error('Failed to fetch offerings:', error);
+      console.error('❌ Failed to fetch offerings:', error);
       return null;
     }
+  }
+
+  /**
+   * Get monthly subscription package
+   */
+  getMonthlyPackage(): PurchasesPackage | null {
+    const offerings = this.offeringsSubject.value;
+    if (!offerings || !offerings.current) return null;
+
+    // Try to find monthly package
+    return (
+      offerings.current.monthly ||
+      offerings.current.availablePackages.find(
+        (pkg) =>
+          pkg.identifier === environment.revenuecat.products.monthly ||
+          pkg.packageType === 'MONTHLY'
+      ) ||
+      null
+    );
+  }
+
+  /**
+   * Get yearly subscription package
+   */
+  getYearlyPackage(): PurchasesPackage | null {
+    const offerings = this.offeringsSubject.value;
+    if (!offerings || !offerings.current) return null;
+
+    // Try to find yearly package
+    return (
+      offerings.current.annual ||
+      offerings.current.availablePackages.find(
+        (pkg) =>
+          pkg.identifier === environment.revenuecat.products.yearly ||
+          pkg.packageType === 'ANNUAL'
+      ) ||
+      null
+    );
   }
 
   /**
@@ -155,6 +267,28 @@ export class PurchasesService {
       }
       throw error;
     }
+  }
+
+  /**
+   * Purchase monthly subscription
+   */
+  async purchaseMonthly(): Promise<CustomerInfo | null> {
+    const monthlyPackage = this.getMonthlyPackage();
+    if (!monthlyPackage) {
+      throw new Error('Monthly subscription package not available');
+    }
+    return this.purchasePackage(monthlyPackage);
+  }
+
+  /**
+   * Purchase yearly subscription
+   */
+  async purchaseYearly(): Promise<CustomerInfo | null> {
+    const yearlyPackage = this.getYearlyPackage();
+    if (!yearlyPackage) {
+      throw new Error('Yearly subscription package not available');
+    }
+    return this.purchasePackage(yearlyPackage);
   }
 
   /**

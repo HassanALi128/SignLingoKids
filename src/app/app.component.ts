@@ -40,9 +40,17 @@ export class AppComponent implements OnInit {
       await this.platform.ready();
 
       // Update status
+      this.initStatus = 'Initializing...';
+
+      // IMPORTANT: Initialize RevenueCat FIRST before any user operations
+      // This ensures the SDK is configured before identifyUser() is called
+      await this.monetizationService.init();
+
+      // Update status
       this.initStatus = 'Checking your device...';
 
       // Initialize user from device (this handles Firebase auth and device check)
+      // This will call purchasesService.identifyUser() which requires RevenueCat to be initialized
       const navigationPath = await this.userService.initializeUserFromDevice();
 
       // Update status
@@ -50,9 +58,6 @@ export class AppComponent implements OnInit {
 
       // Give a brief moment for the status to show
       await this.delay(500);
-
-      // Initialize monetization
-      this.monetizationService.init();
 
       // Setup back button handler
       this.handleBackButton();

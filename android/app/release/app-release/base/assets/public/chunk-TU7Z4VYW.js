@@ -1,0 +1,1 @@
+import{b as e}from"./chunk-DSQUNRGV.js";import{f as n}from"./chunk-D7YYRZS5.js";var o=class extends e{show(i){return n(this,null,function*(){})}hide(i){return n(this,null,function*(){})}};export{o as SplashScreenWeb};

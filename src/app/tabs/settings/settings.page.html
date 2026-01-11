@@ -20,7 +20,7 @@
           <h2 class="user-name">
             {{userName}}
             @if(isPremium) {
-            <ion-icon name="star" class="premium-star-icon"></ion-icon>
+            <ion-icon name="star-outline" class="premium-star-icon"></ion-icon>
             }
           </h2>
         </div>
@@ -30,7 +30,7 @@
 
       <div class="setting-item" (click)="editProfile()">
         <div class="icon-box profile">
-          <ion-icon name="person"></ion-icon>
+          <ion-icon name="person-outline"></ion-icon>
         </div>
         <div class="text-box">
           <h3 class="item-title">Edit Profile</h3>
@@ -60,6 +60,28 @@
       <div class="text-box">
         <h3 class="item-title">Buy Subscription</h3>
         <p class="item-desc">Add 200+ Sign and much more.</p>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
+    </div>
+
+    <div class="setting-card" (click)="openCustomerCenter()">
+      <div class="icon-box manage">
+        <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.5 0C6.04416 0 0 6.04416 0 13.5C0 20.9558 6.04416 27 13.5 27C20.9558 27 27 20.9558 27 13.5C27 6.04416 20.9558 0 13.5 0ZM13.5 4.5C15.5711 4.5 17.25 6.17893 17.25 8.25C17.25 10.3211 15.5711 12 13.5 12C11.4289 12 9.75 10.3211 9.75 8.25C9.75 6.17893 11.4289 4.5 13.5 4.5ZM13.5 23.4C10.125 23.4 7.14375 21.6525 5.4 18.9975C5.44125 16.2825 10.7775 14.7975 13.5 14.7975C16.2225 14.7975 21.5588 16.2825 21.6 18.9975C19.8562 21.6525 16.875 23.4 13.5 23.4Z"
+            fill="url(#paint0_linear_manage)" />
+          <defs>
+            <linearGradient id="paint0_linear_manage" x1="0" y1="0" x2="27" y2="27" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#EF8D1B" />
+              <stop offset="0.448937" stop-color="#F34F27" />
+              <stop offset="1" stop-color="#6E1664" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="text-box">
+        <h3 class="item-title">Manage Subscription</h3>
+        <p class="item-desc">View and manage your subscription.</p>
       </div>
       <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
@@ -145,7 +167,7 @@
     <!-- Testing Mode: Toggle Premium -->
     <div class="setting-card testing-mode" (click)="togglePremium()">
       <div class="icon-box premium-toggle" [class.active]="isPremium">
-        <ion-icon name="star"></ion-icon>
+        <ion-icon name="star-outline"></ion-icon>
       </div>
       <div class="text-box">
         <h3 class="item-title">Toggle Premium (Test)</h3>
@@ -167,7 +189,7 @@
       <div class="edit-modal">
         <div class="modal-header">
           <ion-button fill="clear" (click)="closeEditModal()" class="back-btn">
-            <ion-icon name="arrow-back"></ion-icon>
+            <ion-icon name="arrow-back-outline"></ion-icon>
           </ion-button>
           <h2>Edit profile</h2>
         </div>
@@ -187,7 +209,7 @@
           <div class="input-section">
             <div class="input-wrapper">
               <ion-input [(ngModel)]="editName" placeholder="Enter your name" maxlength="10"></ion-input>
-              <ion-icon name="pencil" class="edit-icon"></ion-icon>
+              <ion-icon name="pencil-outline" class="edit-icon"></ion-icon>
             </div>
           </div>
 

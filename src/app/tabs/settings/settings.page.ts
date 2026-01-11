@@ -17,6 +17,8 @@ import {
   pencil,
   add,
   star,
+  starOutline,
+  personOutline,
 } from 'ionicons/icons';
 
 import { CommonService } from '../../core/services/common';
@@ -24,11 +26,13 @@ import { ProfileService } from '../../services/profile.service';
 import { UserService } from '../../services/user.service';
 import { ModalController } from '@ionic/angular';
 import { PremiumSuccessModalComponent } from '../../components/premium-success-modal/premium-success-modal.component';
+import { CustomerCenterModalComponent } from '../../components/customer-center-modal/customer-center-modal.component';
 import { FormsModule } from '@angular/forms';
 import { QuizService } from '../../services/quiz';
 import { QuizAttemptService } from '../../services/quiz-attempt.service';
 import { DeviceService } from '../../services/device.service';
 import { ProgressService } from '../../services/progress.service';
+import { PurchasesService } from '../../services/purchases.service';
 
 @Component({
   selector: 'app-settings',
@@ -70,7 +74,8 @@ export class SettingsPage implements OnInit {
     private quizAttemptService: QuizAttemptService,
     private deviceService: DeviceService,
     private progressService: ProgressService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private purchasesService: PurchasesService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -79,11 +84,11 @@ export class SettingsPage implements OnInit {
       'document-text-outline': documentTextOutline,
       'chevron-forward-outline': chevronForwardOutline,
       'person-circle-outline': personCircleOutline,
-      person,
+      personOutline,
       'arrow-back': arrowBack,
       pencil,
       add,
-      star,
+      starOutline,
     });
   }
   ngOnInit(): void {
@@ -158,12 +163,48 @@ export class SettingsPage implements OnInit {
   }
 
   async restorePurchase() {
-    this.commonService.messageWithToast(
-      'Checking for previous purchases...',
-      2000,
-      'primary',
-      'bottom'
-    );
+    await this.commonService.showLoadingSpinner('Restoring purchases...');
+
+    try {
+      const customerInfo = await this.purchasesService.restorePurchases();
+      await this.commonService.hideLoadingSpinner();
+
+      if (customerInfo && this.purchasesService.hasProEntitlement()) {
+        // Sync premium status
+        await this.userService.syncPremiumStatusFromRevenueCat();
+
+        this.commonService.messageWithToast(
+          'Purchases restored successfully!',
+          2000,
+          'success',
+          'bottom'
+        );
+      } else {
+        this.commonService.messageWithToast(
+          'No previous purchases found.',
+          2000,
+          'primary',
+          'bottom'
+        );
+      }
+    } catch (error) {
+      await this.commonService.hideLoadingSpinner();
+      console.error('Restore purchases error:', error);
+      this.commonService.messageWithToast(
+        'Failed to restore purchases. Please try again.',
+        2000,
+        'danger',
+        'bottom'
+      );
+    }
+  }
+
+  async openCustomerCenter() {
+    const modal = await this.modalController.create({
+      component: CustomerCenterModalComponent,
+      cssClass: 'customer-center-modal',
+    });
+    await modal.present();
   }
 
   async restoreProgress() {

@@ -31,6 +31,7 @@ const config: CapacitorConfig = {
       overlaysWebView: false,
       style: 'DARK',
       backgroundColor: '#ffffffff',
+      color: '#000000',
     },
   },
 };

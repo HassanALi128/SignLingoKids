@@ -10,9 +10,16 @@ export const environment = {
     measurementId: 'G-LX6WH15GES',
   },
   revenuecat: {
-    // REPLACE THESE WITH YOUR ACTUAL REVENUECAT API KEYS
+    // RevenueCat API Keys - REPLACE WITH PRODUCTION KEYS
     // Get them from: https://app.revenuecat.com/
-    apiKeyIOS: 'YOUR_IOS_API_KEY_HERE',
-    apiKeyAndroid: 'YOUR_ANDROID_API_KEY_HERE',
+    apiKeyIOS: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
+    apiKeyAndroid: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
+    // Entitlement identifier (must match RevenueCat dashboard)
+    entitlementId: 'premium',
+    // Product identifiers (must match RevenueCat dashboard)
+    products: {
+      monthly: 'monthly',
+      yearly: 'yearly',
+    },
   },
 };
