@@ -12,6 +12,7 @@
     --primary-gradient: linear-gradient(180deg, #D63E48 0%, #4B1669 100%);
     --text-matte-black: #171717;
     --ion-font-family: 'Rubik', sans-serif;
+    --ad-banner-height: 0px;
 }
 
 html,
@@ -47,7 +48,7 @@ body {
 // @import '@ionic/angular/css/palettes/dark.system.css';
 /* Safe Area Utilities */
 .safe-area-bottom {
-    padding-bottom: var(--ion-safe-area-bottom);
+    padding-bottom: calc(var(--ion-safe-area-bottom) + var(--ad-banner-height));
 }
 
 .safe-area-top {
@@ -67,11 +68,18 @@ ion-toolbar {
 ion-footer,
 ion-tab-bar {
     --ion-safe-area-bottom: env(safe-area-inset-bottom);
+    padding-bottom: var(--ad-banner-height);
+    transition: padding-bottom 0.3s ease;
+}
+
+/* Global fix for ion-content to respect banner */
+ion-content {
+    --padding-bottom: calc(var(--ad-banner-height) + var(--ion-safe-area-bottom));
 }
 
 /* For pages with fullscreen content that need bottom padding */
 .has-footer {
-    --padding-bottom: calc(56px + var(--ion-safe-area-bottom));
+    --padding-bottom: calc(56px + var(--ion-safe-area-bottom) + var(--ad-banner-height));
 }
 
 

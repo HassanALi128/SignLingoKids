@@ -113,6 +113,23 @@ export class MonetizationService {
     };
 
     try {
+      // Listen for ad size changes to update layout
+      (AdMob as any).addListener(
+        BannerAdPluginEvents.SizeChanged,
+        (info: any) => {
+          this.setBannerHeight(info.height);
+        }
+      );
+
+      // Fallback: Listen for loaded event if size changed doesn't fire immediately
+      (AdMob as any).addListener(BannerAdPluginEvents.Loaded, (info: any) => {
+        // If height is available in info, use it. Otherwise assume standard adaptive height (~50-60px)
+        // Note: info.height might be in pixels or dp. Usually dp.
+        if (info && info.height) {
+          this.setBannerHeight(info.height);
+        }
+      });
+
       await AdMob.showBanner(options);
     } catch (e) {
       console.error('Show Banner Error:', e);
@@ -122,9 +139,17 @@ export class MonetizationService {
   async hideBanner() {
     try {
       await AdMob.hideBanner();
+      this.setBannerHeight(0); // Reset height when hidden
     } catch (e) {
       // ignore
     }
+  }
+
+  private setBannerHeight(height: number) {
+    // Convert height to string with px units
+    const heightPx = height > 0 ? `${height}px` : '0px';
+    document.documentElement.style.setProperty('--ad-banner-height', heightPx);
+    console.log('AdMob Banner Height set to:', heightPx);
   }
 
   async prepareInterstitial() {
