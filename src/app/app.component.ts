@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  IonApp,
-  IonRouterOutlet,
-  Platform,
-  AlertController,
-} from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { AlertService } from './services/alert.service';
 import { MonetizationService } from './services/monetization.service';
 import { UserService } from './services/user.service';
 import { InitLoaderComponent } from './components/init-loader/init-loader.component';
@@ -25,7 +21,7 @@ export class AppComponent implements OnInit {
   constructor(
     private platform: Platform,
     private router: Router,
-    private alertController: AlertController,
+    private alertService: AlertService,
     private monetizationService: MonetizationService,
     private userService: UserService
   ) {}
@@ -117,23 +113,9 @@ export class AppComponent implements OnInit {
   }
 
   private async showExitConfirm() {
-    const alert = await this.alertController.create({
-      header: 'Exit App',
-      message: 'Are you sure you want to exit this app?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Exit',
-          handler: () => {
-            App.exitApp();
-          },
-        },
-      ],
-    });
-
-    await alert.present();
+    const shouldExit = await this.alertService.exitApp();
+    if (shouldExit) {
+      App.exitApp();
+    }
   }
 }

@@ -136,6 +136,7 @@ ion-toolbar {
         padding: 0 16px 16px;
         gap: 12px;
         display: flex;
+        justify-content: center;
 
         // flex-direction: column-reverse;
         .alert-button {
@@ -147,18 +148,19 @@ ion-toolbar {
             text-transform: none;
 
             &.alert-button-cancel {
-                background: #f3f4f6;
-                color: #666;
-                --background: #f3f4f6;
+                background: #AFAFAF;
+                color: white;
+                --background: #AFAFAF;
 
                 .alert-button-inner {
-                    color: #666;
+                    color: white;
                 }
             }
 
             &.alert-button-confirm {
                 background: var(--primary-gradient);
                 color: white;
+                width: 5rem;
                 --background: var(--primary-gradient);
 
                 .alert-button-inner {
@@ -167,4 +169,23 @@ ion-toolbar {
             }
         }
     }
+}
+
+/* Custom Alert Modal - Transparent Background */
+.custom-alert-modal {
+    --background: transparent;
+    --box-shadow: none;
+
+    .modal-wrapper {
+        --background: transparent;
+        --box-shadow: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.alert-button-inner.sc-ion-alert-md {
+    // -ms-flex-pack: end;
+    justify-content: center;
 }

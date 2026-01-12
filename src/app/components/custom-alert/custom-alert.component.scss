@@ -1,0 +1,143 @@
+.custom-alert-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.4); // Dimmed background handled by modal, but this adds extra depth if needed
+}
+
+.alert-content {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px 24px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+
+    // Decorative background blob (optional, keeps it clean for now)
+}
+
+.icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+
+    &.info {
+        background: rgba(var(--ion-color-primary-rgb), 0.1);
+        color: var(--ion-color-primary);
+    }
+
+    &.success {
+        background: rgba(var(--ion-color-success-rgb), 0.1);
+        color: var(--ion-color-success);
+    }
+
+    &.warning {
+        background: rgba(var(--ion-color-warning-rgb), 0.1);
+        color: var(--ion-color-warning);
+    }
+
+    &.exit {
+        background: rgba(var(--ion-color-danger-rgb), 0.1);
+        color: var(--ion-color-danger);
+    }
+
+    &.confirm {
+        background: rgba(var(--ion-color-secondary-rgb), 0.1);
+        color: var(--ion-color-secondary);
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.alert-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #2c3e50;
+    margin: 0 0 12px;
+    font-family: 'Nunito', sans-serif; // Assuming a playful font, or fallback
+}
+
+.alert-message {
+    font-size: 16px;
+    color: #6c757d;
+    margin: 0 0 28px;
+    line-height: 1.5;
+}
+
+.alert-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+
+    .alert-btn {
+        flex: 1;
+        padding: 14px 20px;
+        border-radius: 16px;
+        font-size: 16px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.1s ease, filter 0.2s;
+        outline: none;
+
+        &:active {
+            transform: scale(0.96);
+        }
+
+        &.secondary {
+            background: #f1f3f5;
+            color: #868e96;
+
+            &:hover {
+                background: #e9ecef;
+            }
+        }
+
+        &.primary {
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+            // Default primary gradient
+            background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
+
+            &.warning {
+                background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            }
+
+            &.exit {
+                background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
+            }
+
+            &.success {
+                background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            }
+        }
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

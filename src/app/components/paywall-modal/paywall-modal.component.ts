@@ -3,7 +3,6 @@ import {
   IonicModule,
   ModalController,
   LoadingController,
-  AlertController,
 } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import {
@@ -12,6 +11,7 @@ import {
 } from '@revenuecat/purchases-capacitor-ui';
 import { PurchasesService } from '../../services/purchases.service';
 import { UserService } from '../../services/user.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-paywall-modal',
@@ -26,7 +26,7 @@ export class PaywallModalComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private loadingController: LoadingController,
-    private alertController: AlertController,
+    private alertService: AlertService,
     private purchasesService: PurchasesService,
     private userService: UserService
   ) {}
@@ -128,29 +128,14 @@ export class PaywallModalComponent implements OnInit {
   }
 
   private async showError(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Error',
-      message,
-      buttons: ['OK'],
-    });
-    await alert.present();
+    await this.alertService.error('Error', message);
   }
 
   private async showSuccess(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Success',
-      message,
-      buttons: ['OK'],
-    });
-    await alert.present();
+    await this.alertService.success('Success', message);
   }
 
   private async showInfo(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Info',
-      message,
-      buttons: ['OK'],
-    });
-    await alert.present();
+    await this.alertService.info('Info', message);
   }
 }

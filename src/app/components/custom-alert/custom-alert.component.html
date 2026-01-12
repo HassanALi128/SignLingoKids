@@ -1,0 +1,30 @@
+<div class="custom-alert-wrapper">
+  <div class="alert-content">
+    <!-- Optional Image/Icon -->
+    <div class="icon-wrapper" *ngIf="config.image || config.icon" [ngClass]="config.type">
+      <img *ngIf="config.image" [src]="config.image" alt="Alert Image" />
+      <ion-icon *ngIf="config.icon && !config.image" [name]="config.icon"></ion-icon>
+    </div>
+
+    <h2 class="alert-title">{{ config.header }}</h2>
+    <p class="alert-message">{{ config.message }}</p>
+
+    <div class="alert-buttons">
+      <!-- Secondary Button (Cancel/No) -->
+      <button 
+        class="alert-btn secondary" 
+        *ngIf="config.secondaryButtonText" 
+        (click)="onSecondary()">
+        {{ config.secondaryButtonText }}
+      </button>
+
+      <!-- Primary Button (Confirm/Yes/OK) -->
+      <button 
+        class="alert-btn primary" 
+        [ngClass]="config.type"
+        (click)="onPrimary()">
+        {{ config.primaryButtonText || 'OK' }}
+      </button>
+    </div>
+  </div>
+</div>
