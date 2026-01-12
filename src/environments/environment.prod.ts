@@ -22,4 +22,18 @@ export const environment = {
       yearly: 'yearly',
     },
   },
+  admob: {
+    // AdMob Ad Unit IDs - REPLACE WITH PRODUCTION AD UNIT IDs
+    // Get them from: https://apps.admob.com/
+    android: {
+      banner: 'ca-app-pub-3940256099942544/6300978111', // REPLACE: Test banner ID
+      interstitial: 'ca-app-pub-3940256099942544/1033173712', // REPLACE: Test interstitial ID
+      rewarded: 'ca-app-pub-3940256099942544/5224354917', // REPLACE: Test rewarded ID
+    },
+    ios: {
+      banner: 'ca-app-pub-3940256099942544/2934735716', // REPLACE: Test banner ID
+      interstitial: 'ca-app-pub-3940256099942544/4411468910', // REPLACE: Test interstitial ID
+      rewarded: 'ca-app-pub-3940256099942544/1712485313', // REPLACE: Test rewarded ID
+    },
+  },
 };

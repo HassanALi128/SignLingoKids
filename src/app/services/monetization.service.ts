@@ -9,14 +9,18 @@ import {
   BannerAdSize,
   BannerAdPosition,
   BannerAdPluginEvents,
+  RewardAdOptions,
+  RewardAdPluginEvents,
   AdMobError,
 } from '@capacitor-community/admob';
 import { PurchasesService } from './purchases.service';
+import { UserService } from './user.service';
 import {
   PurchasesOfferings,
   PurchasesPackage,
 } from '@revenuecat/purchases-typescript-internal-esm';
-import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { combineLatest } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -24,22 +28,23 @@ import { firstValueFrom } from 'rxjs';
 export class MonetizationService {
   // Placeholder Ad Units - REPLACE WITH REAL UNITS
   // Test IDs provided by Google
-  private readonly BANNER_ID_ANDROID = 'ca-app-pub-3940256099942544/6300978111';
-  private readonly BANNER_ID_IOS = 'ca-app-pub-3940256099942544/2934735716';
+  private readonly BANNER_ID_ANDROID = environment.admob.android.banner;
+  private readonly BANNER_ID_IOS = environment.admob.ios.banner;
   private readonly INTERSTITIAL_ID_ANDROID =
-    'ca-app-pub-3940256099942544/1033173712';
-  private readonly INTERSTITIAL_ID_IOS =
-    'ca-app-pub-3940256099942544/4411468910';
+    environment.admob.android.interstitial;
+  private readonly INTERSTITIAL_ID_IOS = environment.admob.ios.interstitial;
+  private readonly REWARDED_ID_ANDROID = environment.admob.android.rewarded;
+  private readonly REWARDED_ID_IOS = environment.admob.ios.rewarded;
 
   public isPro = false; // Synced with RevenueCat
-  private isAdMobInitialized = false;
 
   // RevenueCat offerings - exposed for premium page
   public offerings: PurchasesOfferings | null = null;
 
   constructor(
     private platform: Platform,
-    private purchasesService: PurchasesService
+    private purchasesService: PurchasesService,
+    private userService: UserService
   ) {}
 
   async init() {
@@ -48,22 +53,37 @@ export class MonetizationService {
     // Initialize RevenueCat first
     await this.purchasesService.init();
 
-    // Wait for the first resolved premium status before proceeding
-    try {
-      this.isPro = await firstValueFrom(this.purchasesService.isPremium$);
-      console.log('Initial premium status resolved:', this.isPro);
-    } catch (e) {
-      console.error('Error resolving initial premium status:', e);
-    }
+    // Combine RevenueCat premium status with test premium toggle
+    // User is premium if EITHER RevenueCat says so OR test toggle is ON
+    combineLatest([
+      this.purchasesService.isPremium$,
+      this.userService.userData$,
+    ]).subscribe(([revenueCatPremium, userData]) => {
+      // Check test premium from localStorage (via UserService)
+      const testPremium =
+        localStorage.getItem('test_premium_status') === 'true';
 
-    // Subscribe to premium status from RevenueCat for runtime updates
-    this.purchasesService.isPremium$.subscribe((isPremium) => {
-      this.isPro = isPremium;
-      console.log('Premium status updated at runtime:', isPremium);
+      // User is premium if either condition is true
+      const wasPremium = this.isPro;
+      this.isPro =
+        revenueCatPremium || testPremium || (userData?.isPremium ?? false);
 
-      // Hide ads immediately if user becomes premium
-      if (isPremium) {
+      console.log('Premium status updated:', {
+        revenueCatPremium,
+        testPremium,
+        userDataPremium: userData?.isPremium,
+        finalStatus: this.isPro,
+      });
+
+      // Handle premium state changes
+      if (this.isPro && !wasPremium) {
+        // User just became premium - hide ads immediately
+        console.log('User became premium - hiding ads');
         this.hideBanner();
+      } else if (!this.isPro && wasPremium) {
+        // User lost premium status - show ads
+        console.log('User lost premium - showing ads');
+        this.showBanner();
       }
     });
 
@@ -72,35 +92,32 @@ export class MonetizationService {
       this.offerings = offerings;
     });
 
-    // Initialize AdMob ONLY if not premium
+    // Initialize AdMob if not premium
     if (!this.isPro) {
       await this.initAdMob();
-    } else {
-      console.log('User is premium, skipping AdMob initialization');
     }
   }
 
   // ADMOB
   private async initAdMob() {
-    if (this.isAdMobInitialized || this.isPro) return;
-
     try {
       await AdMob.initialize();
-      this.isAdMobInitialized = true;
-      console.log('AdMob initialized successfully');
 
       // Preload Interstitial
       await this.prepareInterstitial();
 
+      // Preload Reward
+      await this.prepareReward();
+
       // Show Banner
-      await this.showBanner();
+      this.showBanner();
     } catch (e) {
       console.error('AdMob Init Error:', e);
     }
   }
 
   async showBanner() {
-    if (this.isPro || !this.isAdMobInitialized) return;
+    if (this.isPro) return;
 
     const adId = this.platform.is('ios')
       ? this.BANNER_ID_IOS
@@ -113,23 +130,6 @@ export class MonetizationService {
     };
 
     try {
-      // Listen for ad size changes to update layout
-      (AdMob as any).addListener(
-        BannerAdPluginEvents.SizeChanged,
-        (info: any) => {
-          this.setBannerHeight(info.height);
-        }
-      );
-
-      // Fallback: Listen for loaded event if size changed doesn't fire immediately
-      (AdMob as any).addListener(BannerAdPluginEvents.Loaded, (info: any) => {
-        // If height is available in info, use it. Otherwise assume standard adaptive height (~50-60px)
-        // Note: info.height might be in pixels or dp. Usually dp.
-        if (info && info.height) {
-          this.setBannerHeight(info.height);
-        }
-      });
-
       await AdMob.showBanner(options);
     } catch (e) {
       console.error('Show Banner Error:', e);
@@ -139,21 +139,13 @@ export class MonetizationService {
   async hideBanner() {
     try {
       await AdMob.hideBanner();
-      this.setBannerHeight(0); // Reset height when hidden
     } catch (e) {
       // ignore
     }
   }
 
-  private setBannerHeight(height: number) {
-    // Convert height to string with px units
-    const heightPx = height > 0 ? `${height}px` : '0px';
-    document.documentElement.style.setProperty('--ad-banner-height', heightPx);
-    console.log('AdMob Banner Height set to:', heightPx);
-  }
-
   async prepareInterstitial() {
-    if (this.isPro || !this.isAdMobInitialized) return;
+    if (this.isPro) return;
 
     const adId = this.platform.is('ios')
       ? this.INTERSTITIAL_ID_IOS
@@ -170,15 +162,58 @@ export class MonetizationService {
   }
 
   async showInterstitial(): Promise<void> {
-    if (this.isPro || !this.isAdMobInitialized) return;
+    if (this.isPro) return;
 
     try {
       // Check if ready, if not prepare
       await AdMob.showInterstitial();
     } catch (e) {
       console.error('Show Interstitial Error, trying to prepare again:', e);
-      await this.prepareInterstitial();
     }
+  }
+
+  async prepareReward() {
+    const adId = this.platform.is('ios')
+      ? this.REWARDED_ID_IOS
+      : this.REWARDED_ID_ANDROID;
+
+    if (!adId || adId.includes('xxx')) {
+      console.warn('Rewarded Ad ID not set');
+      return;
+    }
+
+    const options: RewardAdOptions = {
+      adId: adId,
+    };
+
+    try {
+      await AdMob.prepareRewardVideoAd(options);
+    } catch (e) {
+      console.error('Prepare Reward Error:', e);
+    }
+  }
+
+  async showReward(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      try {
+        // Register event listener for reward
+        const handler = AdMob.addListener(
+          RewardAdPluginEvents.Rewarded,
+          (rewardItem) => {
+            console.log('User rewarded:', rewardItem);
+            resolve(true); // User watched and got reward
+          }
+        );
+
+        // Show the ad
+        await AdMob.showRewardVideoAd();
+      } catch (e) {
+        console.error('Show Reward Error:', e);
+        // Try to prepare again for next time
+        this.prepareReward();
+        resolve(false); // Failed to show or complete
+      }
+    });
   }
 
   // REVENUECAT METHODS - Exposed for premium page

@@ -22,7 +22,6 @@ export class ProfileService {
     private purchasesService: PurchasesService
   ) {
     this.loadProfile();
-    this.syncPremiumStatus();
   }
 
   private loadProfile() {
@@ -53,19 +52,6 @@ export class ProfileService {
           }
         }
       });
-    });
-  }
-
-  private syncPremiumStatus() {
-    this.purchasesService.isPremium$.subscribe((isPremium) => {
-      const currentProfile = this.profileSubject.value;
-      if (currentProfile && currentProfile.isPremium !== isPremium) {
-        const updatedProfile = { ...currentProfile, isPremium };
-        this.profileSubject.next(updatedProfile);
-
-        // Update Firestore as well
-        this.userService.updateUserProfile({ isPremium });
-      }
     });
   }
 

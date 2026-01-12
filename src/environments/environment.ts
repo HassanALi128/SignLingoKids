@@ -26,6 +26,20 @@ export const environment = {
       yearly: 'yearly',
     },
   },
+  admob: {
+    // AdMob Ad Unit IDs
+    // Using Google's test ad unit IDs for development
+    android: {
+      banner: 'ca-app-pub-3940256099942544/6300978111', // Test banner ID
+      interstitial: 'ca-app-pub-3940256099942544/1033173712', // Test interstitial ID
+      rewarded: 'ca-app-pub-3940256099942544/5224354917', // Test rewarded ID
+    },
+    ios: {
+      banner: 'ca-app-pub-3940256099942544/2934735716', // Test banner ID
+      interstitial: 'ca-app-pub-3940256099942544/4411468910', // Test interstitial ID
+      rewarded: 'ca-app-pub-3940256099942544/1712485313', // Test rewarded ID
+    },
+  },
 };
 
 /*

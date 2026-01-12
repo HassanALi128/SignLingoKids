@@ -15,7 +15,6 @@ import {
   map,
   BehaviorSubject,
   combineLatest,
-  firstValueFrom,
 } from 'rxjs';
 import { DeviceService } from './device.service';
 import { PurchasesService } from './purchases.service';
@@ -121,16 +120,6 @@ export class UserService {
 
     // Link device
     await this.deviceService.registerDevice(user.uid);
-
-    // Identify user in RevenueCat (with error handling)
-    try {
-      await this.purchasesService.identifyUser(user.uid);
-    } catch (error) {
-      console.warn(
-        'RevenueCat identify user failed (SDK may not be initialized yet):',
-        error
-      );
-    }
   }
 
   async updateLastActive() {
@@ -152,18 +141,6 @@ export class UserService {
     if (user) {
       const userRef = doc(this.firestore, 'users', user.uid);
       await setDoc(userRef, { isPremium }, { merge: true });
-    }
-  }
-
-  /**
-   * Sync premium status from RevenueCat to Firestore
-   */
-  async syncPremiumStatusFromRevenueCat(): Promise<void> {
-    try {
-      const isPremium = this.purchasesService.isPremium();
-      await this.setPremiumStatus(isPremium);
-    } catch (error) {
-      console.warn('Failed to sync premium status from RevenueCat:', error);
     }
   }
 
@@ -295,16 +272,6 @@ export class UserService {
         // Link current user to device
         await this.loadUserDataByDevice(deviceIdHash, currentUser.uid);
 
-        // Identify user in RevenueCat (with error handling)
-        try {
-          await this.purchasesService.identifyUser(currentUser.uid);
-        } catch (error) {
-          console.warn('RevenueCat identify user failed:', error);
-        }
-
-        // Sync premium status from RevenueCat
-        await this.syncPremiumStatusFromRevenueCat();
-
         // Check user status from FIRESTORE, not localStorage
         const userRef = doc(this.firestore, 'users', currentUser.uid);
         const userSnap = await (
@@ -365,13 +332,6 @@ export class UserService {
       // Update device record with current session
       await this.deviceService.registerDevice(currentUid);
 
-      // Identify user in RevenueCat (with error handling)
-      try {
-        await this.purchasesService.identifyUser(currentUid);
-      } catch (error) {
-        console.warn('RevenueCat identify user failed:', error);
-      }
-
       // The userData$ observable will automatically load the user data
       // from Firestore based on the authenticated user's UID
 
@@ -379,6 +339,20 @@ export class UserService {
       await this.updateLastActive();
     } catch (error) {
       console.error('Error loading user data by device:', error);
+    }
+  }
+
+  /**
+   * Sync premium status from RevenueCat to Firestore
+   * Called after restore purchases or successful purchase
+   */
+  async syncPremiumStatusFromRevenueCat(): Promise<void> {
+    try {
+      const isPremium = this.purchasesService.hasProEntitlement();
+      await this.setPremiumStatus(isPremium);
+      console.log('Premium status synced from RevenueCat:', isPremium);
+    } catch (error) {
+      console.error('Error syncing premium status from RevenueCat:', error);
     }
   }
 }

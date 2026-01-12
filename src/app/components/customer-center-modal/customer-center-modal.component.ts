@@ -6,10 +6,7 @@ import {
 } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { RevenueCatUI } from '@revenuecat/purchases-capacitor-ui';
-import {
-  PurchasesService,
-  SubscriptionStatus,
-} from '../../services/purchases.service';
+import { PurchasesService } from '../../services/purchases.service';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
 
@@ -22,7 +19,6 @@ import { AlertService } from '../../services/alert.service';
 })
 export class CustomerCenterModalComponent implements OnInit {
   isLoading = false;
-  subscriptionStatus: SubscriptionStatus | null = null;
 
   constructor(
     private modalController: ModalController,
@@ -33,11 +29,7 @@ export class CustomerCenterModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadSubscriptionStatus();
-  }
-
-  loadSubscriptionStatus() {
-    this.subscriptionStatus = this.purchasesService.getSubscriptionStatus();
+    // Component initialized
   }
 
   async presentCustomerCenter() {
@@ -50,9 +42,6 @@ export class CustomerCenterModalComponent implements OnInit {
       // Refresh customer info after customer center is dismissed
       await this.purchasesService.refreshCustomerInfo();
       await this.userService.syncPremiumStatusFromRevenueCat();
-
-      // Reload subscription status
-      this.loadSubscriptionStatus();
     } catch (error: any) {
       console.error('Customer Center error:', error);
       await this.showError('An error occurred. Please try again.');
@@ -74,9 +63,6 @@ export class CustomerCenterModalComponent implements OnInit {
       if (customerInfo && this.purchasesService.hasProEntitlement()) {
         // Sync premium status
         await this.userService.syncPremiumStatusFromRevenueCat();
-
-        // Reload subscription status
-        this.loadSubscriptionStatus();
 
         await this.showSuccess('Purchases restored successfully!');
       } else {
@@ -103,10 +89,5 @@ export class CustomerCenterModalComponent implements OnInit {
 
   private async showInfo(message: string) {
     await this.alertService.info('Info', message);
-  }
-
-  get formattedExpirationDate(): string {
-    if (!this.subscriptionStatus?.expirationDate) return 'N/A';
-    return this.subscriptionStatus.expirationDate.toLocaleDateString();
   }
 }
