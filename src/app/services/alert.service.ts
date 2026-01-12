@@ -4,12 +4,16 @@ import {
   CustomAlertComponent,
   AlertConfig,
 } from '../components/custom-alert/custom-alert.component';
+import { addIcons } from 'ionicons';
+import { helpCircle } from 'ionicons/icons';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertService {
-  constructor(private modalController: ModalController) {}
+  constructor(private modalController: ModalController) {
+    addIcons({ helpCircle });
+  }
 
   /**
    * Presents a custom alert modal.
@@ -38,12 +42,13 @@ export class AlertService {
     header: string,
     message: string,
     primaryText: string = 'Yes',
-    secondaryText: string = 'No'
+    secondaryText: string = 'No',
+    type: 'confirm' | 'unlearn' = 'confirm'
   ): Promise<boolean> {
     return this.presentAlert({
       header,
       message,
-      type: 'confirm',
+      type,
       primaryButtonText: primaryText,
       secondaryButtonText: secondaryText,
       icon: 'help-circle',

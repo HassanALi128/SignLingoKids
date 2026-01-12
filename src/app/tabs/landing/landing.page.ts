@@ -40,6 +40,7 @@ import { register } from 'swiper/element/bundle';
 import { CommonService } from 'src/app/core/services/common';
 import { ProfileService } from 'src/app/services/profile.service';
 import { SubscriptionModalComponent } from 'src/app/components/subscription-modal/subscription-modal.component';
+import { AlertService } from 'src/app/services/alert.service';
 
 register();
 
@@ -117,6 +118,7 @@ export class LandingPage implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private modalController: ModalController,
     private alertController: AlertController,
+    private alertService: AlertService,
     private platform: Platform
   ) {
     addIcons({
@@ -457,28 +459,20 @@ export class LandingPage implements OnInit, OnDestroy {
 
       if (this.learningService.isLearned(signId)) {
         // Already learned, ask to unlearn
-        const alert = await this.alertController.create({
-          header: 'Unlearn Item?',
-          message: 'Do you want to unlearn this item?',
-          buttons: [
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              cssClass: 'secondary',
-            },
-            {
-              text: 'Unlearn',
-              handler: () => {
-                this.learningService.unlearn(signId);
-                this.loadRecentLearning();
-                this.updateCertificateProgress();
-                this.showToast('Item unlearned');
-              },
-            },
-          ],
-        });
+        const confirmed = await this.alertService.confirm(
+          'Unlearn Item?',
+          'Do you want to unlearn this item?',
+          'Unlearn',
+          'Cancel',
+          'unlearn'
+        );
 
-        await alert.present();
+        if (confirmed) {
+          this.learningService.unlearn(signId);
+          this.loadRecentLearning();
+          this.updateCertificateProgress();
+          this.showToast('Item unlearned');
+        }
       } else {
         // Not learned, mark as learned
         this.learningService.markAsLearned(signId, categoryId);

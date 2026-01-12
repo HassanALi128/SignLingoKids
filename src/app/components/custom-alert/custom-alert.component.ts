@@ -5,7 +5,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 export interface AlertConfig {
   header: string;
   message: string;
-  type?: 'info' | 'confirm' | 'warning' | 'success' | 'exit';
+  type?: 'info' | 'confirm' | 'warning' | 'success' | 'exit' | 'unlearn';
   image?: string; // Optional image URL
   icon?: string; // Optional icon name
   primaryButtonText?: string;
