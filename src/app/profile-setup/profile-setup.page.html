@@ -32,9 +32,10 @@
     <!-- Name Input Section -->
     <div class="name-section">
       <ion-item lines="none" class="name-input-item">
-        <ion-input [(ngModel)]="userName" placeholder="Enter your name" class="name-input" type="text">
+        <ion-input [(ngModel)]="userName" placeholder="Enter your name" class="name-input" type="text" maxlength="10">
         </ion-input>
       </ion-item>
+      <p class="helper-text">Only 10 characters are allowed</p>
     </div>
 
     <!-- Avatar Selection Grid -->

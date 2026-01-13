@@ -9,6 +9,8 @@ import { RevenueCatUI } from '@revenuecat/purchases-capacitor-ui';
 import { PurchasesService } from '../../services/purchases.service';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
+import { addIcons } from 'ionicons';
+import { close } from 'ionicons/icons';
 
 @Component({
   selector: 'app-customer-center-modal',
@@ -26,7 +28,9 @@ export class CustomerCenterModalComponent implements OnInit {
     private alertService: AlertService,
     private purchasesService: PurchasesService,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ close });
+  }
 
   ngOnInit() {
     // Component initialized

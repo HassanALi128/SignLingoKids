@@ -5,14 +5,28 @@ import {
   AlertConfig,
 } from '../components/custom-alert/custom-alert.component';
 import { addIcons } from 'ionicons';
-import { helpCircle } from 'ionicons/icons';
+import {
+  alertCircle,
+  checkmarkCircle,
+  helpCircle,
+  informationCircle,
+  logOut,
+  warning,
+} from 'ionicons/icons';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertService {
   constructor(private modalController: ModalController) {
-    addIcons({ helpCircle });
+    addIcons({
+      helpCircle,
+      informationCircle,
+      warning,
+      logOut,
+      checkmarkCircle,
+      alertCircle,
+    });
   }
 
   /**

@@ -156,6 +156,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this.stopConfetti(); // Ensure confetti is stopped
     this.threeRenderer.dispose();
     this.showTabBar();
 
@@ -416,9 +417,22 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     }
 
     // Navigate back to quiz page to show results
-    await this.monetizationService.showInterstitial();
-    this.router.navigate(['/tabs/quiz']);
+    // Only show ad if NOT premium
+    if (!this.monetizationService.isPro) {
+      console.log('User is not premium, showing interstitial ad');
+      await this.monetizationService.showInterstitial();
+    } else {
+      console.log('User is premium, skipping ad');
+    }
+
+    // Clean up confetti before navigating
+    this.stopConfetti();
+
+    // Use navigateBack for smoother transition
+    this.navController.navigateBack(['/tabs/quiz']);
   }
+
+  private confettiInterval: any;
 
   private triggerConfetti() {
     const duration = 3000;
@@ -429,11 +443,14 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
       return Math.random() * (max - min) + min;
     };
 
-    const interval: any = setInterval(() => {
+    // Clear any existing interval
+    this.stopConfetti();
+
+    this.confettiInterval = setInterval(() => {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
-        return clearInterval(interval);
+        return this.stopConfetti();
       }
 
       const particleCount = 50 * (timeLeft / duration);
@@ -449,6 +466,18 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
       });
     }, 250);
+  }
+
+  private stopConfetti() {
+    if (this.confettiInterval) {
+      clearInterval(this.confettiInterval);
+      this.confettiInterval = undefined;
+    }
+    try {
+      confetti.reset();
+    } catch (e) {
+      // Ignore error if confetti not initialized
+    }
   }
 
   goBack() {

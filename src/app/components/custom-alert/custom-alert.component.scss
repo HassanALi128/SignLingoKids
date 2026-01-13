@@ -34,17 +34,38 @@
 
     &.info {
         background: rgba(var(--ion-color-primary-rgb), 0.1);
-        color: var(--ion-color-primary);
+
+        ion-icon {
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
     }
 
     &.success {
         background: rgba(var(--ion-color-success-rgb), 0.1);
-        color: var(--ion-color-success);
+
+        ion-icon {
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
     }
 
     &.warning {
         background: rgba(var(--ion-color-warning-rgb), 0.1);
-        color: var(--ion-color-warning);
+
+        ion-icon {
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
     }
 
     &.exit {
@@ -125,10 +146,10 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
             // Default primary gradient
-            background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
+            background: var(--primary-gradient);
 
             &.warning {
-                background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+                background: var(--primary-gradient);
             }
 
             &.exit {
@@ -136,7 +157,7 @@
             }
 
             &.success {
-                background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+                background: var(--primary-gradient);
             }
 
             &.unlearn {
