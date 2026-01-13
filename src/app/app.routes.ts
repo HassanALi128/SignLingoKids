@@ -28,4 +28,18 @@ export const routes: Routes = [
         (m) => m.ProfileSetupPage
       ),
   },
+  {
+    path: 'favorites-view-all',
+    loadComponent: () =>
+      import('./pages/favorites-view-all/favorites-view-all.page').then(
+        (m) => m.FavoritesViewAllPage
+      ),
+  },
+  {
+    path: 'quiz-progress-view-all',
+    loadComponent: () =>
+      import('./pages/quiz-progress-view-all/quiz-progress-view-all.page').then(
+        (m) => m.QuizProgressViewAllPage
+      ),
+  },
 ];

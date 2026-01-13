@@ -212,9 +212,7 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   viewAllResults() {
-    // Navigate to full results history page
-    // TODO: Implement results history page
-    console.log('Viewing all results...');
+    this.router.navigate(['/quiz-progress-view-all']);
   }
 
   goToProfile() {

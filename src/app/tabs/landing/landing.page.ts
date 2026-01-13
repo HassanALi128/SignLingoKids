@@ -620,9 +620,8 @@ export class LandingPage implements OnInit, OnDestroy {
       }
 
       if (this.currentSign.actionName) {
-        // Stop idle scheduler when playing a specific sign
-        this.three.stopIdleScheduler();
-        this.three.play(this.currentSign.actionName);
+        // Play sign animation temporarily, will return to idle animations when done
+        this.three.playTemporary(this.currentSign.actionName);
         console.log('Playing current sign:', this.currentSign.actionName);
       }
 
@@ -660,5 +659,9 @@ export class LandingPage implements OnInit, OnDestroy {
     } else {
       this.showToast('No audio available for this item');
     }
+  }
+
+  viewAllFavorites() {
+    this.navController.navigateForward('/favorites-view-all');
   }
 }

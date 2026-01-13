@@ -220,6 +220,70 @@ export class ThreeRenderer implements OnDestroy {
     this.resumeRendering();
   }
 
+  /**
+   * Play a temporary animation without stopping the idle scheduler.
+   * After the animation finishes, it will automatically fade back to idle-common.
+   * This is useful for quiz questions, feedback animations, etc.
+   */
+  playTemporary(clipName: string, fadeSeconds = 0.3): void {
+    if (!this.mixer) return;
+
+    const tempAction = this.actions.get(clipName);
+    if (!tempAction) {
+      console.warn('❌ Animation not found:', clipName);
+      return;
+    }
+
+    const idleCommonAction = this.actions.get(this.IDLE_COMMON);
+    if (!idleCommonAction) {
+      // If idle-common doesn't exist, fall back to regular play
+      this.play(clipName, fadeSeconds);
+      return;
+    }
+
+    console.log(`🎬 Playing temporary animation: ${clipName}`);
+
+    // Fade out current action (likely idle-common)
+    if (this.activeAction && this.activeAction !== tempAction) {
+      this.activeAction.fadeOut(fadeSeconds);
+    }
+
+    // Setup and play temporary animation
+    tempAction.reset();
+    tempAction.setEffectiveTimeScale(1);
+    tempAction.setEffectiveWeight(1);
+    tempAction.fadeIn(fadeSeconds);
+    tempAction.play();
+
+    this.activeAction = tempAction;
+
+    // When temporary animation finishes, fade back to idle-common
+    const onFinished = (e: any) => {
+      if (e.action === tempAction) {
+        this.mixer?.removeEventListener('finished', onFinished);
+
+        console.log(
+          `✅ Temporary animation finished, returning to ${this.IDLE_COMMON}`
+        );
+
+        // Fade back to idle-common
+        tempAction.fadeOut(fadeSeconds);
+        idleCommonAction.reset();
+        idleCommonAction.setEffectiveTimeScale(1);
+        idleCommonAction.setEffectiveWeight(1);
+        idleCommonAction.fadeIn(fadeSeconds);
+        idleCommonAction.play();
+
+        this.activeAction = idleCommonAction;
+      }
+    };
+
+    this.mixer.addEventListener('finished', onFinished);
+
+    // Ensure rendering is active
+    this.resumeRendering();
+  }
+
   stop(): void {
     this.stopIdleScheduler();
     this.activeAction?.stop();

@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Favorites</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="favorites-content">
+    @if(totalFavorites === 0) {
+    <!-- Empty State -->
+    <div class="empty-state">
+        <div class="empty-icon">
+            <ion-icon name="heart-outline"></ion-icon>
+        </div>
+        <h2>No Favorites Yet</h2>
+        <p>Start adding your favorite signs, categories, and more!</p>
+    </div>
+    } @else {
+    <!-- Total Count -->
+    <div class="total-count">
+        <ion-icon name="heart"></ion-icon>
+        <span>{{ totalFavorites }} Favorite{{ totalFavorites !== 1 ? 's' : '' }}</span>
+    </div>
+
+    <!-- Grouped Favorites -->
+    @for(group of groupedFavorites; track group.type) {
+    <div class="favorites-group">
+        <div class="group-header">
+            <div class="group-title">
+                <ion-icon [name]="group.icon"></ion-icon>
+                <h3>{{ group.label }}</h3>
+            </div>
+            <span class="group-count">{{ group.items.length }}</span>
+        </div>
+
+        <div class="favorites-list">
+            @for(item of group.items; track item.id) {
+            <div class="favorite-card" (click)="navigateToItem(item)">
+                <div class="favorite-content">
+                    @if(item.image) {
+                    <div class="favorite-image">
+                        <img [src]="item.image" [alt]="item.name" />
+                    </div>
+                    } @else {
+                    <div class="favorite-image placeholder" [style.background]="item.bgColor || '#E64522'">
+                        <span>{{ item.name.charAt(0).toUpperCase() }}</span>
+                    </div>
+                    }
+
+                    <div class="favorite-info">
+                        <h4>{{ item.name }}</h4>
+                        <p class="favorite-type">{{ group.label }}</p>
+                    </div>
+                </div>
+
+                <div class="favorite-actions">
+                    <ion-button fill="clear" (click)="removeFavorite(item, $event)" class="remove-btn">
+                        <ion-icon name="trash" slot="icon-only"></ion-icon>
+                    </ion-button>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+    }
+    }
+</ion-content>

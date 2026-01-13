@@ -1,0 +1,95 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Quiz Progress</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="quiz-progress-content">
+    @if(allResults.length === 0) {
+    <!-- Empty State -->
+    <div class="empty-state">
+        <div class="empty-icon">
+            <ion-icon name="clipboard-outline"></ion-icon>
+        </div>
+        <h2>No Quiz Attempts Yet</h2>
+        <p>Start your first quiz to see your progress here!</p>
+    </div>
+    } @else {
+    <!-- Statistics Card -->
+    <div class="statistics-card">
+        <h3>Overall Statistics</h3>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">{{ statistics.totalQuizzes }}</div>
+                <div class="stat-label">Total Quizzes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ statistics.averageScore }}%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ statistics.bestScore }}%</div>
+                <div class="stat-label">Best Score</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ statistics.totalCorrect }}/{{ statistics.totalQuestions }}</div>
+                <div class="stat-label">Total Correct</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Attempts Section -->
+    <div class="section-header">
+        <h3>All Attempts ({{ allResults.length }})</h3>
+    </div>
+
+    <div class="results-list">
+        @for(result of allResults; track result.date) {
+        <div class="result-card" (click)="openResultModal(result)">
+            <div class="result-header">
+                <div class="result-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <span>{{ result.formattedDate }}</span>
+                </div>
+                <div class="result-status" [class.passed]="result.isPassed" [class.failed]="!result.isPassed">
+                    <ion-icon [name]="result.isPassed ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+                    <span>{{ result.isPassed ? 'Passed' : 'Failed' }}</span>
+                </div>
+            </div>
+
+            <div class="result-body">
+                <div class="result-info">
+                    <div class="score-text">
+                        <span class="score">{{ result.score }}</span>
+                        <span class="total">/{{ result.total }}</span>
+                    </div>
+                    <div class="questions-text">Questions Correct</div>
+                </div>
+
+                <div class="result-progress">
+                    <svg class="progress-circle" width="80" height="80" viewBox="0 0 80 80">
+                        <circle class="progress-bg" cx="40" cy="40" r="35" fill="none" stroke="#F0F0F0"
+                            stroke-width="8" />
+                        <circle class="progress-fill" cx="40" cy="40" r="35" fill="none" [attr.stroke]="result.color"
+                            stroke-width="8" stroke-linecap="round" [style.stroke-dasharray]="219.8"
+                            [style.stroke-dashoffset]="219.8 - (result.percentage / 100) * 219.8"
+                            transform="rotate(-90 40 40)" />
+                    </svg>
+                    <span class="progress-text">{{ result.percentage }}%</span>
+                </div>
+            </div>
+
+            <div class="result-footer">
+                <span class="view-details">Tap to view details</span>
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+            </div>
+        </div>
+        }
+    </div>
+    }
+</ion-content>

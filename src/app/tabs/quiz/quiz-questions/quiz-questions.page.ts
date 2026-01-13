@@ -303,7 +303,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
           this.updateState({ isAnimationLoading: false });
         }
 
-        this.threeRenderer.play(currentQuestion.actionName);
+        this.threeRenderer.playTemporary(currentQuestion.actionName);
       } catch (error) {
         console.error('Error playing animation:', error);
         this.updateState({ isAnimationLoading: false });
@@ -360,7 +360,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
       );
 
       if (happyAnim) {
-        this.threeRenderer.play(happyAnim);
+        this.threeRenderer.playTemporary(happyAnim);
       }
 
       await Haptics.notification({ type: NotificationType.Success });

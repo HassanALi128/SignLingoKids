@@ -86,7 +86,7 @@
   <!-- Favourite Section -->
   <div class="section-header">
     <h3>Favorites</h3>
-    <a class="see-all">See All</a>
+    <a class="see-all" (click)="viewAllFavorites()">See All</a>
   </div>
   @if(featuredItems.length === 0){
   <div class="empty-message">Your Favorites will appear here.</div>

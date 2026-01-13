@@ -1,0 +1,1786 @@
+[
+  {
+    "id": "basics",
+    "label": "Basics",
+    "thumbUrl": "../../assets/images/categories/basics.webp",
+    "color": "",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Basic.glb",
+    "signs": [
+      {
+        "id": "bath",
+        "label": "Bath",
+        "thumbUrl": "assets/images/categories/basic/bath.webp",
+        "audioUrl": "assets/audio/bath.m4a",
+        "actionName": "bath"
+      },
+      {
+        "id": "boat",
+        "label": "Boat",
+        "thumbUrl": "assets/images/categories/basic/boat.webp",
+        "audioUrl": "assets/audio/boat.m4a",
+        "actionName": "boat"
+      },
+      {
+        "id": "book",
+        "label": "Book",
+        "thumbUrl": "assets/images/categories/basic/book.webp",
+        "audioUrl": "assets/audio/book.m4a",
+        "actionName": "book"
+      },
+      {
+        "id": "boxer",
+        "label": "Boxer",
+        "thumbUrl": "assets/images/categories/basic/boxer.webp",
+        "audioUrl": "assets/audio/underpants.m4a",
+        "actionName": "underpants"
+      },
+      {
+        "id": "candy",
+        "label": "Candy",
+        "thumbUrl": "assets/images/categories/basic/candy.webp",
+        "audioUrl": "assets/audio/candy.m4a",
+        "actionName": "candy"
+      },
+      {
+        "id": "car",
+        "label": "Car",
+        "thumbUrl": "assets/images/categories/basic/car.webp",
+        "audioUrl": "assets/audio/car.m4a",
+        "actionName": "car"
+      },
+      {
+        "id": "subway",
+        "label": "Subway",
+        "thumbUrl": "assets/images/categories/basic/subway.webp",
+        "audioUrl": "assets/audio/subway.m4a",
+        "actionName": "subway"
+      },
+      {
+        "id": "teacher",
+        "label": "Teacher",
+        "thumbUrl": "assets/images/categories/basic/teacher.webp",
+        "audioUrl": "assets/audio/teacher.m4a",
+        "actionName": "teacher"
+      },
+      {
+        "id": "thankyou",
+        "label": "Thank You",
+        "thumbUrl": "assets/images/categories/basic/thankyou.webp",
+        "audioUrl": "assets/audio/thankyou.m4a",
+        "actionName": "thankyou"
+      },
+      {
+        "id": "umbrella",
+        "label": "Umbrella",
+        "thumbUrl": "assets/images/categories/basic/umbrella.webp",
+        "audioUrl": "assets/audio/umbrella.m4a",
+        "actionName": "umbrella"
+      },
+      {
+        "id": "airplane",
+        "label": "Airplane",
+        "thumbUrl": "assets/images/categories/basic/permium/airplane.webp",
+        "audioUrl": "assets/audio/airplane.m4a",
+        "actionName": "airplane",
+        "isPremium": true
+      },
+      {
+        "id": "baby",
+        "label": "Baby",
+        "thumbUrl": "assets/images/categories/basic/permium/baby.webp",
+        "audioUrl": "assets/audio/baby.m4a",
+        "actionName": "baby",
+        "isPremium": true
+      },
+      {
+        "id": "bathroom",
+        "label": "Bathroom",
+        "thumbUrl": "assets/images/categories/basic/permium/bathroom.webp",
+        "audioUrl": "assets/audio/bathroom.m4a",
+        "actionName": "bathroom",
+        "isPremium": true
+      },
+      {
+        "id": "battery",
+        "label": "Battery",
+        "thumbUrl": "assets/images/categories/basic/permium/battery.webp",
+        "audioUrl": "assets/audio/battery.m4a",
+        "actionName": "battery",
+        "isPremium": true
+      },
+      {
+        "id": "bed",
+        "label": "Bed",
+        "thumbUrl": "assets/images/categories/basic/permium/bed.webp",
+        "audioUrl": "assets/audio/bed.m4a",
+        "actionName": "bed",
+        "isPremium": true
+      },
+      {
+        "id": "bedroom",
+        "label": "Bedroom",
+        "thumbUrl": "assets/images/categories/basic/permium/bedroom.webp",
+        "audioUrl": "assets/audio/bedroom.m4a",
+        "actionName": "bedroom",
+        "isPremium": true
+      },
+      {
+        "id": "brush",
+        "label": "Brush",
+        "thumbUrl": "assets/images/categories/basic/permium/brush.webp",
+        "audioUrl": "assets/audio/brush.m4a",
+        "actionName": "brush",
+        "isPremium": true
+      },
+      {
+        "id": "bucket",
+        "label": "Bucket",
+        "thumbUrl": "assets/images/categories/basic/permium/bucket.webp",
+        "audioUrl": "assets/audio/bucket.m4a",
+        "actionName": "bucket",
+        "isPremium": true
+      },
+      {
+        "id": "bus",
+        "label": "Bus",
+        "thumbUrl": "assets/images/categories/basic/permium/bus.webp",
+        "audioUrl": "assets/audio/bus.m4a",
+        "actionName": "bus",
+        "isPremium": true
+      },
+      {
+        "id": "chair",
+        "label": "Chair",
+        "thumbUrl": "assets/images/categories/basic/permium/chair.webp",
+        "audioUrl": "assets/audio/chair.m4a",
+        "actionName": "chair",
+        "isPremium": true
+      },
+      {
+        "id": "church",
+        "label": "Church",
+        "thumbUrl": "assets/images/categories/basic/permium/church.webp",
+        "audioUrl": "assets/audio/church.m4a",
+        "actionName": "church",
+        "isPremium": true
+      },
+      {
+        "id": "dollar",
+        "label": "Dollar",
+        "thumbUrl": "assets/images/categories/basic/permium/dollar.webp",
+        "audioUrl": "assets/audio/dollar.m4a",
+        "actionName": "dollar",
+        "isPremium": true
+      },
+      {
+        "id": "door",
+        "label": "Door",
+        "thumbUrl": "assets/images/categories/basic/permium/door.webp",
+        "audioUrl": "assets/audio/door.m4a",
+        "actionName": "door",
+        "isPremium": true
+      },
+      {
+        "id": "elevator",
+        "label": "Elevator",
+        "thumbUrl": "assets/images/categories/basic/permium/elevator.webp",
+        "audioUrl": "assets/audio/elevator.m4a",
+        "actionName": "elevator",
+        "isPremium": true
+      },
+      {
+        "id": "flower",
+        "label": "Flower",
+        "thumbUrl": "assets/images/categories/basic/permium/flower.webp",
+        "audioUrl": "assets/audio/flower.m4a",
+        "actionName": "flower",
+        "isPremium": true
+      },
+      {
+        "id": "friend",
+        "label": "Friend",
+        "thumbUrl": "assets/images/categories/basic/permium/friend.webp",
+        "audioUrl": "assets/audio/friend.m4a",
+        "actionName": "friend",
+        "isPremium": true
+      },
+      {
+        "id": "garden",
+        "label": "Garden",
+        "thumbUrl": "assets/images/categories/basic/permium/garden.webp",
+        "audioUrl": "assets/audio/garden.m4a",
+        "actionName": "garden",
+        "isPremium": true
+      },
+      {
+        "id": "gel",
+        "label": "Gel",
+        "thumbUrl": "assets/images/categories/basic/permium/gel.webp",
+        "audioUrl": "assets/audio/gel.m4a",
+        "actionName": "gel",
+        "isPremium": true
+      },
+      {
+        "id": "glasses",
+        "label": "Glasses",
+        "thumbUrl": "assets/images/categories/basic/permium/glasses.webp",
+        "audioUrl": "assets/audio/glasses.m4a",
+        "actionName": "glasses",
+        "isPremium": true
+      },
+      {
+        "id": "gloves",
+        "label": "Gloves",
+        "thumbUrl": "assets/images/categories/basic/permium/gloves.webp",
+        "audioUrl": "assets/audio/gloves.m4a",
+        "actionName": "gloves",
+        "isPremium": true
+      },
+      {
+        "id": "hat",
+        "label": "Hat",
+        "thumbUrl": "assets/images/categories/basic/permium/hat.webp",
+        "audioUrl": "assets/audio/hat.m4a",
+        "actionName": "hat",
+        "isPremium": true
+      },
+      {
+        "id": "hi",
+        "label": "Hi",
+        "thumbUrl": "assets/images/categories/basic/permium/hi.webp",
+        "audioUrl": "assets/audio/hi.m4a",
+        "actionName": "hi",
+        "isPremium": true
+      },
+      {
+        "id": "home",
+        "label": "Home",
+        "thumbUrl": "assets/images/categories/basic/permium/home.webp",
+        "audioUrl": "assets/audio/home.m4a",
+        "actionName": "home",
+        "isPremium": true
+      },
+      {
+        "id": "house",
+        "label": "House",
+        "thumbUrl": "assets/images/categories/basic/permium/house.webp",
+        "audioUrl": "assets/audio/house.m4a",
+        "actionName": "house",
+        "isPremium": true
+      },
+      {
+        "id": "iloveyou",
+        "label": "I Love You",
+        "thumbUrl": "assets/images/categories/basic/permium/iloveyou.webp",
+        "audioUrl": "assets/audio/iloveyou.m4a",
+        "actionName": "iloveyou",
+        "isPremium": true
+      },
+      {
+        "id": "in",
+        "label": "In",
+        "thumbUrl": "assets/images/categories/basic/permium/in.webp",
+        "audioUrl": "assets/audio/in.m4a",
+        "actionName": "in",
+        "isPremium": true
+      },
+      {
+        "id": "jacket",
+        "label": "Jacket",
+        "thumbUrl": "assets/images/categories/basic/permium/jecket.webp",
+        "audioUrl": "assets/audio/jacket.m4a",
+        "actionName": "jacket",
+        "isPremium": true
+      },
+      {
+        "id": "key",
+        "label": "Key",
+        "thumbUrl": "assets/images/categories/basic/permium/key.webp",
+        "audioUrl": "assets/audio/key.m4a",
+        "actionName": "key",
+        "isPremium": true
+      },
+      {
+        "id": "laptop",
+        "label": "Laptop",
+        "thumbUrl": "assets/images/categories/basic/permium/laptop.webp",
+        "audioUrl": "assets/audio/laptop.m4a",
+        "actionName": "laptop",
+        "isPremium": true
+      },
+      {
+        "id": "love",
+        "label": "Love",
+        "thumbUrl": "assets/images/categories/basic/permium/love.webp",
+        "audioUrl": "assets/audio/love.m4a",
+        "actionName": "love",
+        "isPremium": true
+      },
+      {
+        "id": "mail",
+        "label": "Mail",
+        "thumbUrl": "assets/images/categories/basic/permium/mail.webp",
+        "audioUrl": "assets/audio/mail.m4a",
+        "actionName": "mail",
+        "isPremium": true
+      },
+      {
+        "id": "me",
+        "label": "Me",
+        "thumbUrl": "assets/images/categories/basic/permium/me.webp",
+        "audioUrl": "assets/audio/me.m4a",
+        "actionName": "me",
+        "isPremium": true
+      },
+      {
+        "id": "music",
+        "label": "Music",
+        "thumbUrl": "assets/images/categories/basic/permium/music.webp",
+        "audioUrl": "assets/audio/music.m4a",
+        "actionName": "music",
+        "isPremium": true
+      },
+      {
+        "id": "pen",
+        "label": "Pen",
+        "thumbUrl": "assets/images/categories/basic/permium/pen.webp",
+        "audioUrl": "assets/audio/pen.m4a",
+        "actionName": "pen",
+        "isPremium": true
+      },
+      {
+        "id": "phone",
+        "label": "Phone",
+        "thumbUrl": "assets/images/categories/basic/permium/phone.webp",
+        "audioUrl": "assets/audio/phone.m4a",
+        "actionName": "phone",
+        "isPremium": true
+      },
+      {
+        "id": "piano",
+        "label": "Piano",
+        "thumbUrl": "assets/images/categories/basic/permium/piano.webp",
+        "audioUrl": "assets/audio/piano.m4a",
+        "actionName": "piano",
+        "isPremium": true
+      },
+      {
+        "id": "school",
+        "label": "School",
+        "thumbUrl": "assets/images/categories/basic/permium/school.webp",
+        "audioUrl": "assets/audio/school.m4a",
+        "actionName": "school",
+        "isPremium": true
+      },
+      {
+        "id": "shoes",
+        "label": "Shoes",
+        "thumbUrl": "assets/images/categories/basic/permium/shoes.webp",
+        "audioUrl": "assets/audio/shoes.m4a",
+        "actionName": "shoes",
+        "isPremium": true
+      },
+      {
+        "id": "shower",
+        "label": "Shower",
+        "thumbUrl": "assets/images/categories/basic/permium/shower.webp",
+        "audioUrl": "assets/audio/shower.m4a",
+        "actionName": "shower",
+        "isPremium": true
+      },
+      {
+        "id": "slide",
+        "label": "Slide",
+        "thumbUrl": "assets/images/categories/basic/permium/slide.webp",
+        "audioUrl": "assets/audio/slide.m4a",
+        "actionName": "slide",
+        "isPremium": true
+      },
+      {
+        "id": "soap",
+        "label": "Soap",
+        "thumbUrl": "assets/images/categories/basic/permium/soap.webp",
+        "audioUrl": "assets/audio/soap.m4a",
+        "actionName": "soap",
+        "isPremium": true
+      },
+      {
+        "id": "socks",
+        "label": "Socks",
+        "thumbUrl": "assets/images/categories/basic/permium/socks.webp",
+        "audioUrl": "assets/audio/socks.m4a",
+        "actionName": "socks",
+        "isPremium": true
+      },
+      {
+        "id": "sorry",
+        "label": "Sorry",
+        "thumbUrl": "assets/images/categories/basic/permium/sorry.webp",
+        "audioUrl": "assets/audio/sorry.m4a",
+        "actionName": "sorry",
+        "isPremium": true
+      },
+      {
+        "id": "stairs",
+        "label": "Stairs",
+        "thumbUrl": "assets/images/categories/basic/permium/stairs.webp",
+        "audioUrl": "assets/audio/stairs.m4a",
+        "actionName": "stairs",
+        "isPremium": true
+      },
+      {
+        "id": "stop",
+        "label": "Stop",
+        "thumbUrl": "assets/images/categories/basic/permium/stop.webp",
+        "audioUrl": "assets/audio/stop.m4a",
+        "actionName": "stop",
+        "isPremium": true
+      },
+      {
+        "id": "street",
+        "label": "Street",
+        "thumbUrl": "assets/images/categories/basic/permium/street.webp",
+        "audioUrl": "assets/audio/street.m4a",
+        "actionName": "street",
+        "isPremium": true
+      },
+      {
+        "id": "swimming",
+        "label": "Swimming",
+        "thumbUrl": "assets/images/categories/basic/permium/swimming.webp",
+        "audioUrl": "assets/audio/swimming.m4a",
+        "actionName": "swimming",
+        "isPremium": true
+      },
+      {
+        "id": "swimsuit",
+        "label": "Swimsuit",
+        "thumbUrl": "assets/images/categories/basic/permium/swimsuit.webp",
+        "audioUrl": "assets/audio/swimsuit.m4a",
+        "actionName": "swimsuit",
+        "isPremium": true
+      },
+      {
+        "id": "swimtrunks",
+        "label": "Swim Trunks",
+        "thumbUrl": "assets/images/categories/basic/permium/swimtrunks.webp",
+        "audioUrl": "assets/audio/swimtrunks.m4a",
+        "actionName": "swimtrunks",
+        "isPremium": true
+      },
+      {
+        "id": "table",
+        "label": "Table",
+        "thumbUrl": "assets/images/categories/basic/permium/table.webp",
+        "audioUrl": "assets/audio/table.m4a",
+        "actionName": "table",
+        "isPremium": true
+      },
+      {
+        "id": "time",
+        "label": "Time",
+        "thumbUrl": "assets/images/categories/basic/permium/time.webp",
+        "audioUrl": "assets/audio/time.m4a",
+        "actionName": "time",
+        "isPremium": true
+      },
+      {
+        "id": "toilet",
+        "label": "Toilet",
+        "thumbUrl": "assets/images/categories/basic/permium/toilet.webp",
+        "audioUrl": "assets/audio/toilet.m4a",
+        "actionName": "toilet",
+        "isPremium": true
+      },
+      {
+        "id": "toothbrush",
+        "label": "Toothbrush",
+        "thumbUrl": "assets/images/categories/basic/permium/toothbrush.webp",
+        "audioUrl": "assets/audio/toothbrush.m4a",
+        "actionName": "toothbrush",
+        "isPremium": true
+      },
+      {
+        "id": "towel",
+        "label": "Towel",
+        "thumbUrl": "assets/images/categories/basic/permium/towel.webp",
+        "audioUrl": "assets/audio/towel.m4a",
+        "actionName": "towel",
+        "isPremium": true
+      },
+      {
+        "id": "train",
+        "label": "Train",
+        "thumbUrl": "assets/images/categories/basic/permium/train.webp",
+        "audioUrl": "assets/audio/train.m4a",
+        "actionName": "train",
+        "isPremium": true
+      },
+      {
+        "id": "walk",
+        "label": "Walk",
+        "thumbUrl": "assets/images/categories/basic/permium/walk.webp",
+        "audioUrl": "assets/audio/walk.m4a",
+        "actionName": "walk",
+        "isPremium": true
+      },
+      {
+        "id": "yes",
+        "label": "Yes",
+        "thumbUrl": "assets/images/categories/basic/permium/yes.webp",
+        "audioUrl": "assets/audio/yes.m4a",
+        "actionName": "yes",
+        "isPremium": true
+      }
+    ]
+  },
+  {
+    "id": "family-and-food",
+    "label": "Family & Food",
+    "thumbUrl": "../../assets/images/categories/food-family.webp",
+    "color": "",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_familyandfood.glb",
+    "signs": [
+      {
+        "id": "apple",
+        "label": "Apple",
+        "thumbUrl": "assets/images/categories/family-and-food/apple.webp",
+        "audioUrl": "assets/audio/apple.m4a",
+        "actionName": "apple"
+      },
+      {
+        "id": "brother",
+        "label": "Brother",
+        "thumbUrl": "assets/images/categories/family-and-food/brother.webp",
+        "audioUrl": "assets/audio/brother.m4a",
+        "actionName": "brother"
+      },
+      {
+        "id": "daddy",
+        "label": "Daddy",
+        "thumbUrl": "assets/images/categories/family-and-food/daddy.webp",
+        "audioUrl": "assets/audio/daddy.m4a",
+        "actionName": "daddy"
+      },
+      {
+        "id": "grandma",
+        "label": "Grandma",
+        "thumbUrl": "assets/images/categories/family-and-food/grandma.webp",
+        "audioUrl": "assets/audio/grandma.m4a",
+        "actionName": "grandma"
+      },
+      {
+        "id": "grandpa",
+        "label": "Grandpa",
+        "thumbUrl": "assets/images/categories/family-and-food/grandpa.webp",
+        "audioUrl": "assets/audio/grandpa.m4a",
+        "actionName": "grandpa"
+      },
+      {
+        "id": "mommy",
+        "label": "Mommy",
+        "thumbUrl": "assets/images/categories/family-and-food/mommy.webp",
+        "audioUrl": "assets/audio/mommy.m4a",
+        "actionName": "mommy"
+      },
+      {
+        "id": "sister",
+        "label": "Sister",
+        "thumbUrl": "assets/images/categories/family-and-food/sister.webp",
+        "audioUrl": "assets/audio/sister.m4a",
+        "actionName": "sister"
+      },
+      {
+        "id": "aunt",
+        "label": "Aunt",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/aunt.webp",
+        "audioUrl": "assets/audio/aunt.m4a",
+        "actionName": "aunt",
+        "isPremium": true
+      },
+      {
+        "id": "egg",
+        "label": "Egg",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/egg.webp",
+        "audioUrl": "assets/audio/egg.m4a",
+        "actionName": "egg",
+        "isPremium": true
+      },
+      {
+        "id": "food",
+        "label": "Food",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/food.webp",
+        "audioUrl": "assets/audio/food.m4a",
+        "actionName": "food",
+        "isPremium": true
+      },
+      {
+        "id": "fork",
+        "label": "Fork",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/fork.webp",
+        "audioUrl": "assets/audio/fork.m4a",
+        "actionName": "fork",
+        "isPremium": true
+      },
+      {
+        "id": "frenchfries",
+        "label": "French Fries",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/frenchfries.webp",
+        "audioUrl": "assets/audio/frenchfries.m4a",
+        "actionName": "frenchfries",
+        "isPremium": true
+      },
+      {
+        "id": "hamburger",
+        "label": "Hamburger",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/hamburger.webp",
+        "audioUrl": "assets/audio/hamburger.m4a",
+        "actionName": "hamburger",
+        "isPremium": true
+      },
+      {
+        "id": "hotdog",
+        "label": "Hot Dog",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/hotdog.webp",
+        "audioUrl": "assets/audio/hotdog.m4a",
+        "actionName": "hotdog",
+        "isPremium": true
+      },
+      {
+        "id": "icecream",
+        "label": "Ice Cream",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/icecream.webp",
+        "audioUrl": "assets/audio/icecream.m4a",
+        "actionName": "icecream",
+        "isPremium": true
+      },
+      {
+        "id": "knife",
+        "label": "Knife",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/knife.webp",
+        "audioUrl": "assets/audio/knife.m4a",
+        "actionName": "knife",
+        "isPremium": true
+      },
+      {
+        "id": "milk",
+        "label": "Milk",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/milk.webp",
+        "audioUrl": "assets/audio/milk.m4a",
+        "actionName": "milk",
+        "isPremium": true
+      },
+      {
+        "id": "pancake",
+        "label": "Pancake",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/pancake.webp",
+        "audioUrl": "assets/audio/pancake.m4a",
+        "actionName": "pancake",
+        "isPremium": true
+      },
+      {
+        "id": "pepper",
+        "label": "Pepper",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/pepper.webp",
+        "audioUrl": "assets/audio/pepper.m4a",
+        "actionName": "pepper",
+        "isPremium": true
+      },
+      {
+        "id": "salt",
+        "label": "Salt",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/salt.webp",
+        "audioUrl": "assets/audio/salt.m4a",
+        "actionName": "salt",
+        "isPremium": true
+      },
+      {
+        "id": "spoon",
+        "label": "Spoon",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/spoon.webp",
+        "audioUrl": "assets/audio/spoon.m4a",
+        "actionName": "spoon",
+        "isPremium": true
+      },
+      {
+        "id": "sugar",
+        "label": "Sugar",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/sugar.webp",
+        "audioUrl": "assets/audio/sugar.m4a",
+        "actionName": "sugar",
+        "isPremium": true
+      },
+      {
+        "id": "thirsty",
+        "label": "Thirsty",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/thirsty.webp",
+        "audioUrl": "assets/audio/thirsty.m4a",
+        "actionName": "thirsty",
+        "isPremium": true
+      },
+      {
+        "id": "uncle",
+        "label": "Uncle",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/uncle.webp",
+        "audioUrl": "assets/audio/uncle.m4a",
+        "actionName": "uncle",
+        "isPremium": true
+      },
+      {
+        "id": "water",
+        "label": "Water",
+        "thumbUrl": "assets/images/categories/family-and-food/permium/water.webp",
+        "audioUrl": "assets/audio/water.m4a",
+        "actionName": "water",
+        "isPremium": true
+      }
+    ]
+  },
+  {
+    "id": "animals",
+    "label": "Animals",
+    "thumbUrl": "../../assets/images/categories/animals.webp",
+    "color": "",
+    "audioUrl": "assets/audio/animals.m4a",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Animals.glb",
+    "signs": [
+      {
+        "id": "cat",
+        "label": "Cat",
+        "thumbUrl": "assets/images/categories/animals/cat.webp",
+        "audioUrl": "assets/audio/cat.m4a",
+        "actionName": "cat"
+      },
+      {
+        "id": "dog",
+        "label": "Dog",
+        "thumbUrl": "assets/images/categories/animals/dog.webp",
+        "audioUrl": "assets/audio/dog.m4a",
+        "actionName": "dog"
+      },
+      {
+        "id": "bird",
+        "label": "Bird",
+        "thumbUrl": "assets/images/categories/animals/bird.webp",
+        "audioUrl": "assets/audio/bird.m4a",
+        "actionName": "bird"
+      },
+      {
+        "id": "fish",
+        "label": "Fish",
+        "thumbUrl": "assets/images/categories/animals/fish.webp",
+        "audioUrl": "assets/audio/fish.m4a",
+        "actionName": "fish"
+      },
+      {
+        "id": "butterfly",
+        "label": "Butterfly",
+        "thumbUrl": "assets/images/categories/animals/butterfly.webp",
+        "audioUrl": "assets/audio/butterfly.m4a",
+        "actionName": "butterfly"
+      },
+      {
+        "id": "horse",
+        "label": "Horse",
+        "thumbUrl": "assets/images/categories/animals/horse.webp",
+        "audioUrl": "assets/audio/horse.m4a",
+        "actionName": "horse"
+      },
+      {
+        "id": "lion",
+        "label": "Lion",
+        "thumbUrl": "assets/images/categories/animals/lion.webp",
+        "audioUrl": "assets/audio/lion.m4a",
+        "actionName": "lion"
+      },
+      {
+        "id": "owl",
+        "label": "Owl",
+        "thumbUrl": "assets/images/categories/animals/owl.webp",
+        "audioUrl": "assets/audio/owl.m4a",
+        "actionName": "owl"
+      },
+      {
+        "id": "panda",
+        "label": "Panda",
+        "thumbUrl": "assets/images/categories/animals/panda.webp",
+        "audioUrl": "assets/audio/panda.m4a",
+        "actionName": "panda"
+      },
+      {
+        "id": "deer",
+        "label": "Deer",
+        "thumbUrl": "assets/images/categories/animals/deer.webp",
+        "audioUrl": "assets/audio/deer.m4a",
+        "actionName": "deer"
+      },
+      {
+        "id": "ant",
+        "label": "Ant",
+        "thumbUrl": "assets/images/categories/animals/permium/ant.webp",
+        "audioUrl": "assets/audio/ant.m4a",
+        "actionName": "ant",
+        "isPremium": true
+      },
+      {
+        "id": "bear",
+        "label": "Bear",
+        "thumbUrl": "assets/images/categories/animals/permium/bear.webp",
+        "audioUrl": "assets/audio/bear.m4a",
+        "actionName": "bear",
+        "isPremium": true
+      },
+      {
+        "id": "bee",
+        "label": "Bee",
+        "thumbUrl": "assets/images/categories/animals/permium/bee.webp",
+        "audioUrl": "assets/audio/bee.m4a",
+        "actionName": "bee",
+        "isPremium": true
+      },
+      {
+        "id": "caterpillar",
+        "label": "Caterpillar",
+        "thumbUrl": "assets/images/categories/animals/permium/caterpillar.webp",
+        "audioUrl": "assets/audio/caterpillar.m4a",
+        "actionName": "caterpillar",
+        "isPremium": true
+      },
+      {
+        "id": "chameleon",
+        "label": "Chameleon",
+        "thumbUrl": "assets/images/categories/animals/permium/chameleon.webp",
+        "audioUrl": "assets/audio/chameleon.m4a",
+        "actionName": "chameleon",
+        "isPremium": true
+      },
+      {
+        "id": "chicken",
+        "label": "Chicken",
+        "thumbUrl": "assets/images/categories/animals/permium/chicken.webp",
+        "audioUrl": "assets/audio/chicken.m4a",
+        "actionName": "chicken",
+        "isPremium": true
+      },
+      {
+        "id": "cow",
+        "label": "Cow",
+        "thumbUrl": "assets/images/categories/animals/permium/cow.webp",
+        "audioUrl": "assets/audio/cow.m4a",
+        "actionName": "cow",
+        "isPremium": true
+      },
+      {
+        "id": "crab",
+        "label": "Crab",
+        "thumbUrl": "assets/images/categories/animals/permium/crab.webp",
+        "audioUrl": "assets/audio/crab.m4a",
+        "actionName": "crab",
+        "isPremium": true
+      },
+      {
+        "id": "crocodile",
+        "label": "Crocodile",
+        "thumbUrl": "assets/images/categories/animals/permium/crocodile.webp",
+        "audioUrl": "assets/audio/crocodile.m4a",
+        "actionName": "crocodile",
+        "isPremium": true
+      },
+      {
+        "id": "dolphin",
+        "label": "Dolphin",
+        "thumbUrl": "assets/images/categories/animals/permium/dolphin.webp",
+        "audioUrl": "assets/audio/dolphin.m4a",
+        "actionName": "dolphin",
+        "isPremium": true
+      },
+      {
+        "id": "donkey",
+        "label": "Donkey",
+        "thumbUrl": "assets/images/categories/animals/permium/donkey.webp",
+        "audioUrl": "assets/audio/donkey.m4a",
+        "actionName": "donkey",
+        "isPremium": true
+      },
+      {
+        "id": "duck",
+        "label": "Duck",
+        "thumbUrl": "assets/images/categories/animals/permium/duck.webp",
+        "audioUrl": "assets/audio/duck.m4a",
+        "actionName": "duck",
+        "isPremium": true
+      },
+      {
+        "id": "elephant",
+        "label": "Elephant",
+        "thumbUrl": "assets/images/categories/animals/permium/elephant.webp",
+        "audioUrl": "assets/audio/elephant.m4a",
+        "actionName": "elephant",
+        "isPremium": true
+      },
+      {
+        "id": "flamingo",
+        "label": "Flamingo",
+        "thumbUrl": "assets/images/categories/animals/permium/flamingo.webp",
+        "audioUrl": "assets/audio/flamingo.m4a",
+        "actionName": "flamingo",
+        "isPremium": true
+      },
+      {
+        "id": "fox",
+        "label": "Fox",
+        "thumbUrl": "assets/images/categories/animals/permium/fox.webp",
+        "audioUrl": "assets/audio/fox.m4a",
+        "actionName": "fox",
+        "isPremium": true
+      },
+      {
+        "id": "frog",
+        "label": "Frog",
+        "thumbUrl": "assets/images/categories/animals/permium/frog.webp",
+        "audioUrl": "assets/audio/frog.m4a",
+        "actionName": "frog",
+        "isPremium": true
+      },
+      {
+        "id": "giraffe",
+        "label": "Giraffe",
+        "thumbUrl": "assets/images/categories/animals/permium/giraffe.webp",
+        "audioUrl": "assets/audio/giraffe.m4a",
+        "actionName": "giraffe",
+        "isPremium": true
+      },
+      {
+        "id": "goat",
+        "label": "Goat",
+        "thumbUrl": "assets/images/categories/animals/permium/goat.webp",
+        "audioUrl": "assets/audio/goat.m4a",
+        "actionName": "goat",
+        "isPremium": true
+      },
+      {
+        "id": "goose",
+        "label": "Goose",
+        "thumbUrl": "assets/images/categories/animals/permium/goose.webp",
+        "audioUrl": "assets/audio/goose.m4a",
+        "actionName": "goose",
+        "isPremium": true
+      },
+      {
+        "id": "ladybug",
+        "label": "Ladybug",
+        "thumbUrl": "assets/images/categories/animals/permium/ladybug.webp",
+        "audioUrl": "assets/audio/ladybug.m4a",
+        "actionName": "ladybug",
+        "isPremium": true
+      },
+      {
+        "id": "mole",
+        "label": "Mole",
+        "thumbUrl": "assets/images/categories/animals/permium/mole.webp",
+        "audioUrl": "assets/audio/mole.m4a",
+        "actionName": "mole",
+        "isPremium": true
+      },
+      {
+        "id": "monkey",
+        "label": "Monkey",
+        "thumbUrl": "assets/images/categories/animals/permium/monkey.webp",
+        "audioUrl": "assets/audio/monkey.m4a",
+        "actionName": "monkey",
+        "isPremium": true
+      },
+      {
+        "id": "mosquito",
+        "label": "Mosquito",
+        "thumbUrl": "assets/images/categories/animals/permium/mosquito.webp",
+        "audioUrl": "assets/audio/mosquito.m4a",
+        "actionName": "mosquito",
+        "isPremium": true
+      },
+      {
+        "id": "mouse",
+        "label": "Mouse",
+        "thumbUrl": "assets/images/categories/animals/permium/mouse.webp",
+        "audioUrl": "assets/audio/mouse.m4a",
+        "actionName": "mouse",
+        "isPremium": true
+      },
+      {
+        "id": "parrot",
+        "label": "Parrot",
+        "thumbUrl": "assets/images/categories/animals/permium/parrot.webp",
+        "audioUrl": "assets/audio/parrot.m4a",
+        "actionName": "parrot",
+        "isPremium": true
+      },
+      {
+        "id": "peacock",
+        "label": "Peacock",
+        "thumbUrl": "assets/images/categories/animals/permium/peacock.webp",
+        "audioUrl": "assets/audio/peacock.m4a",
+        "actionName": "peacock",
+        "isPremium": true
+      },
+      {
+        "id": "penguin",
+        "label": "Penguin",
+        "thumbUrl": "assets/images/categories/animals/permium/penguin.webp",
+        "audioUrl": "assets/audio/penguin.m4a",
+        "actionName": "penguin",
+        "isPremium": true
+      },
+      {
+        "id": "pig",
+        "label": "Pig",
+        "thumbUrl": "assets/images/categories/animals/permium/pig.webp",
+        "audioUrl": "assets/audio/pig.m4a",
+        "actionName": "pig",
+        "isPremium": true
+      },
+      {
+        "id": "polarbear",
+        "label": "Polar Bear",
+        "thumbUrl": "assets/images/categories/animals/permium/polarbear.webp",
+        "audioUrl": "assets/audio/polarbear.m4a",
+        "actionName": "polarbear",
+        "isPremium": true
+      },
+      {
+        "id": "rabbit",
+        "label": "Rabbit",
+        "thumbUrl": "assets/images/categories/animals/permium/rabbit.webp",
+        "audioUrl": "assets/audio/rabbit.m4a",
+        "actionName": "rabbit",
+        "isPremium": true
+      },
+      {
+        "id": "rhino",
+        "label": "Rhino",
+        "thumbUrl": "assets/images/categories/animals/permium/rhino.webp",
+        "audioUrl": "assets/audio/rhino.m4a",
+        "actionName": "rhino",
+        "isPremium": true
+      },
+      {
+        "id": "rooster",
+        "label": "Rooster",
+        "thumbUrl": "assets/images/categories/animals/permium/rooster.webp",
+        "audioUrl": "assets/audio/rooster.m4a",
+        "actionName": "rooster",
+        "isPremium": true
+      },
+      {
+        "id": "seal",
+        "label": "Seal",
+        "thumbUrl": "assets/images/categories/animals/permium/seal.webp",
+        "audioUrl": "assets/audio/seal.m4a",
+        "actionName": "seal",
+        "isPremium": true
+      },
+      {
+        "id": "shark",
+        "label": "Shark",
+        "thumbUrl": "assets/images/categories/animals/permium/shark.webp",
+        "audioUrl": "assets/audio/shark.m4a",
+        "actionName": "shark",
+        "isPremium": true
+      },
+      {
+        "id": "sheep",
+        "label": "Sheep",
+        "thumbUrl": "assets/images/categories/animals/permium/sheep.webp",
+        "audioUrl": "assets/audio/sheep.m4a",
+        "actionName": "sheep",
+        "isPremium": true
+      },
+      {
+        "id": "snake",
+        "label": "Snake",
+        "thumbUrl": "assets/images/categories/animals/permium/snake.webp",
+        "audioUrl": "assets/audio/snake.m4a",
+        "actionName": "snake",
+        "isPremium": true
+      },
+      {
+        "id": "spider",
+        "label": "Spider",
+        "thumbUrl": "assets/images/categories/animals/permium/spider.webp",
+        "audioUrl": "assets/audio/spider.m4a",
+        "actionName": "spider",
+        "isPremium": true
+      },
+      {
+        "id": "swan",
+        "label": "Swan",
+        "thumbUrl": "assets/images/categories/animals/permium/swan.webp",
+        "audioUrl": "assets/audio/swan.m4a",
+        "actionName": "swan",
+        "isPremium": true
+      },
+      {
+        "id": "tiger",
+        "label": "Tiger",
+        "thumbUrl": "assets/images/categories/animals/permium/tiger.webp",
+        "audioUrl": "assets/audio/tiger.m4a",
+        "actionName": "tiger",
+        "isPremium": true
+      },
+      {
+        "id": "turtle",
+        "label": "Turtle",
+        "thumbUrl": "assets/images/categories/animals/permium/turtle.webp",
+        "audioUrl": "assets/audio/turtle.m4a",
+        "actionName": "turtle",
+        "isPremium": true
+      },
+      {
+        "id": "wolf",
+        "label": "Wolf",
+        "thumbUrl": "assets/images/categories/animals/permium/wolf.webp",
+        "audioUrl": "assets/audio/wolf.m4a",
+        "actionName": "wolf",
+        "isPremium": true
+      },
+      {
+        "id": "zebra",
+        "label": "Zebra",
+        "thumbUrl": "assets/images/categories/animals/permium/zebra.webp",
+        "audioUrl": "assets/audio/zebra.m4a",
+        "actionName": "zebra",
+        "isPremium": true
+      }
+    ]
+  },
+  {
+    "id": "emotions&colors",
+    "label": "Emotions & Colors",
+    "thumbUrl": "../../assets/images/categories/emotional-color.webp",
+    "color": "",
+    "audioUrl": "assets/audio/colors.m4a",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_emotionandcolor.glb",
+    "signs": [
+      {
+        "id": "red",
+        "label": "Red",
+        "thumbUrl": "assets/images/categories/expression-and-color/red.webp",
+        "audioUrl": "assets/audio/red.m4a",
+        "actionName": "red"
+      },
+      {
+        "id": "white",
+        "label": "White",
+        "thumbUrl": "assets/images/categories/expression-and-color/white.webp",
+        "audioUrl": "assets/audio/white.m4a",
+        "actionName": "white"
+      },
+      {
+        "id": "black",
+        "label": "Black",
+        "thumbUrl": "assets/images/categories/expression-and-color/black.webp",
+        "audioUrl": "assets/audio/black.m4a",
+        "actionName": "black"
+      },
+      {
+        "id": "yellow",
+        "label": "Yellow",
+        "thumbUrl": "assets/images/categories/expression-and-color/yellow.webp",
+        "audioUrl": "assets/audio/yellow.m4a",
+        "actionName": "yellow"
+      },
+      {
+        "id": "crying",
+        "label": "Crying",
+        "thumbUrl": "assets/images/categories/expression-and-color/crying.webp",
+        "audioUrl": "assets/audio/crying.m4a",
+        "actionName": "crying"
+      },
+      {
+        "id": "happy",
+        "label": "Happy",
+        "thumbUrl": "assets/images/categories/expression-and-color/happy.webp",
+        "audioUrl": "assets/audio/happy.m4a",
+        "actionName": "happy"
+      },
+      {
+        "id": "angry",
+        "label": "Angry",
+        "thumbUrl": "assets/images/categories/expression-and-color/angry.webp",
+        "audioUrl": "assets/audio/angry.m4a",
+        "actionName": "angry"
+      },
+      {
+        "id": "afraid",
+        "label": "Afraid",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/afraid.webp",
+        "audioUrl": "assets/audio/afraid.m4a",
+        "actionName": "afraid",
+        "isPremium": true
+      },
+      {
+        "id": "ashamed",
+        "label": "Ashamed",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/ashamed.webp",
+        "audioUrl": "assets/audio/ashamed.m4a",
+        "actionName": "ashamed",
+        "isPremium": true
+      },
+      {
+        "id": "blue",
+        "label": "Blue",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/blue.webp",
+        "audioUrl": "assets/audio/blue.m4a",
+        "actionName": "blue",
+        "isPremium": true
+      },
+      {
+        "id": "grey",
+        "label": "Grey",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/gray.webp",
+        "audioUrl": "assets/audio/grey.m4a",
+        "actionName": "grey",
+        "isPremium": true
+      },
+      {
+        "id": "green",
+        "label": "Green",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/green.webp",
+        "audioUrl": "assets/audio/green.m4a",
+        "actionName": "green",
+        "isPremium": true
+      },
+      {
+        "id": "nervous",
+        "label": "Nervous",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/nervous.webp",
+        "audioUrl": "assets/audio/nervous.m4a",
+        "actionName": "nervous",
+        "isPremium": true
+      },
+      {
+        "id": "orange",
+        "label": "Orange",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/orange.webp",
+        "audioUrl": "assets/audio/orange.m4a",
+        "actionName": "orange",
+        "isPremium": true
+      },
+      {
+        "id": "pink",
+        "label": "Pink",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/pink.webp",
+        "audioUrl": "assets/audio/pink.m4a",
+        "actionName": "pink",
+        "isPremium": true
+      },
+      {
+        "id": "purple",
+        "label": "Purple",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/purple.webp",
+        "audioUrl": "assets/audio/purple.m4a",
+        "actionName": "purple",
+        "isPremium": true
+      },
+      {
+        "id": "shy",
+        "label": "Shy",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/shy.webp",
+        "audioUrl": "assets/audio/shy.m4a",
+        "actionName": "shy",
+        "isPremium": true
+      },
+      {
+        "id": "sweet",
+        "label": "Sweet",
+        "thumbUrl": "assets/images/categories/expression-and-color/permium/sweet.webp",
+        "audioUrl": "assets/audio/sweet.m4a",
+        "actionName": "sweet",
+        "isPremium": true
+      }
+    ]
+  },
+  {
+    "id": "playtime",
+    "label": "Playtime",
+    "thumbUrl": "assets/images/categories/playtime.webp",
+    "color": "",
+    "audioUrl": "assets/audio/playtime.m4a",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_playtime.glb",
+    "signs": [
+      {
+        "id": "ball",
+        "label": "Ball",
+        "thumbUrl": "assets/images/categories/playtime/football.webp",
+        "audioUrl": "assets/audio/ball.m4a",
+        "actionName": "ball"
+      },
+      {
+        "id": "balloon",
+        "label": "Balloon",
+        "thumbUrl": "assets/images/categories/playtime/balloon.webp",
+        "audioUrl": "assets/audio/balloon.m4a",
+        "actionName": "balloon"
+      },
+      {
+        "id": "bicycle",
+        "label": "Bicycle",
+        "thumbUrl": "assets/images/categories/playtime/cycle.webp",
+        "audioUrl": "assets/audio/bicycle.m4a",
+        "actionName": "bicycle"
+      },
+      {
+        "id": "blocks",
+        "label": "Blocks",
+        "thumbUrl": "assets/images/categories/playtime/cube.webp",
+        "audioUrl": "assets/audio/blocks.m4a",
+        "actionName": "block"
+      },
+      {
+        "id": "blow",
+        "label": "Blow",
+        "thumbUrl": "assets/images/categories/playtime/blow.webp",
+        "audioUrl": "assets/audio/blow.m4a",
+        "actionName": "blow"
+      },
+      {
+        "id": "candle",
+        "label": "Candle",
+        "thumbUrl": "assets/images/categories/playtime/candle.webp",
+        "audioUrl": "assets/audio/candle.m4a",
+        "actionName": "candle"
+      },
+      {
+        "id": "clown",
+        "label": "Clown",
+        "thumbUrl": "assets/images/categories/playtime/party.webp",
+        "audioUrl": "assets/audio/clown.m4a",
+        "actionName": "clown"
+      },
+      {
+        "id": "decorating",
+        "label": "Decorating",
+        "thumbUrl": "assets/images/categories/playtime/decoration.webp",
+        "audioUrl": "assets/audio/decorating.m4a",
+        "actionName": "decorating"
+      },
+      {
+        "id": "ball_premium",
+        "label": "Ball (Premium)",
+        "thumbUrl": "assets/images/categories/playtime/permium/ball.webp",
+        "audioUrl": "assets/audio/ball.m4a",
+        "actionName": "ball",
+        "isPremium": true
+      },
+      {
+        "id": "basketball",
+        "label": "Basketball",
+        "thumbUrl": "assets/images/categories/playtime/permium/basketball.webp",
+        "audioUrl": "assets/audio/basketball.m4a",
+        "actionName": "basketball",
+        "isPremium": true
+      },
+      {
+        "id": "batman",
+        "label": "Batman",
+        "thumbUrl": "assets/images/categories/playtime/permium/batman.webp",
+        "audioUrl": "assets/audio/batman.m4a",
+        "actionName": "batman",
+        "isPremium": true
+      },
+      {
+        "id": "captainamerica",
+        "label": "Captain America",
+        "thumbUrl": "assets/images/categories/playtime/permium/captainamerica.webp",
+        "audioUrl": "assets/audio/captainamerica.m4a",
+        "actionName": "captainamerica",
+        "isPremium": true
+      },
+      {
+        "id": "doll",
+        "label": "Doll",
+        "thumbUrl": "assets/images/categories/playtime/permium/doll.webp",
+        "audioUrl": "assets/audio/doll.m4a",
+        "actionName": "doll",
+        "isPremium": true
+      },
+      {
+        "id": "drawing",
+        "label": "Drawing",
+        "thumbUrl": "assets/images/categories/playtime/permium/drawing.webp",
+        "audioUrl": "assets/audio/drawing.m4a",
+        "actionName": "drawing",
+        "isPremium": true
+      },
+      {
+        "id": "flipflop",
+        "label": "Flip Flop",
+        "thumbUrl": "assets/images/categories/playtime/permium/flipflop.webp",
+        "audioUrl": "assets/audio/flipflop.m4a",
+        "actionName": "flipflop",
+        "isPremium": true
+      },
+      {
+        "id": "gift",
+        "label": "Gift",
+        "thumbUrl": "assets/images/categories/playtime/permium/gift.webp",
+        "audioUrl": "assets/audio/gift.m4a",
+        "actionName": "gift",
+        "isPremium": true
+      },
+      {
+        "id": "giving",
+        "label": "Giving",
+        "thumbUrl": "assets/images/categories/playtime/permium/giving.webp",
+        "audioUrl": "assets/audio/giving.m4a",
+        "actionName": "giving",
+        "isPremium": true
+      },
+      {
+        "id": "glue",
+        "label": "Glue",
+        "thumbUrl": "assets/images/categories/playtime/permium/glue.webp",
+        "audioUrl": "assets/audio/glue.m4a",
+        "actionName": "glue",
+        "isPremium": true
+      },
+      {
+        "id": "hideandseek",
+        "label": "Hide and Seek",
+        "thumbUrl": "assets/images/categories/playtime/permium/hideandseek.webp",
+        "audioUrl": "assets/audio/hideandseek.m4a",
+        "actionName": "hideandseek",
+        "isPremium": true
+      },
+      {
+        "id": "hulk",
+        "label": "Hulk",
+        "thumbUrl": "assets/images/categories/playtime/permium/hulk.webp",
+        "audioUrl": "assets/audio/hulk.m4a",
+        "actionName": "hulk",
+        "isPremium": true
+      },
+      {
+        "id": "ironman",
+        "label": "Iron Man",
+        "thumbUrl": "assets/images/categories/playtime/permium/ironman.webp",
+        "audioUrl": "assets/audio/ironman.m4a",
+        "actionName": "ironman",
+        "isPremium": true
+      },
+      {
+        "id": "lemonade",
+        "label": "Lemonade",
+        "thumbUrl": "assets/images/categories/playtime/permium/lemonade.webp",
+        "audioUrl": "assets/audio/lemonade.m4a",
+        "actionName": "lemonade",
+        "isPremium": true
+      },
+      {
+        "id": "painting",
+        "label": "Painting",
+        "thumbUrl": "assets/images/categories/playtime/permium/painting.webp",
+        "audioUrl": "assets/audio/painting.m4a",
+        "actionName": "painting",
+        "isPremium": true
+      },
+      {
+        "id": "paper",
+        "label": "Paper",
+        "thumbUrl": "assets/images/categories/playtime/permium/paper.webp",
+        "audioUrl": "assets/audio/paper.m4a",
+        "actionName": "paper",
+        "isPremium": true
+      },
+      {
+        "id": "playground",
+        "label": "Playground",
+        "thumbUrl": "assets/images/categories/playtime/permium/playground.webp",
+        "audioUrl": "assets/audio/playground.m4a",
+        "actionName": "playground",
+        "isPremium": true
+      },
+      {
+        "id": "playing",
+        "label": "Playing",
+        "thumbUrl": "assets/images/categories/playtime/permium/playing.webp",
+        "audioUrl": "assets/audio/playing.m4a",
+        "actionName": "playing",
+        "isPremium": true
+      },
+      {
+        "id": "sandbox",
+        "label": "Sandbox",
+        "thumbUrl": "assets/images/categories/playtime/permium/sandbox.webp",
+        "audioUrl": "assets/audio/sandbox.m4a",
+        "actionName": "sandbox",
+        "isPremium": true
+      },
+      {
+        "id": "scissors",
+        "label": "Scissors",
+        "thumbUrl": "assets/images/categories/playtime/permium/scissors.webp",
+        "audioUrl": "assets/audio/scissors.m4a",
+        "actionName": "scissors",
+        "isPremium": true
+      },
+      {
+        "id": "shovel",
+        "label": "Shovel",
+        "thumbUrl": "assets/images/categories/playtime/permium/shovel.webp",
+        "audioUrl": "assets/audio/shovel.m4a",
+        "actionName": "shovel",
+        "isPremium": true
+      },
+      {
+        "id": "soccer",
+        "label": "Soccer",
+        "thumbUrl": "assets/images/categories/playtime/permium/soccer.webp",
+        "audioUrl": "assets/audio/soccer.m4a",
+        "actionName": "soccer",
+        "isPremium": true
+      },
+      {
+        "id": "spiderman",
+        "label": "Spider-Man",
+        "thumbUrl": "assets/images/categories/playtime/permium/spiderman.webp",
+        "audioUrl": "assets/audio/spiderman.m4a",
+        "actionName": "spiderman",
+        "isPremium": true
+      },
+      {
+        "id": "superman",
+        "label": "Superman",
+        "thumbUrl": "assets/images/categories/playtime/permium/superman.webp",
+        "audioUrl": "assets/audio/superman.m4a",
+        "actionName": "superman",
+        "isPremium": true
+      },
+      {
+        "id": "theflash",
+        "label": "The Flash",
+        "thumbUrl": "assets/images/categories/playtime/permium/theflash.webp",
+        "audioUrl": "assets/audio/theflash.m4a",
+        "actionName": "theflash",
+        "isPremium": true
+      },
+      {
+        "id": "wolverine",
+        "label": "Wolverine",
+        "thumbUrl": "assets/images/categories/playtime/permium/wolverine.webp",
+        "audioUrl": "assets/audio/wolverine.m4a",
+        "actionName": "wolverine",
+        "isPremium": true
+      }
+    ]
+  },
+  {
+    "id": "nature",
+    "label": "Nature",
+    "thumbUrl": "assets/images/categories/nature.webp",
+    "color": "",
+    "audioUrl": "assets/audio/nature.m4a",
+    "actionFile": "assets/aslkidanimation/actions/asl_new_Animation_Nature.glb",
+    "signs": [
+      {
+        "id": "cloud",
+        "label": "Cloud",
+        "thumbUrl": "assets/images/categories/nature/cloud.webp",
+        "audioUrl": "assets/audio/cloud.m4a",
+        "actionName": "cloud"
+      },
+      {
+        "id": "grass",
+        "label": "Grass",
+        "thumbUrl": "assets/images/categories/nature/grass.webp",
+        "audioUrl": "assets/audio/grass.m4a",
+        "actionName": "grass"
+      },
+      {
+        "id": "autumn",
+        "label": "Autumn",
+        "thumbUrl": "assets/images/categories/nature/autumn.webp",
+        "audioUrl": "assets/audio/autumn.m4a",
+        "actionName": "autumn"
+      },
+      {
+        "id": "beach",
+        "label": "Beach",
+        "thumbUrl": "assets/images/categories/nature/beach.webp",
+        "audioUrl": "assets/audio/beach.m4a",
+        "actionName": "beach"
+      },
+      {
+        "id": "cold",
+        "label": "Cold",
+        "thumbUrl": "assets/images/categories/nature/cold.webp",
+        "audioUrl": "assets/audio/cold.m4a",
+        "actionName": "cold"
+      },
+      {
+        "id": "dry",
+        "label": "Dry",
+        "thumbUrl": "assets/images/categories/nature/dry.webp",
+        "audioUrl": "assets/audio/dry.m4a",
+        "actionName": "dry"
+      },
+      {
+        "id": "forest",
+        "label": "Forest",
+        "thumbUrl": "assets/images/categories/nature/forest.webp",
+        "audioUrl": "assets/audio/forest.m4a",
+        "actionName": "forest"
+      },
+      {
+        "id": "freezing",
+        "label": "Freezing",
+        "thumbUrl": "assets/images/categories/nature/freezing.webp",
+        "audioUrl": "assets/audio/freezing.m4a",
+        "actionName": "freezing"
+      },
+      {
+        "id": "ice",
+        "label": "Ice",
+        "thumbUrl": "assets/images/categories/nature/permium/ice.webp",
+        "audioUrl": "assets/audio/ice.m4a",
+        "actionName": "ice",
+        "isPremium": true
+      },
+      {
+        "id": "leaf",
+        "label": "Leaf",
+        "thumbUrl": "assets/images/categories/nature/permium/leaf.webp",
+        "audioUrl": "assets/audio/leaf.m4a",
+        "actionName": "leaf",
+        "isPremium": true
+      },
+      {
+        "id": "melting",
+        "label": "Melting",
+        "thumbUrl": "assets/images/categories/nature/permium/melting.webp",
+        "audioUrl": "assets/audio/melting.m4a",
+        "actionName": "melting",
+        "isPremium": true
+      },
+      {
+        "id": "moon",
+        "label": "Moon",
+        "thumbUrl": "assets/images/categories/nature/permium/moon.webp",
+        "audioUrl": "assets/audio/moon.m4a",
+        "actionName": "moon",
+        "isPremium": true
+      },
+      {
+        "id": "mushroom",
+        "label": "Mushroom",
+        "thumbUrl": "assets/images/categories/nature/permium/mushroom.webp",
+        "audioUrl": "assets/audio/mushroom.m4a",
+        "actionName": "mushroom",
+        "isPremium": true
+      },
+      {
+        "id": "rainbow",
+        "label": "Rainbow",
+        "thumbUrl": "assets/images/categories/nature/permium/rainbow.webp",
+        "audioUrl": "assets/audio/rainbow.m4a",
+        "actionName": "rainbow",
+        "isPremium": true
+      },
+      {
+        "id": "raincoat",
+        "label": "Raincoat",
+        "thumbUrl": "assets/images/categories/nature/permium/raincoat.webp",
+        "audioUrl": "assets/audio/raincoat.m4a",
+        "actionName": "raincoat",
+        "isPremium": true
+      },
+      {
+        "id": "rain",
+        "label": "Rain",
+        "thumbUrl": "assets/images/categories/nature/permium/rain.webp",
+        "audioUrl": "assets/audio/rain.m4a",
+        "actionName": "rain",
+        "isPremium": true
+      },
+      {
+        "id": "sand",
+        "label": "Sand",
+        "thumbUrl": "assets/images/categories/nature/permium/sand.webp",
+        "audioUrl": "assets/audio/sand.m4a",
+        "actionName": "sand",
+        "isPremium": true
+      },
+      {
+        "id": "snowing",
+        "label": "Snowing",
+        "thumbUrl": "assets/images/categories/nature/permium/snowing.webp",
+        "audioUrl": "assets/audio/snowing.m4a",
+        "actionName": "snowing",
+        "isPremium": true
+      },
+      {
+        "id": "snowman",
+        "label": "Snowman",
+        "thumbUrl": "assets/images/categories/nature/permium/snowman.webp",
+        "audioUrl": "assets/audio/snowman.m4a",
+        "actionName": "snowman",
+        "isPremium": true
+      },
+      {
+        "id": "spring",
+        "label": "Spring",
+        "thumbUrl": "assets/images/categories/nature/permium/spring.webp",
+        "audioUrl": "assets/audio/spring.m4a",
+        "actionName": "spring",
+        "isPremium": true
+      },
+      {
+        "id": "strom",
+        "label": "Storm",
+        "thumbUrl": "assets/images/categories/nature/permium/strom.webp",
+        "audioUrl": "assets/audio/storm.m4a",
+        "actionName": "storm",
+        "isPremium": true
+      },
+      {
+        "id": "summer",
+        "label": "Summer",
+        "thumbUrl": "assets/images/categories/nature/permium/summer.webp",
+        "audioUrl": "assets/audio/summer.m4a",
+        "actionName": "summer",
+        "isPremium": true
+      },
+      {
+        "id": "sun",
+        "label": "Sun",
+        "thumbUrl": "assets/images/categories/nature/permium/sun.webp",
+        "audioUrl": "assets/audio/sun.m4a",
+        "actionName": "sun",
+        "isPremium": true
+      },
+      {
+        "id": "tree",
+        "label": "Tree",
+        "thumbUrl": "assets/images/categories/nature/permium/tree.webp",
+        "audioUrl": "assets/audio/tree.m4a",
+        "actionName": "tree",
+        "isPremium": true
+      },
+      {
+        "id": "warm",
+        "label": "Warm",
+        "thumbUrl": "assets/images/categories/nature/permium/warm.webp",
+        "audioUrl": "assets/audio/warm.m4a",
+        "actionName": "warm",
+        "isPremium": true
+      },
+      {
+        "id": "winter",
+        "label": "Winter",
+        "thumbUrl": "assets/images/categories/nature/permium/winter.webp",
+        "audioUrl": "assets/audio/winter.m4a",
+        "actionName": "winter",
+        "isPremium": true
+      }
+    ]
+  }
+]
