@@ -13,6 +13,7 @@ import {
 import { addIcons } from 'ionicons';
 import { arrowBack, heart, trash } from 'ionicons/icons';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
+import { AlertService } from '../../services/alert.service';
 
 interface GroupedFavorites {
   type: string;
@@ -50,7 +51,8 @@ export class FavoritesViewAllPage implements OnInit {
 
   constructor(
     private navController: NavController,
-    private favoritesService: FavoritesService
+    private favoritesService: FavoritesService,
+    private alertService: AlertService
   ) {
     addIcons({ arrowBack, heart, trash });
   }
@@ -93,10 +95,21 @@ export class FavoritesViewAllPage implements OnInit {
       }));
   }
 
-  removeFavorite(item: FavoriteItem, event: Event) {
+  async removeFavorite(item: FavoriteItem, event: Event) {
     event.stopPropagation();
-    this.favoritesService.removeFavorite(item.id);
-    this.loadFavorites();
+
+    const confirmed = await this.alertService.confirm(
+      'Remove Favorite?',
+      `Are you sure you want to remove "${item.name}" from your favorites?`,
+      'Remove',
+      'Cancel',
+      'confirm'
+    );
+
+    if (confirmed) {
+      this.favoritesService.removeFavorite(item.id);
+      this.loadFavorites();
+    }
   }
 
   navigateToItem(item: FavoriteItem) {
