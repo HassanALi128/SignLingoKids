@@ -12,6 +12,7 @@ import {
   RewardAdOptions,
   RewardAdPluginEvents,
   AdMobError,
+  AdMobBannerSize,
 } from '@capacitor-community/admob';
 import { PurchasesService } from './purchases.service';
 import { UserService } from './user.service';
@@ -103,6 +104,24 @@ export class MonetizationService {
     try {
       await AdMob.initialize();
 
+      // Listen for banner load to set height
+      // Note: Loaded event does not provide size info in this plugin version
+      AdMob.addListener(BannerAdPluginEvents.Loaded, () => {
+        console.log('Banner loaded');
+        // Default to 60px if height is missing (standard adaptive banner height)
+        this.setBannerHeight(60);
+      });
+
+      // Listen for size changes
+      AdMob.addListener(
+        BannerAdPluginEvents.SizeChanged,
+        (info: AdMobBannerSize) => {
+          console.log('Banner size changed:', info);
+          const height = info.height || 60;
+          this.setBannerHeight(height);
+        }
+      );
+
       // Preload Interstitial
       await this.prepareInterstitial();
 
@@ -114,6 +133,14 @@ export class MonetizationService {
     } catch (e) {
       console.error('AdMob Init Error:', e);
     }
+  }
+
+  private setBannerHeight(height: number) {
+    console.log(`Setting global banner height to ${height}px`);
+    document.documentElement.style.setProperty(
+      '--ad-banner-height',
+      `${height}px`
+    );
   }
 
   async showBanner() {
@@ -131,6 +158,9 @@ export class MonetizationService {
 
     try {
       await AdMob.showBanner(options);
+      // We rely on the event listener to set the height, but we can set a safe default
+      // immediately if we expect it to show, or wait for the event.
+      // Let's wait for the event to be accurate, but if it's already cached it might fire fast.
     } catch (e) {
       console.error('Show Banner Error:', e);
     }
@@ -139,6 +169,7 @@ export class MonetizationService {
   async hideBanner() {
     try {
       await AdMob.hideBanner();
+      this.setBannerHeight(0);
     } catch (e) {
       // ignore
     }
