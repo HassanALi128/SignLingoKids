@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -13,11 +13,13 @@ import {
   IonLabel,
   NavController,
   ModalController,
+  Platform,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBack, checkmarkCircle, closeCircle } from 'ionicons/icons';
 import { QuizService, QuizResult } from '../../services/quiz';
 import { ResultModalComponent } from '../../tabs/quiz/result-modal/result-modal.component';
+import { Subscription } from 'rxjs';
 
 interface QuizStatistics {
   totalQuizzes: number;
@@ -52,7 +54,7 @@ interface ResultDisplay extends QuizResult {
     IonLabel,
   ],
 })
-export class QuizProgressViewAllPage implements OnInit {
+export class QuizProgressViewAllPage implements OnInit, OnDestroy {
   allResults: ResultDisplay[] = [];
   statistics: QuizStatistics = {
     totalQuizzes: 0,
@@ -61,17 +63,39 @@ export class QuizProgressViewAllPage implements OnInit {
     totalCorrect: 0,
     totalQuestions: 0,
   };
+  private backButtonSubscription?: Subscription;
 
   constructor(
     private navController: NavController,
     private quizService: QuizService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private platform: Platform
   ) {
     addIcons({ arrowBack, checkmarkCircle, closeCircle });
   }
 
   ngOnInit() {
     this.loadAllResults();
+  }
+
+  ionViewWillEnter() {
+    // Handle back button with high priority
+    this.backButtonSubscription =
+      this.platform.backButton.subscribeWithPriority(9999, () => {
+        this.navController.navigateBack('/tabs/quiz');
+      });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
   }
 
   private loadAllResults() {
@@ -138,6 +162,6 @@ export class QuizProgressViewAllPage implements OnInit {
   }
 
   goBack() {
-    this.navController.back();
+    this.navController.navigateBack('/tabs/quiz');
   }
 }

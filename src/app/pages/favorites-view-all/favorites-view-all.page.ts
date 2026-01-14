@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -9,11 +9,13 @@ import {
   IonButton,
   IonIcon,
   NavController,
+  Platform,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBack, heart, trash } from 'ionicons/icons';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
 import { AlertService } from '../../services/alert.service';
+import { Subscription } from 'rxjs';
 
 interface GroupedFavorites {
   type: string;
@@ -38,9 +40,10 @@ interface GroupedFavorites {
     IonIcon,
   ],
 })
-export class FavoritesViewAllPage implements OnInit {
+export class FavoritesViewAllPage implements OnInit, OnDestroy {
   groupedFavorites: GroupedFavorites[] = [];
   totalFavorites: number = 0;
+  private backButtonSubscription?: Subscription;
 
   private typeLabels: Record<string, { label: string; icon: string }> = {
     abc: { label: 'ABC Letters', icon: 'text-outline' },
@@ -52,7 +55,8 @@ export class FavoritesViewAllPage implements OnInit {
   constructor(
     private navController: NavController,
     private favoritesService: FavoritesService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private platform: Platform
   ) {
     addIcons({ arrowBack, heart, trash });
   }
@@ -64,6 +68,24 @@ export class FavoritesViewAllPage implements OnInit {
   ionViewWillEnter() {
     // Reload favorites when returning to this page
     this.loadFavorites();
+
+    // Handle back button with high priority
+    this.backButtonSubscription =
+      this.platform.backButton.subscribeWithPriority(9999, () => {
+        this.navController.navigateBack('/tabs/home');
+      });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.backButtonSubscription) {
+      this.backButtonSubscription.unsubscribe();
+    }
   }
 
   private loadFavorites() {
@@ -119,6 +141,6 @@ export class FavoritesViewAllPage implements OnInit {
   }
 
   goBack() {
-    this.navController.back();
+    this.navController.navigateBack('/tabs/home');
   }
 }

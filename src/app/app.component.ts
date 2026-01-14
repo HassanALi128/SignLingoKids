@@ -104,6 +104,12 @@ export class AppComponent implements OnInit {
 
         if (url === '/tabs/home' || url === '/') {
           await this.showExitConfirm();
+        } else if (url.includes('favorites-view-all')) {
+          // Navigate back to home/landing page
+          this.router.navigateByUrl('/tabs/home');
+        } else if (url.includes('quiz-progress-view-all')) {
+          // Navigate back to quiz page
+          this.router.navigateByUrl('/tabs/quiz');
         } else {
           // Allow default Ionic back navigation for other pages
           processNextHandler();
