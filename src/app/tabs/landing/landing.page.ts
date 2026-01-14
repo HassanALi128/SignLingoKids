@@ -217,24 +217,11 @@ export class LandingPage implements OnInit, OnDestroy {
             this.closeCategoryDetail();
           } else {
             // Show Exit Alert
-            const alert = await this.alertController.create({
-              header: 'Exit App',
-              message: 'Do you want to exit the app?',
-              buttons: [
-                {
-                  text: 'Cancel',
-                  role: 'cancel',
-                  cssClass: 'secondary',
-                },
-                {
-                  text: 'Exit',
-                  handler: () => {
-                    App.exitApp();
-                  },
-                },
-              ],
-            });
-            await alert.present();
+            // Show Exit Alert
+            const shouldExit = await this.alertService.exitApp();
+            if (shouldExit) {
+              App.exitApp();
+            }
           }
         }
       );
