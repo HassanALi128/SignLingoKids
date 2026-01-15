@@ -49,9 +49,6 @@ interface ResultDisplay extends QuizResult {
     IonButtons,
     IonButton,
     IonIcon,
-    IonList,
-    IonItem,
-    IonLabel,
   ],
 })
 export class QuizProgressViewAllPage implements OnInit, OnDestroy {
