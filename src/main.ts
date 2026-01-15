@@ -23,7 +23,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     importProvidersFrom(IonicModule.forRoot({ mode: 'md' })),
-    provideIonicAngular(),
+    provideIonicAngular({ mode: 'md' }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(),
     ModalController,
