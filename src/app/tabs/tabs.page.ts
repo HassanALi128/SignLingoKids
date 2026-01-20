@@ -18,6 +18,7 @@ import {
   star,
 } from 'ionicons/icons';
 import { QuizService } from '../services/quiz';
+import { MonetizationService } from '../services/monetization.service';
 
 @Component({
   selector: 'app-tabs',
@@ -29,7 +30,10 @@ export class TabsPage implements OnInit {
   public environmentInjector = inject(EnvironmentInjector);
   isPremium: boolean = false;
 
-  constructor(private quizService: QuizService) {
+  constructor(
+    private quizService: QuizService,
+    private monetizationService: MonetizationService
+  ) {
     addIcons({
       triangle,
       ellipse,
@@ -43,8 +47,18 @@ export class TabsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.quizService.isPremium$.subscribe((status) => {
+    this.quizService.isPremium$.subscribe((status: boolean) => {
       this.isPremium = status;
     });
+  }
+
+  ionViewWillEnter() {
+    // Show banner when entering tabs
+    this.monetizationService.showBanner();
+  }
+
+  ionViewWillLeave() {
+    // Hide banner when leaving tabs (e.g. to onboarding or profile setup)
+    this.monetizationService.hideBanner();
   }
 }

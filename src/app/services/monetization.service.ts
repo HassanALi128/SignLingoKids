@@ -128,8 +128,8 @@ export class MonetizationService {
       // Preload Reward
       await this.prepareReward();
 
-      // Show Banner
-      this.showBanner();
+      // Show Banner - REMOVED: Managed by TabsPage
+      // this.showBanner();
     } catch (e) {
       console.error('AdMob Init Error:', e);
     }
@@ -146,6 +146,11 @@ export class MonetizationService {
   async showBanner() {
     if (this.isPro) return;
 
+    // Set a default height immediately to start the transition
+    // Standard iOS/Android banner height is often roughly 50-60dp.
+    // We start with a safe guess to prevent overlap while the real size loads.
+    this.setBannerHeight(60);
+
     const adId = this.platform.is('ios')
       ? this.BANNER_ID_IOS
       : this.BANNER_ID_ANDROID;
@@ -154,15 +159,15 @@ export class MonetizationService {
       adSize: BannerAdSize.ADAPTIVE_BANNER,
       position: BannerAdPosition.BOTTOM_CENTER,
       margin: 0,
+      // offsets if needed?
     };
 
     try {
       await AdMob.showBanner(options);
-      // We rely on the event listener to set the height, but we can set a safe default
-      // immediately if we expect it to show, or wait for the event.
-      // Let's wait for the event to be accurate, but if it's already cached it might fire fast.
     } catch (e) {
       console.error('Show Banner Error:', e);
+      // If error, maybe reset height?
+      // this.setBannerHeight(0);
     }
   }
 

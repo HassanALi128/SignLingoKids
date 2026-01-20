@@ -1,79 +1,66 @@
 ion-tab-bar {
-    --background: white;
-    border-top: 1px solid #E8E8E8;
-    padding-top: 8px;
-    padding-bottom: 0;
-    // height: calc(60px + env(safe-area-inset-bottom));
+  --background: white;
+  border-top: 1px solid #e8e8e8;
+  padding-top: 8px;
+  padding-bottom: 0;
 
-    &.premium-safe-area {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
+  // Lift the tab bar by the ad height
+  // CRITICAL: On iOS, the ad sits at the very bottom (covering safe area).
+  // The tabs normally sit above safe area.
+  // So we need: Ad Height (which usually includes safe area space) OR Ad Height + Safe Area depending on how AdMob renders.
+  // Usually AdMob Adaptive Banner height ~50-60px.
+  // If we just use --ad-banner-height, it might be exactly the banner size.
+  // We add a small buffer or ensure we account for safe area if the reported height doesn't.
+
+  margin-bottom: calc(
+    var(--ad-banner-height, 0px) + env(safe-area-inset-bottom)
+  );
+  transition: margin-bottom 0.3s ease;
+
+  // height: calc(60px + env(safe-area-inset-bottom));
+
+  &.premium-safe-area {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+// Background layer behind the native ad to prevent "black bar" issues
+.ad-background-layer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--ad-banner-height, 0px) + env(safe-area-inset-bottom));
+  background: white;
+  z-index: 0; // Behind tabs (tabs are usually z-index 10+)
+  transition: height 0.3s ease;
 }
 
 ion-tab-button {
-    --color: #87837B;
-    --color-selected: #DB4827;
+  --color: #87837b;
+  --color-selected: #db4827;
 
+  ion-label {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  // Default state - gray icons
+  svg path {
+    stroke: #87837b;
+    transition: stroke 0.3s ease;
+  }
+
+  // Active state - orange icons and label
+  &.tab-selected {
     ion-label {
-        font-size: 12px;
-        font-weight: 500;
-        margin-top: 4px;
+      color: #db4827;
+      font-weight: 600;
     }
 
-    // Default state - gray icons
     svg path {
-        stroke: #87837B;
-        transition: stroke 0.3s ease;
+      stroke: #db4827;
     }
-
-    // Active state - orange icons and label
-    &.tab-selected {
-        ion-label {
-            color: #DB4827;
-            font-weight: 600;
-        }
-
-        svg path {
-            stroke: #DB4827;
-        }
-    }
-}
-
-// Global Ad Placeholder Styles
-.global-ad-container {
-    background: white;
-    padding: 8px 20px;
-    border-top: 1px solid #E8E8E8;
-}
-
-.ad-placeholder {
-    width: 100%;
-    height: 60px;
-    background: rgba(245, 245, 245, 0.8);
-    border: 2px dashed #ccc;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    color: #999;
-    transition: all 0.3s ease;
-
-    ion-icon {
-        font-size: 20px;
-    }
-
-    span {
-        font-size: 10px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    &:hover {
-        border-color: #DB4827;
-        color: #DB4827;
-        background: rgba(219, 72, 39, 0.05);
-    }
+  }
 }

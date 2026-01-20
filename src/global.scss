@@ -9,15 +9,15 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 :root {
-    --primary-gradient: linear-gradient(180deg, #D63E48 0%, #4B1669 100%);
-    --text-matte-black: #171717;
-    --ion-font-family: 'Rubik', sans-serif;
-    --ad-banner-height: 0px;
+  --primary-gradient: linear-gradient(180deg, #d63e48 0%, #4b1669 100%);
+  --text-matte-black: #171717;
+  --ion-font-family: "Rubik", sans-serif;
+  --ad-banner-height: 0px;
 }
 
 html,
 body {
-    font-family: 'Rubik', sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 
 /* Core CSS required for Ionic components to work properly */
@@ -48,48 +48,52 @@ body {
 // @import '@ionic/angular/css/palettes/dark.system.css';
 /* Safe Area Utilities */
 .safe-area-bottom {
-    padding-bottom: calc(var(--ion-safe-area-bottom) + var(--ad-banner-height));
+  padding-bottom: calc(var(--ion-safe-area-bottom) + var(--ad-banner-height));
 }
 
 .safe-area-top {
-    padding-top: var(--ion-safe-area-top);
+  padding-top: var(--ion-safe-area-top);
 }
 
 /* Ensure headers respect safe areas */
 ion-header {
-    --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 ion-toolbar {
-    --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 /* Ensure footers and tab bars respect safe areas */
+/* REMOVED: Causing layout regression on non-ad pages. Handled locally in tabs.page.scss */
+/* 
 ion-footer,
 ion-tab-bar {
     --ion-safe-area-bottom: env(safe-area-inset-bottom);
     padding-bottom: var(--ad-banner-height);
     transition: padding-bottom 0.3s ease;
-}
+} 
+*/
 
 /* Global fix for ion-content to respect banner */
 ion-content {
-    --padding-bottom: calc(var(--ad-banner-height) + var(--ion-safe-area-bottom));
+  --padding-bottom: calc(var(--ad-banner-height) + var(--ion-safe-area-bottom));
 }
 
 /* For pages with fullscreen content that need bottom padding */
 .has-footer {
-    --padding-bottom: calc(56px + var(--ion-safe-area-bottom) + var(--ad-banner-height));
+  --padding-bottom: calc(
+    56px + var(--ion-safe-area-bottom) + var(--ad-banner-height)
+  );
 }
-
 
 /* Headers respect safe areas */
 ion-header {
-    --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 ion-toolbar {
-    --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-top: env(safe-area-inset-top);
 }
 
 /* Tab bars respect safe areas */
@@ -100,92 +104,92 @@ ion-toolbar {
 
 /* Modern Alert Styles */
 .modern-alert {
-    --backdrop-opacity: 0.6;
-    --background: rgba(255, 255, 255, 0.95);
+  --backdrop-opacity: 0.6;
+  --background: rgba(255, 255, 255, 0.95);
 
-    .alert-wrapper {
-        border-radius: 24px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        max-width: 320px;
+  .alert-wrapper {
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    max-width: 320px;
+  }
+
+  .alert-head {
+    padding-top: 24px;
+    padding-bottom: 12px;
+
+    h2 {
+      font-family: var(--ion-font-family);
+      font-weight: 700;
+      font-size: 22px;
+      color: #333;
+      text-align: center;
     }
+  }
 
-    .alert-head {
-        padding-top: 24px;
-        padding-bottom: 12px;
+  .alert-message {
+    font-family: var(--ion-font-family);
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    padding-bottom: 24px;
+    line-height: 1.5;
+  }
 
-        h2 {
-            font-family: var(--ion-font-family);
-            font-weight: 700;
-            font-size: 22px;
-            color: #333;
-            text-align: center;
+  .alert-button-group {
+    padding: 0 16px 16px;
+    gap: 12px;
+    display: flex;
+    justify-content: center;
+
+    // flex-direction: column-reverse;
+    .alert-button {
+      border-radius: 16px;
+      height: 48px;
+      margin: 0 !important;
+      font-weight: 600;
+      font-size: 16px;
+      text-transform: none;
+
+      &.alert-button-cancel {
+        background: #afafaf;
+        color: white;
+        --background: #afafaf;
+
+        .alert-button-inner {
+          color: white;
         }
-    }
+      }
 
-    .alert-message {
-        font-family: var(--ion-font-family);
-        font-size: 16px;
-        color: #666;
-        text-align: center;
-        padding-bottom: 24px;
-        line-height: 1.5;
-    }
+      &.alert-button-confirm {
+        background: var(--primary-gradient);
+        color: white;
+        width: 5rem;
+        --background: var(--primary-gradient);
 
-    .alert-button-group {
-        padding: 0 16px 16px;
-        gap: 12px;
-        display: flex;
-        justify-content: center;
-
-        // flex-direction: column-reverse;
-        .alert-button {
-            border-radius: 16px;
-            height: 48px;
-            margin: 0 !important;
-            font-weight: 600;
-            font-size: 16px;
-            text-transform: none;
-
-            &.alert-button-cancel {
-                background: #AFAFAF;
-                color: white;
-                --background: #AFAFAF;
-
-                .alert-button-inner {
-                    color: white;
-                }
-            }
-
-            &.alert-button-confirm {
-                background: var(--primary-gradient);
-                color: white;
-                width: 5rem;
-                --background: var(--primary-gradient);
-
-                .alert-button-inner {
-                    color: white;
-                }
-            }
+        .alert-button-inner {
+          color: white;
         }
+      }
     }
+  }
 }
 
 /* Custom Alert Modal - Transparent Background */
 .custom-alert-modal {
+  --background: transparent;
+  --box-shadow: none;
+
+  .modal-wrapper {
     --background: transparent;
     --box-shadow: none;
-
-    .modal-wrapper {
-        --background: transparent;
-        --box-shadow: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .alert-button-inner.sc-ion-alert-md {
-    // -ms-flex-pack: end;
-    justify-content: center;
+  // -ms-flex-pack: end;
+  justify-content: center;
 }
