@@ -21,6 +21,7 @@ export class ProfileService {
     private userService: UserService,
     private purchasesService: PurchasesService
   ) {
+    console.log('ProfileService: Initializing...');
     this.loadProfile();
   }
 
@@ -28,6 +29,7 @@ export class ProfileService {
     this.userService.ensureAuth().then(() => {
       this.userService.userData$.subscribe((userData) => {
         if (userData) {
+          console.log('ProfileService: Received user data', userData);
           const currentProfile = this.profileSubject.value;
           const profile: UserProfile = {
             name: userData.displayName || 'Guest',
@@ -56,6 +58,7 @@ export class ProfileService {
   }
 
   async updateProfile(profile: UserProfile) {
+    console.log('ProfileService: Updating profile', profile);
     try {
       await this.userService.updateUserProfile({
         displayName: profile.name,

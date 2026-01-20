@@ -18,6 +18,7 @@ import {
 } from 'rxjs';
 import { DeviceService } from './device.service';
 import { PurchasesService } from './purchases.service';
+import { AlertService } from './alert.service'; // Added for debug alerts
 
 export interface UserData {
   uid: string;
@@ -49,8 +50,10 @@ export class UserService {
     public auth: Auth,
     private firestore: Firestore,
     private deviceService: DeviceService,
-    private purchasesService: PurchasesService
+    private purchasesService: PurchasesService,
+    private alertService: AlertService // Injected for debug
   ) {
+    console.log('UserService: Initializing...');
     this.user$ = user(this.auth);
 
     this.userData$ = combineLatest([
@@ -59,6 +62,7 @@ export class UserService {
     ]).pipe(
       switchMap(([u, isTestPremium]) => {
         if (u) {
+          console.log('UserService: User authenticated', u.uid);
           const userDoc = doc(this.firestore, `users/${u.uid}`);
           return docData(userDoc).pipe(
             map((data) => {
@@ -96,7 +100,19 @@ export class UserService {
   async ensureAuth() {
     const currentUser = this.auth.currentUser;
     if (!currentUser) {
-      await signInAnonymously(this.auth);
+      console.log('UserService: No current user, signing in anonymously...');
+      try {
+        await signInAnonymously(this.auth);
+        console.log('UserService: Anonymous sign-in successful');
+      } catch (error) {
+        console.error('UserService: Anonymous sign-in failed', error);
+        this.alertService.error(
+          'Auth Error',
+          'Failed to sign in anonymously. Data may not save. ' + error
+        );
+      }
+    } else {
+      console.log('UserService: Already authenticated as', currentUser.uid);
     }
   }
 
@@ -116,7 +132,17 @@ export class UserService {
     };
 
     // Use setDoc with merge: true to avoid overwriting if exists
-    await setDoc(userRef, userData, { merge: true });
+    console.log('UserService: Creating/Updating user profile for', user.uid);
+    try {
+      await setDoc(userRef, userData, { merge: true });
+      console.log('UserService: User profile created/updated successfully');
+    } catch (e) {
+      console.error('UserService: Error creating user profile', e);
+      this.alertService.error(
+        'Save Error',
+        'Failed to create user profile: ' + e
+      );
+    }
 
     // Link device
     await this.deviceService.registerDevice(user.uid);
@@ -132,6 +158,8 @@ export class UserService {
           lastActiveAt: new Date().toISOString(),
         },
         { merge: true }
+      ).catch((e) =>
+        console.error('UserService: Error updating lastActive', e)
       );
     }
   }
@@ -156,7 +184,18 @@ export class UserService {
       const userRef = doc(this.firestore, 'users', user.uid);
       // Use setDoc with merge: true to ensure document is created if it doesn't exist
       // This fixes "No document to update" error on fresh installs
-      await setDoc(userRef, data, { merge: true });
+      console.log('UserService: Updating user profile', data);
+      await setDoc(userRef, data, { merge: true })
+        .then(() => {
+          console.log('UserService: Profile updated successfully');
+        })
+        .catch((e) => {
+          console.error('UserService: Error updating profile', e);
+          this.alertService.error(
+            'Update Error',
+            'Failed to update profile: ' + e
+          );
+        });
     }
   }
 

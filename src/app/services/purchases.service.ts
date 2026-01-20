@@ -31,17 +31,32 @@ export class PurchasesService {
 
   constructor(private platform: Platform) {}
 
+  private initPromise: Promise<void> | null = null;
+
   /**
    * Initialize RevenueCat SDK
-   * Call this once during app startup
+   * Call this once during app startup or lazily
    */
   async init(): Promise<void> {
     if (this.isInitialized) {
-      console.log('RevenueCat already initialized');
       return;
     }
 
+    if (this.initPromise) {
+      return this.initPromise;
+    }
+
+    this.initPromise = this.performInit();
+    return this.initPromise;
+  }
+
+  private async performInit(): Promise<void> {
+    // Check if initialization is blocked (e.g. by previous error or just pending)
+    if (this.isInitialized) return;
+
     try {
+      // Don't wait for platform.ready() if we are already running logic that implies readiness,
+      // but RevenueCat plugin needs it. Safe to await.
       await this.platform.ready();
 
       // Configure RevenueCat
@@ -56,31 +71,81 @@ export class PurchasesService {
         return;
       }
 
-      // Initialize Purchases SDK
-      await Purchases.configure({
-        apiKey,
-        appUserID: undefined, // Will be set later when user logs in
-      });
+      // Initialize Purchases SDK with timeout protection
+      await this.withTimeout(
+        Purchases.configure({
+          apiKey,
+          appUserID: undefined, // Will be set later when user logs in
+        }),
+        5000,
+        'Purchases.configure'
+      );
 
       // Set log level for debugging (remove in production)
       if (!environment.production) {
-        await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
+        try {
+          await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
+        } catch (error) {
+          console.warn('Could not set log level:', error);
+        }
       }
 
       // Listen to customer info updates
       this.setupCustomerInfoListener();
 
-      // Fetch initial customer info
-      await this.refreshCustomerInfo();
+      // Fetch initial customer info with timeout
+      // Don't block app startup if this fails
+      try {
+        await this.withTimeout(
+          this.refreshCustomerInfo(),
+          3000,
+          'refreshCustomerInfo'
+        );
+      } catch (error) {
+        console.warn('Could not fetch initial customer info:', error);
+        // Continue anyway - we'll retry later
+      }
 
-      // Fetch offerings
-      await this.fetchOfferings();
+      // Fetch offerings with timeout
+      // Don't block app startup if this fails
+      try {
+        await this.withTimeout(this.fetchOfferings(), 3000, 'fetchOfferings');
+      } catch (error) {
+        console.warn('Could not fetch offerings:', error);
+        // Continue anyway - we'll retry later
+      }
 
       this.isInitialized = true;
       console.log('✅ RevenueCat initialized successfully');
     } catch (error) {
       console.error('❌ Failed to initialize RevenueCat:', error);
+      // Mark as initialized to prevent infinite retry loops if config is bad
+      this.isInitialized = true;
+    } finally {
+      this.initPromise = null;
     }
+  }
+
+  /**
+   * Wrap a promise with a timeout
+   */
+  private withTimeout<T>(
+    promise: Promise<T>,
+    timeoutMs: number,
+    operationName: string
+  ): Promise<T> {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(
+          () =>
+            reject(
+              new Error(`${operationName} timed out after ${timeoutMs}ms`)
+            ),
+          timeoutMs
+        )
+      ),
+    ]);
   }
 
   /**
@@ -98,13 +163,26 @@ export class PurchasesService {
    * Refresh customer info from RevenueCat
    */
   async refreshCustomerInfo(): Promise<CustomerInfo | null> {
+    if (!this.isInitialized) await this.init();
     try {
       const { customerInfo } = await Purchases.getCustomerInfo();
       this.customerInfoSubject.next(customerInfo);
       this.updatePremiumStatus(customerInfo);
       return customerInfo;
-    } catch (error) {
-      console.error('Failed to get customer info:', error);
+    } catch (error: any) {
+      // Log but don't crash on StoreKit authentication errors
+      if (
+        error?.message?.includes('Authentication') ||
+        error?.message?.includes('ASDErrorDomain') ||
+        error?.message?.includes('AMSErrorDomain')
+      ) {
+        console.warn(
+          'StoreKit authentication error (sandbox issue):',
+          error.message
+        );
+      } else {
+        console.error('Failed to get customer info:', error);
+      }
       return null;
     }
   }
@@ -123,6 +201,7 @@ export class PurchasesService {
    * Fetch available offerings from RevenueCat
    */
   async fetchOfferings(): Promise<PurchasesOfferings | null> {
+    if (!this.isInitialized) await this.init();
     try {
       const offerings = await Purchases.getOfferings();
       this.offeringsSubject.next(offerings);
@@ -139,6 +218,7 @@ export class PurchasesService {
   async purchasePackage(
     packageToBuy: PurchasesPackage
   ): Promise<CustomerInfo | null> {
+    if (!this.isInitialized) await this.init();
     try {
       const { customerInfo } = await Purchases.purchasePackage({
         aPackage: packageToBuy,
@@ -161,6 +241,7 @@ export class PurchasesService {
    * Restore previous purchases
    */
   async restorePurchases(): Promise<CustomerInfo | null> {
+    if (!this.isInitialized) await this.init();
     try {
       const { customerInfo } = await Purchases.restorePurchases();
       console.log('Purchases restored:', customerInfo);
@@ -178,6 +259,7 @@ export class PurchasesService {
    * Call this after user authentication
    */
   async identifyUser(appUserID: string): Promise<void> {
+    if (!this.isInitialized) await this.init();
     try {
       const { customerInfo } = await Purchases.logIn({ appUserID });
       this.customerInfoSubject.next(customerInfo);
@@ -192,6 +274,7 @@ export class PurchasesService {
    * Log out current user
    */
   async logOut(): Promise<void> {
+    if (!this.isInitialized) await this.init();
     try {
       const { customerInfo } = await Purchases.logOut();
       this.customerInfoSubject.next(customerInfo);

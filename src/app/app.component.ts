@@ -32,46 +32,19 @@ export class AppComponent implements OnInit {
 
   async initializeApp() {
     try {
-      // Wait for platform to be ready
-      await this.platform.ready();
-
-      // Update status
-      this.initStatus = 'Initializing...';
-
-      // IMPORTANT: Initialize RevenueCat FIRST before any user operations
-      // This ensures the SDK is configured before identifyUser() is called
-      await this.monetizationService.init();
-
-      // Update status
-      this.initStatus = 'Checking your device...';
-
-      // Initialize user from device (this handles Firebase auth and device check)
-      // This will call purchasesService.identifyUser() which requires RevenueCat to be initialized
-      const navigationPath = await this.userService.initializeUserFromDevice();
-
-      // Update status
-      this.initStatus = 'Loading your data...';
-
-      // Give a brief moment for the status to show
-      await this.delay(500);
-
-      // Setup back button handler
-      this.handleBackButton();
-
-      // Update status
-      this.initStatus = 'Almost ready!';
-
-      // Give a brief moment before hiding loader
-      await this.delay(300);
-
-      // Hide the init loader
-      this.showInitLoader = false;
-
-      // Hide native splash screen
-      SplashScreen.hide();
-
-      // Navigate to appropriate page
-      this.navigateBasedOnPath(navigationPath);
+      // Wrap entire initialization in a timeout to prevent indefinite hanging
+      await Promise.race([
+        this.performInitialization(),
+        new Promise((_, reject) =>
+          setTimeout(
+            () =>
+              reject(
+                new Error('App initialization timed out after 10 seconds')
+              ),
+            10000
+          )
+        ),
+      ]);
     } catch (error) {
       console.error('Error during app initialization:', error);
 
@@ -80,6 +53,50 @@ export class AppComponent implements OnInit {
       SplashScreen.hide();
       this.router.navigateByUrl('/onboarding');
     }
+  }
+
+  private async performInitialization() {
+    // Wait for platform to be ready
+    await this.platform.ready();
+
+    // Update status
+    this.initStatus = 'Initializing...';
+
+    // Initialize RevenueCat & AdMob in background (non-blocking)
+    this.monetizationService.init().catch((err) => {
+      console.warn('Background monetization init failed:', err);
+    });
+
+    // Update status
+    this.initStatus = 'Checking your device...';
+
+    // Initialize user from device (this handles Firebase auth and device check)
+    // This will call purchasesService.identifyUser() which requires RevenueCat to be initialized
+    const navigationPath = await this.userService.initializeUserFromDevice();
+
+    // Update status
+    this.initStatus = 'Loading your data...';
+
+    // Give a brief moment for the status to show
+    await this.delay(500);
+
+    // Setup back button handler
+    this.handleBackButton();
+
+    // Update status
+    this.initStatus = 'Almost ready!';
+
+    // Give a brief moment before hiding loader
+    await this.delay(300);
+
+    // Hide the init loader
+    this.showInitLoader = false;
+
+    // Hide native splash screen
+    SplashScreen.hide();
+
+    // Navigate to appropriate page
+    this.navigateBasedOnPath(navigationPath);
   }
 
   private delay(ms: number): Promise<void> {

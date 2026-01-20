@@ -94,7 +94,7 @@ export class QuizAttemptService {
     );
 
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((d) => d.data() as QuizAttempt);
+    return snapshot.docs.map((d: any) => d.data() as QuizAttempt);
   }
 
   async resetQuizAttempts() {
@@ -106,7 +106,7 @@ export class QuizAttemptService {
       `quizAttempts/${deviceId}/attempts`
     );
     const snapshot = await getDocs(attemptsRef);
-    const deletePromises = snapshot.docs.map((d) => deleteDoc(d.ref));
+    const deletePromises = snapshot.docs.map((d: any) => deleteDoc(d.ref));
     await Promise.all(deletePromises);
   }
 }
