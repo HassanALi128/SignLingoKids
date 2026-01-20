@@ -1,12 +1,12 @@
 .abc-content {
-  --background: #FDF8F0;
+  --background: #fdf8f0;
   --padding-bottom: 0;
 }
 
 // Header
 ion-header {
   ion-toolbar {
-    --background: #FDF8F0;
+    --background: #fdf8f0;
     --border-width: 0;
   }
 }
@@ -33,14 +33,12 @@ ion-header {
   }
 }
 
-
-
 .user-avatar {
   width: 45px;
   height: 45px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid #E8E8E8;
+  border: 2px solid #e8e8e8;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   .avatar-img {
@@ -83,7 +81,7 @@ ion-header {
   width: 60px;
   height: 60px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #E74C3C, #C0392B);
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
   border: none;
   display: flex;
   align-items: center;
@@ -120,7 +118,7 @@ ion-header {
 
 .letter-card {
   aspect-ratio: 1;
-  background: #FFF4E6;
+  background: #fff4e6;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -137,22 +135,22 @@ ion-header {
   }
 
   &.active {
-    background: #FFE8CC;
+    background: #ffe8cc;
     box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
     transform: scale(1.05);
   }
 
   &.learned {
-    background: #D4EDDA;
+    background: #d4edda;
 
     &::after {
-      content: '✓';
+      content: "✓";
       position: absolute;
       top: 2px;
       right: 2px;
       width: 16px;
       height: 16px;
-      background: #28A745;
+      background: #28a745;
       border-radius: 50%;
       color: white;
       font-size: 10px;

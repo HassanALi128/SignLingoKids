@@ -1,14 +1,14 @@
 // @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
 
 .landing-content {
-  --background: #FDF8F0;
+  --background: #fdf8f0;
   --padding-bottom: 80px;
 }
 
 // Header
 ion-header {
   ion-toolbar {
-    --background: #FDF8F0;
+    --background: #fdf8f0;
     --border-width: 0;
     padding: calc(0px + var(--ion-safe-area-top, 0px)) 20px 0px;
   }
@@ -17,7 +17,7 @@ ion-header {
     z-index: 10000;
 
     ion-toolbar {
-      --background: #FDF8F0;
+      --background: #fdf8f0;
       --padding-top: 8px;
       --padding-bottom: 8px;
     }
@@ -35,7 +35,6 @@ ion-header {
     --padding-start: 0;
     margin: 0;
     font-size: 24px;
-
 
     ion-icon {
       color: var(--text-matte-black);
@@ -89,7 +88,7 @@ ion-header {
       color: var(--text-matte-black);
 
       .user-name {
-        color: #F34F27;
+        color: #f34f27;
       }
     }
 
@@ -135,7 +134,7 @@ ion-header {
       right: 0;
       width: 18px;
       height: 18px;
-      background: linear-gradient(135deg, #FFD700, #FFA500);
+      background: linear-gradient(135deg, #ffd700, #ffa500);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -156,7 +155,7 @@ ion-header {
 .premium-banner {
   margin: 16px 20px;
   // padding: 16px;
-  background: linear-gradient(135deg, #8B4513 0%, #5D2E1A 100%);
+  background: linear-gradient(135deg, #8b4513 0%, #5d2e1a 100%);
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -224,7 +223,7 @@ ion-header {
 
   .see-all {
     font-size: 14px;
-    color: #FF6B6B;
+    color: #ff6b6b;
     text-decoration: none;
     cursor: pointer;
   }
@@ -314,7 +313,7 @@ ion-header {
     top: 12px;
     right: 12px;
     font-size: 24px;
-    color: #FF6B6B;
+    color: #ff6b6b;
     z-index: 2;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
@@ -323,7 +322,7 @@ ion-header {
     transition: all 0.2s ease;
 
     &.active {
-      color: #FF6B6B;
+      color: #ff6b6b;
       background-color: rgba(255, 255, 255, 1);
       transform: scale(1.1);
     }
@@ -441,7 +440,7 @@ ion-header {
 .certificate-icon {
   width: 50px;
   height: 50px;
-  background: #FFE8D6;
+  background: #ffe8d6;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -490,7 +489,7 @@ ion-header {
   transform: translate(-50%, -50%);
   font-size: 14px;
   font-weight: 700;
-  color: #FF6B6B;
+  color: #ff6b6b;
 }
 
 // Remove old styles
@@ -508,11 +507,13 @@ ion-header {
 // Category Detail View Overlay
 .category-detail-view {
   position: fixed;
-  top: calc(56px + var(--ion-safe-area-top, 0px)); // Height of toolbar + safe area
+  top: calc(
+    56px + var(--ion-safe-area-top, 0px)
+  ); // Height of toolbar + safe area
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #FDF8F0;
+  background-color: #fdf8f0;
   z-index: 999; // Below the header
   display: flex;
   flex-direction: column;
@@ -591,7 +592,10 @@ ion-header {
 
 .action-buttons {
   position: absolute;
-  bottom: 280px; // Adjust based on bottom sheet height
+  // Lift based on bottom sheet height + ad height buffer
+  bottom: calc(
+    280px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom)
+  );
   left: 0;
   right: 0;
   display: flex;
@@ -605,7 +609,9 @@ ion-header {
   transition: bottom 0.3s ease-in-out;
 
   &.lowered {
-    bottom: 40px;
+    bottom: calc(
+      40px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom)
+    );
   }
 
   .action-btn-wrapper {
@@ -613,91 +619,24 @@ ion-header {
   }
 }
 
-.action-btn-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &.center {
-    transform: translateY(-10px);
-  }
-}
-
-.action-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.1s ease;
-  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Removed generic shadow
-
-  &:active {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 !important; // Hide shadow on press
-  }
-
-  img {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-  }
-
-  &.expand {
-    background: #6FCF97; // Green
-    box-shadow: 0 6px 0 #27AE60; // Darker Green
-  }
-
-  &.rotate {
-    background: #56CCF2; // Blue
-    box-shadow: 0 6px 0 #2D9CDB; // Darker Blue
-  }
-
-  &.play {
-    width: 60px;
-    height: 60px;
-    background: #EB5757; // Red
-    border-radius: 20px;
-    box-shadow: 0 6px 0 #C0392B; // Darker Red
-
-    img {
-      width: 36px;
-      height: 36px;
-    }
-  }
-
-  &.sound {
-    background: #56CCF2; // Blue
-    box-shadow: 0 6px 0 #2D9CDB; // Darker Blue
-  }
-
-  &.hat {
-    background: #e0f2fe;
-    // color: #0ea5e9;
-    box-shadow: 0 6px 0 #8B4513; // SaddleBrown
-
-    &.active-learned {
-      background: #22c55e;
-      // color: white;
-    }
-  }
-}
+// ... existing code ...
 
 .bottom-sheet {
   position: absolute;
-  bottom: 0;
+  // Lift by Ad Height + Safe Area
+  bottom: calc(var(--ad-banner-height, 0px) + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
   background: white;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   // padding: 24px 0 30px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+
+  // Fill the gap below with white box-shadow
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05), 0 100px 0 0 #ffffff;
+
   z-index: 20;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, bottom 0.3s ease;
 
   &.hidden {
     transform: translateY(100%);
@@ -748,7 +687,6 @@ ion-header {
     // margin-right: 20px; // Swiper handles spacing via space-between if needed, or margin on slide
   }
 }
-
 
 .item-card {
   width: 100%;
@@ -805,7 +743,7 @@ ion-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    background: linear-gradient(135deg, #ffd700, #ffa500);
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
 
@@ -902,7 +840,7 @@ ion-header {
     font-size: 22px;
     font-weight: 800; // Bolder
     letter-spacing: 0.5px;
-    color: #F34F27; // Make it pop more
+    color: #f34f27; // Make it pop more
   }
 }
 
@@ -933,13 +871,10 @@ ion-header {
   }
 }
 
-
-
 ion-icon {
   color: white;
   font-size: 24px;
 }
-
 
 .premium-badge {
   background: linear-gradient(135deg, #ffd700, #ffa500);
