@@ -19,6 +19,7 @@ import {
 import { DeviceService } from './device.service';
 import { PurchasesService } from './purchases.service';
 import { AlertService } from './alert.service'; // Added for debug alerts
+import { Platform } from '@ionic/angular';
 
 export interface UserData {
   uid: string;
@@ -51,7 +52,8 @@ export class UserService {
     private firestore: Firestore,
     private deviceService: DeviceService,
     private purchasesService: PurchasesService,
-    private alertService: AlertService // Injected for debug
+    private alertService: AlertService, // Injected for debug
+    private platform: Platform
   ) {
     console.log('UserService: Initializing...');
     this.user$ = user(this.auth);
@@ -126,7 +128,11 @@ export class UserService {
       deviceIdHash: deviceIdHash || 'unknown',
       isAnonymous: user.isAnonymous,
       isPremium: false, // Default to false
-      platform: 'web', // You might want to detect this dynamically
+      platform: this.platform.is('android')
+        ? 'android'
+        : this.platform.is('ios')
+        ? 'ios'
+        : 'web', // You might want to detect this dynamically
       createdAt: now,
       lastActiveAt: now,
     };
