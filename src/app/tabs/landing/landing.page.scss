@@ -594,7 +594,7 @@ ion-header {
   position: absolute;
   // Lift based on bottom sheet height + ad height buffer
   bottom: calc(
-    280px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom)
+    210px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom)
   );
   left: 0;
   right: 0;

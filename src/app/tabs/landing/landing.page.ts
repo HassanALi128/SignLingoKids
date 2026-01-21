@@ -216,8 +216,6 @@ export class LandingPage implements OnInit, OnDestroy {
           if (this.selectedCategory) {
             this.closeCategoryDetail();
           } else {
-            // Show Exit Alert
-            // Show Exit Alert
             const shouldExit = await this.alertService.exitApp();
             if (shouldExit) {
               App.exitApp();

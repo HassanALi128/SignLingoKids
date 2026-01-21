@@ -42,11 +42,26 @@ export class MonetizationService {
   // RevenueCat offerings - exposed for premium page
   public offerings: PurchasesOfferings | null = null;
 
+  // Track AdMob initialization status
+  private adMobInitialized = false;
+  private adMobInitPromise: Promise<void>;
+
   constructor(
     private platform: Platform,
     private purchasesService: PurchasesService,
     private userService: UserService
-  ) {}
+  ) {
+    // Create an indefinite promise that we resolve when init is done
+    this.adMobInitPromise = new Promise<void>((resolve) => {
+      // Small timeout to allow init to complete later
+      const checkInterval = setInterval(() => {
+        if (this.adMobInitialized) {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 500);
+    });
+  }
 
   async init() {
     await this.platform.ready();
@@ -103,6 +118,7 @@ export class MonetizationService {
   private async initAdMob() {
     try {
       await AdMob.initialize();
+      this.adMobInitialized = true; // Mark as ready
 
       // Listen for banner load to set height
       // Note: Loaded event does not provide size info in this plugin version
@@ -146,6 +162,21 @@ export class MonetizationService {
   async showBanner() {
     if (this.isPro) return;
 
+    // Wait for initialization before engaging plugin
+    if (!this.adMobInitialized) {
+      console.log('AdMob not initialized yet, waiting...');
+      // Race a 5s timeout vs the actual init
+      await Promise.race([
+        this.adMobInitPromise,
+        new Promise((resolve) => setTimeout(resolve, 5000)),
+      ]);
+
+      if (!this.adMobInitialized) {
+        console.warn('AdMob failed to init in time, skipping banner show');
+        return;
+      }
+    }
+
     // Set a default height immediately to start the transition
     // Standard iOS/Android banner height is often roughly 50-60dp.
     // We start with a safe guess to prevent overlap while the real size loads.
@@ -173,8 +204,10 @@ export class MonetizationService {
 
   async hideBanner() {
     try {
-      await AdMob.hideBanner();
-      this.setBannerHeight(0);
+      if (this.adMobInitialized) {
+        await AdMob.hideBanner();
+        this.setBannerHeight(0);
+      }
     } catch (e) {
       // ignore
     }
@@ -182,6 +215,9 @@ export class MonetizationService {
 
   async prepareInterstitial() {
     if (this.isPro) return;
+
+    // Wait for initialization
+    if (!this.adMobInitialized) return;
 
     const adId = this.platform.is('ios')
       ? this.INTERSTITIAL_ID_IOS
@@ -199,6 +235,7 @@ export class MonetizationService {
 
   async showInterstitial(): Promise<void> {
     if (this.isPro) return;
+    if (!this.adMobInitialized) return;
 
     try {
       // Check if ready, if not prepare
@@ -209,6 +246,8 @@ export class MonetizationService {
   }
 
   async prepareReward() {
+    if (!this.adMobInitialized) return;
+
     const adId = this.platform.is('ios')
       ? this.REWARDED_ID_IOS
       : this.REWARDED_ID_ANDROID;

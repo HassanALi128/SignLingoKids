@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "710376628790",
+    "project_id": "hand-hero-3d-asl",
+    "storage_bucket": "hand-hero-3d-asl.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710376628790:android:0d03ebdf90aa29c4052e97",
+        "android_client_info": {
+          "package_name": "com.handhero.asl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNr-XS5Ww8m0AWF06RonjlqRH3jNtcQKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
