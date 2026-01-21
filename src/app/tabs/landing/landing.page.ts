@@ -533,13 +533,31 @@ export class LandingPage implements OnInit, OnDestroy {
     return this.learningService.isLearned(item.id);
   }
 
-  toggleFavorite(
+  async toggleFavorite(
     item: FavoriteItem & { isFavorite: boolean },
     event: Event
-  ): void {
+  ): Promise<void> {
     event.stopPropagation();
-    const newStatus = this.favoritesService.toggleFavorite(item);
-    item.isFavorite = newStatus;
+
+    // If currently a favorite, ask for confirmation before removing
+    if (item.isFavorite) {
+      const confirmed = await this.alertService.confirm(
+        'Remove Favorite?',
+        `Are you sure you want to remove "${item.name}" from your favorites?`,
+        'Remove',
+        'Cancel',
+        'confirm'
+      );
+
+      if (confirmed) {
+        const newStatus = this.favoritesService.toggleFavorite(item);
+        item.isFavorite = newStatus;
+      }
+    } else {
+      // If adding, just do it
+      const newStatus = this.favoritesService.toggleFavorite(item);
+      item.isFavorite = newStatus;
+    }
   }
 
   isFavorite(item: FavoriteItem): boolean {
