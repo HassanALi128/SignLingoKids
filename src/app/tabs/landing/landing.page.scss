@@ -507,9 +507,7 @@ ion-header {
 // Category Detail View Overlay
 .category-detail-view {
   position: fixed;
-  top: calc(
-    56px + var(--ion-safe-area-top, 0px)
-  ); // Height of toolbar + safe area
+  top: calc(56px + var(--ion-safe-area-top, 0px)); // Height of toolbar + safe area
   left: 0;
   right: 0;
   bottom: 0;
@@ -593,9 +591,7 @@ ion-header {
 .action-buttons {
   position: absolute;
   // Lift based on bottom sheet height + ad height buffer
-  bottom: calc(
-    210px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom)
-  );
+  bottom: calc(260px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
   display: flex;
@@ -609,9 +605,7 @@ ion-header {
   transition: bottom 0.3s ease-in-out;
 
   &.lowered {
-    bottom: calc(
-      40px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom)
-    );
+    bottom: calc(40px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom));
   }
 
   .action-btn-wrapper {
