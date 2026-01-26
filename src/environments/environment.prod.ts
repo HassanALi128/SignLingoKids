@@ -12,7 +12,7 @@ export const environment = {
   revenuecat: {
     // RevenueCat API Keys - REPLACE WITH PRODUCTION KEYS
     // Get them from: https://app.revenuecat.com/
-    apiKeyIOS: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
+    apiKeyIOS: 'appl_plOqOhUXEyvDFXdnQclLsoXwbDu',
     apiKeyAndroid: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
     // Entitlement identifier (must match RevenueCat dashboard)
     entitlementId: 'premium',

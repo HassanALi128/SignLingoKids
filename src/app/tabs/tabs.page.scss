@@ -20,6 +20,8 @@ ion-tab-bar {
   // height: calc(60px + env(safe-area-inset-bottom));
 
   &.premium-safe-area {
+    // When premium (no ads), reset margin and only use safe-area padding
+    margin-bottom: 0 !important;
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
