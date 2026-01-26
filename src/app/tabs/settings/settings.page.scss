@@ -334,16 +334,7 @@ ion-modal.edit-profile-modal {
       overflow-x: hidden;
       overscroll-behavior: contain;
       flex: 1;
-
-      // Expand container to full width of the modal (undoing parent padding)
-      // This moves the overflow clip boundary to the edge of the screen/modal
-      margin: 0 -24px;
-      width: calc(100% + 48px);
-
-      // Add padding back to align content internally and give buffer for shadows
-      padding: 0 24px;
-      padding-bottom: 24px; // Extra bottom space
-
+      padding: 0 16px 24px 16px; // Consistent padding on all sides
       box-sizing: border-box;
 
       // Hide scrollbar but keep functionality
@@ -357,22 +348,16 @@ ion-modal.edit-profile-modal {
       .avatar-preview-section {
         display: flex;
         justify-content: center;
-        align-items: center;
         margin-bottom: 24px;
-        width: 100%;
-        box-sizing: border-box;
 
         .avatar-preview {
           position: relative;
           width: 140px;
           height: 140px;
-          min-width: 140px;
-          min-height: 140px;
           border-radius: 50%;
           background: white;
           padding: 6px;
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-          margin: 0 auto;
 
           .preview-img {
             width: 100%;
@@ -446,8 +431,9 @@ ion-modal.edit-profile-modal {
         .avatar-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-          padding: 8px;
+          gap: 12px; // Reduced gap for better fit
+          justify-items: center;
+          align-items: center;
 
           .avatar-item {
             aspect-ratio: 1;
@@ -461,6 +447,8 @@ ion-modal.edit-profile-modal {
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             border: 3px solid transparent;
+            width: 100%;
+            max-width: 100px; // Slightly smaller to ensure no cutoff
 
             ion-img {
               width: 100%;
