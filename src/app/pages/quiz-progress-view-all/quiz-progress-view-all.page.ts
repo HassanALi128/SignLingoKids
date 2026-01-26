@@ -60,6 +60,7 @@ export class QuizProgressViewAllPage implements OnInit, OnDestroy {
     totalCorrect: 0,
     totalQuestions: 0,
   };
+  isPremium = false;
   private backButtonSubscription?: Subscription;
 
   constructor(
@@ -72,7 +73,14 @@ export class QuizProgressViewAllPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.subscribeToPremium();
     this.loadAllResults();
+  }
+
+  private subscribeToPremium() {
+    this.quizService.isPremium$.subscribe((isPremium) => {
+      this.isPremium = isPremium;
+    });
   }
 
   ionViewWillEnter() {
@@ -160,5 +168,9 @@ export class QuizProgressViewAllPage implements OnInit, OnDestroy {
 
   goBack() {
     this.navController.navigateBack('/tabs/quiz');
+  }
+
+  goToPremium() {
+    this.navController.navigateForward('/tabs/setting');
   }
 }

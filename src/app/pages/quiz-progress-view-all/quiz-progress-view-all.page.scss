@@ -1,5 +1,103 @@
 .quiz-progress-content {
   --background: #f8f9fa;
+  position: relative; // Ensure overlay is positioned relative to content
+}
+
+.content-wrapper {
+  position: relative; // For overlay positioning
+  min-height: 100%;
+
+  // Blurred state
+  &.premium-blur {
+    filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
+    overflow: hidden;
+  }
+}
+
+// Fixed overlay that covers the entire content
+.premium-lock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+
+  .lock-content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    max-width: 320px;
+    width: 90%;
+    border: 2px solid white;
+
+    .lock-icon-circle {
+      width: 70px;
+      height: 70px;
+      background: #fdf2f2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+
+      ion-icon {
+        font-size: 32px;
+        color: #ef4444;
+      }
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    p {
+      margin: 0 0 24px;
+      font-size: 15px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .premium-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 24px;
+      text-align: left;
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        color: #555;
+        font-size: 14px;
+
+        ion-icon {
+          color: #4caf50;
+          font-size: 18px;
+        }
+      }
+    }
+
+    .unlock-btn {
+      --background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+      --border-radius: 14px;
+      font-weight: 600;
+      height: 50px;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    }
+  }
 }
 
 /* Empty State */

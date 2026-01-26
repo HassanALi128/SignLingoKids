@@ -1,120 +1,144 @@
 <ion-header>
-    <ion-toolbar>
-        <div class="header-content">
-            <div class="greeting">
-                <h2>Hi <span class="user-name">{{ (userName$ | async) }}</span>, Ready to Learn Today?</h2>
-                <p>Let's Start Your Learning Test!</p>
-            </div>
-            @if((userAvatar$ | async); as avatar) {
-            <div class="user-avatar" (click)="goToProfile()">
-                <ion-img [src]="avatar" class="avatar-img"></ion-img>
-                @if(isPremium$ | async) {
-                <div class="premium-badge-star">
-                    <ion-icon name="star"></ion-icon>
-                </div>
-                }
-            </div>
-            } @else {
-            <div class="user-avatar" (click)="goToProfile()">
-                <ion-icon name="person-circle-outline"></ion-icon>
-                @if(isPremium$ | async) {
-                <div class="premium-badge-star">
-                    <ion-icon name="star"></ion-icon>
-                </div>
-                }
-            </div>
-            }
+  <ion-toolbar>
+    <div class="header-content">
+      <div class="greeting">
+        <h2>
+          Hi <span class="user-name">{{ (userName$ | async) }}</span>, Ready to
+          Learn Today?
+        </h2>
+        <p>Let's Start Your Learning Test!</p>
+      </div>
+      @if((userAvatar$ | async); as avatar) {
+      <div class="user-avatar" (click)="goToProfile()">
+        <ion-img [src]="avatar" class="avatar-img"></ion-img>
+        @if(isPremium$ | async) {
+        <div class="premium-badge-star">
+          <ion-icon name="star"></ion-icon>
         </div>
-    </ion-toolbar>
+        }
+      </div>
+      } @else {
+      <div class="user-avatar" (click)="goToProfile()">
+        <ion-icon name="person-circle-outline"></ion-icon>
+        @if(isPremium$ | async) {
+        <div class="premium-badge-star">
+          <ion-icon name="star"></ion-icon>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="quiz-content">
-    <!-- Lock Message and Progress (Outside Banner) -->
-    @if((quizUnlockState$ | async); as unlockState) {
-    @if(!unlockState.canStart) {
-    <div class="lock-section">
-        <div class="lock-message">
-            <ion-icon name="lock-closed-outline" class="lock-icon"></ion-icon>
-            <p class="lock-text">{{ unlockState.message }}</p>
-        </div>
-
-        <!-- Progress indicator -->
-        <div class="progress-container">
-            <div class="progress-info">
-                <span class="progress-label">Learning Progress</span>
-                <span class="progress-value">{{ unlockState.progress }}%</span>
-            </div>
-            <ion-progress-bar [value]="unlockState.progress / 100" class="learning-progress-bar"></ion-progress-bar>
-            <p class="progress-hint">Reach 25% to unlock! 🎯</p>
-        </div>
-    </div>
-    }
-    }
-
-    <!-- Start Your Quiz Banner -->
-    <div class="quiz-banner">
-        <div class="banner-content">
-            <div class="banner-text">
-                <h3>Start Your Quiz!</h3>
-
-                @if((quizUnlockState$ | async); as unlockState) {
-                @if(unlockState.canStart) {
-                <p>{{ unlockState.message }}</p>
-                }
-
-                <ion-button class="start-quiz-btn" expand="block" (click)="startQuiz()"
-                    [disabled]="!unlockState.canStart">
-                    @if(unlockState.canStart) {
-                    Start Quiz
-                    } @else {
-                    <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-                    Locked
-                    }
-                </ion-button>
-                }
-            </div>
-            <div class="banner-characters">
-                <ion-img src="assets/landing/landing.png" alt="Characters" class="characters-img"></ion-img>
-                <!-- <div class="question-mark">?</div> -->
-            </div>
-        </div>
+  <!-- Lock Message and Progress (Outside Banner) -->
+  @if((quizUnlockState$ | async); as unlockState) { @if(!unlockState.canStart) {
+  <div class="lock-section">
+    <div class="lock-message">
+      <ion-icon name="lock-closed-outline" class="lock-icon"></ion-icon>
+      <p class="lock-text">{{ unlockState.message }}</p>
     </div>
 
-    <!-- Recent Results Section -->
-    <div class="section-header">
-        <h3>Recent Results</h3>
-        <a class="view-all" (click)="viewAllResults()">View all</a>
+    <!-- Progress indicator -->
+    <div class="progress-container">
+      <div class="progress-info">
+        <span class="progress-label">Learning Progress</span>
+        <span class="progress-value">{{ unlockState.progress }}%</span>
+      </div>
+      <ion-progress-bar
+        [value]="unlockState.progress / 100"
+        class="learning-progress-bar"
+      ></ion-progress-bar>
+      <p class="progress-hint">Reach 25% to unlock! 🎯</p>
     </div>
+  </div>
+  } }
 
-    @if((recentResults$ | async); as results) {
-    @if(results.length === 0) {
-    <div class="empty-message">
-        <p>No quiz results yet. Start your first quiz!</p>
-    </div>
-    } @else {
-    <div class="results-list">
-        @for(result of results; track result.date) {
-        <div class="result-card" (click)="openResultModal(result)">
-            <div class="result-image">
-                <img [src]="result.imageUrl" [alt]="result.label">
-            </div>
-            <div class="result-info">
-                <h4>{{ result.label }}</h4>
-                <p>{{ result.description }}</p>
-            </div>
-            <div class="result-progress">
-                <svg class="progress-circle" width="70" height="70" viewBox="0 0 70 70">
-                    <circle class="progress-bg" cx="35" cy="35" r="30" fill="none" stroke="#F0F0F0" stroke-width="6" />
-                    <circle class="progress-fill" cx="35" cy="35" r="30" fill="none" [attr.stroke]="result.color"
-                        stroke-width="6" stroke-linecap="round" [style.stroke-dasharray]="188.4"
-                        [style.stroke-dashoffset]="188.4 - (result.percentage / 100) * 188.4"
-                        transform="rotate(-90 35 35)" />
-                </svg>
-                <span class="progress-text">{{ result.percentage }}%</span>
-            </div>
-        </div>
+  <!-- Start Your Quiz Banner -->
+  <div class="quiz-banner">
+    <div class="banner-content">
+      <div class="banner-text">
+        <h3>Start Your Quiz!</h3>
+
+        @if((quizUnlockState$ | async); as unlockState) {
+        @if(unlockState.canStart) {
+        <p>{{ unlockState.message }}</p>
         }
+
+        <ion-button
+          class="start-quiz-btn"
+          expand="block"
+          (click)="startQuiz()"
+          [disabled]="!unlockState.canStart"
+        >
+          @if(unlockState.canStart) { Start Quiz } @else {
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          Locked }
+        </ion-button>
+        }
+      </div>
+      <div class="banner-characters">
+        <ion-img
+          src="assets/landing/landing.png"
+          alt="Characters"
+          class="characters-img"
+        ></ion-img>
+        <!-- <div class="question-mark">?</div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Results Section -->
+  <div class="section-header">
+    <h3>Recent Results</h3>
+    <a class="view-all" (click)="viewAllResults()">View all</a>
+  </div>
+
+  @if((recentResults$ | async); as results) { @if(results.length === 0) {
+  <div class="empty-message">
+    <p>No quiz results yet. Start your first quiz!</p>
+  </div>
+  } @else {
+  <div class="results-list">
+    @for(result of results; track result.date) {
+    <div class="result-card" (click)="openResultModal(result)">
+      <div class="result-image">
+        <img [src]="result.imageUrl" [alt]="result.label" />
+      </div>
+      <div class="result-info">
+        <h4>{{ result.label }}</h4>
+        <p>{{ result.description }}</p>
+      </div>
+      <div class="result-progress">
+        <svg class="progress-circle" width="70" height="70" viewBox="0 0 70 70">
+          <circle
+            class="progress-bg"
+            cx="35"
+            cy="35"
+            r="30"
+            fill="none"
+            stroke="#F0F0F0"
+            stroke-width="6"
+          />
+          <circle
+            class="progress-fill"
+            cx="35"
+            cy="35"
+            r="30"
+            fill="none"
+            [attr.stroke]="result.color"
+            stroke-width="6"
+            stroke-linecap="round"
+            [style.stroke-dasharray]="188.4"
+            [style.stroke-dashoffset]="188.4 - (result.percentage / 100) * 188.4"
+            transform="rotate(-90 35 35)"
+          />
+        </svg>
+        <span class="progress-text">{{ result.percentage }}%</span>
+      </div>
     </div>
     }
-    }
+  </div>
+  } }
 </ion-content>
