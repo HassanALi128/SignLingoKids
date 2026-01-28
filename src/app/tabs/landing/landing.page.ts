@@ -335,8 +335,8 @@ export class LandingPage implements OnInit, OnDestroy {
         'assets/aslkidanimation/actions/new-asl-default-animation.glb'
       );
 
-      // Start Idle Scheduler for the character
-      this.three.startIdleScheduler();
+      // Start Idle Loop
+      this.three.play('idel-common');
     } catch (error) {
       console.error('Error initializing 3D model:', error);
     } finally {
@@ -345,7 +345,7 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   closeCategoryDetail(): void {
-    this.three.stopIdleScheduler();
+    this.three.stop();
     this.selectedCategory = null;
     this.categoryItems = [];
     this.stopAudio();
