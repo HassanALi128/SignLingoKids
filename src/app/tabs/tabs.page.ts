@@ -16,6 +16,7 @@ import {
   settings,
   home,
   star,
+  settingsOutline,
 } from 'ionicons/icons';
 import { QuizService } from '../services/quiz';
 import { MonetizationService } from '../services/monetization.service';
@@ -40,7 +41,7 @@ export class TabsPage implements OnInit {
       square,
       library,
       school,
-      settings,
+      settingsOutline,
       home,
       star,
     });

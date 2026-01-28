@@ -1,0 +1,38 @@
+{
+    "id": "story_001",
+    "title": "Veldora's Awakening",
+    "version": 1,
+    "assets": {
+        "glb_url": "assets/models/veldora_main.glb",
+        "preload_audio": []
+    },
+    "blocks": [
+        {
+            "id": 1,
+            "type": "NARRATION",
+            "audio_url": "assets/audio/intro_01.mp3",
+            "subtitle_text": "Welcome, traveler. I have been expecting you.",
+            "anim_name": "Idle_LookAround",
+            "loop_anim": true
+        },
+        {
+            "id": 2,
+            "type": "INTERACTION",
+            "audio_url": "assets/audio/task_01.mp3",
+            "subtitle_text": "Touch the glowing crystal to wake me fully.",
+            "anim_name": "Point_Forward",
+            "interaction": {
+                "target_mesh": "Crystal_Mesh",
+                "timeout": 10000
+            }
+        },
+        {
+            "id": 3,
+            "type": "NARRATION",
+            "audio_url": "assets/audio/success_01.mp3",
+            "subtitle_text": "Excellent! The power flows once more.",
+            "anim_name": "Happy_Jump",
+            "loop_anim": false
+        }
+    ]
+}

@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Story Lab</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadTestStory()">
+        <ion-icon name="refresh"></ion-icon>
+        Load Test
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- 3D Viewport (Placeholder for Phase 1) -->
+  <div #threeCanvasContainer class="three-container">
+    <div *ngIf="isLoading" class="loader-overlay">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading Assets...</p>
+    </div>
+  </div>
+
+  <!-- Story Overlay UI -->
+  <div class="story-overlay" *ngIf="currentBlock$ | async as block">
+    <div class="subtitle-box">
+      <p>{{ block.subtitle_text }}</p>
+    </div>
+
+    <!-- Interaction Prompt -->
+    <div
+      class="interaction-prompt"
+      *ngIf="(currentState$ | async) === 'WAIT_FOR_INTERACTION'"
+    >
+      <ion-icon name="finger-print" size="large"></ion-icon>
+      <p>Tap to Interact!</p>
+      <!-- Debug Button for simple testing without Raycasting -->
+      <ion-button size="small" color="warning" (click)="simulateInteraction()">
+        (Debug: Simulate Tap)
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Debug Console -->
+  <div class="debug-console">
+    <p>State: <strong>{{ currentState$ | async }}</strong></p>
+    <p>Block ID: {{ (currentBlock$ | async)?.id || '-' }}</p>
+    <p>Anim: {{ (currentBlock$ | async)?.anim_name || '-' }}</p>
+  </div>
+</ion-content>
