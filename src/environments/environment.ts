@@ -16,7 +16,8 @@ export const environment = {
   revenuecat: {
     // RevenueCat API Keys
     // Using test key for both platforms during development
-    apiKeyIOS: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
+    // apiKeyIOS: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
+    apiKeyIOS: 'appl_plOqOhUXEyvDFXdnQclLsoXwbDu',
     apiKeyAndroid: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
     // Entitlement identifier (must match RevenueCat dashboard)
     entitlementId: 'premium',

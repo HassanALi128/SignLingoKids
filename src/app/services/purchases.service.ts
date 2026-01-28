@@ -109,7 +109,7 @@ export class PurchasesService {
       // Fetch offerings with timeout
       // Don't block app startup if this fails
       try {
-        await this.withTimeout(this.fetchOfferings(), 3000, 'fetchOfferings');
+        await this.withTimeout(this.fetchOfferings(), 10000, 'fetchOfferings');
       } catch (error) {
         console.warn('Could not fetch offerings:', error);
         // Continue anyway - we'll retry later
@@ -197,17 +197,21 @@ export class PurchasesService {
     this.isPremiumSubject.next(hasPremium);
   }
 
+  public lastError: string | null = null;
+
   /**
    * Fetch available offerings from RevenueCat
    */
   async fetchOfferings(): Promise<PurchasesOfferings | null> {
     if (!this.isInitialized) await this.init();
     try {
+      this.lastError = null;
       const offerings = await Purchases.getOfferings();
       this.offeringsSubject.next(offerings);
       return offerings;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch offerings:', error);
+      this.lastError = error?.message || JSON.stringify(error);
       return null;
     }
   }

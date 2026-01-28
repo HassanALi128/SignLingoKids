@@ -25,7 +25,7 @@ import { MonetizationService } from '../services/monetization.service';
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
-  imports: [IonTabs, IonTabBar, IonTabButton, IonLabel],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonLabel, IonIcon],
 })
 export class TabsPage implements OnInit {
   public environmentInjector = inject(EnvironmentInjector);

@@ -1,16 +1,80 @@
-<ion-content class="paywall-content">
+<ion-content [scrollY]="true" class="paywall-content">
+  <div class="close-button" (click)="close()">
+    <ion-icon name="close-circle" color="medium"></ion-icon>
+  </div>
+
   <div class="paywall-container">
-    <!-- Loading state -->
-    <div *ngIf="isLoading" class="loading-container">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Loading subscription options...</p>
+    <!-- Header -->
+    <div class="header-section">
+      <img src="assets/logo.png" class="app-logo" alt="Hand Hero Logo" />
+      
+      <h1 class="main-title">Learning moments</h1>
+      <p class="subtitle">Expand your learning moments with Premium access.</p>
+      
+      <img src="assets/HH.webp" class="hero-image" alt="Premium Hero" />
     </div>
 
-    <!-- Restore purchases button (shown at bottom) -->
-    <div class="restore-container">
-      <ion-button fill="clear" (click)="restorePurchases()">
-        Restore Purchases
+    <!-- Plans -->
+    <div class="plans-container">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <ion-spinner color="warning"></ion-spinner>
+      </div>
+
+      <!-- Plan Cards -->
+      <ng-container *ngIf="!isLoading">
+        <div 
+          class="plan-card" 
+          *ngFor="let pkg of packages"
+          [class.selected]="selectedPackage === pkg"
+          (click)="selectPackage(pkg)"
+        >
+          <!-- 19% OFF Badge for Annual -->
+          <div class="discount-badge" *ngIf="pkg.packageType === 'ANNUAL'">19% OFF</div>
+
+          <div class="card-content">
+            <div class="radio-section">
+              <div class="custom-radio" [class.checked]="selectedPackage === pkg">
+                <ion-icon name="checkmark-sharp" *ngIf="selectedPackage === pkg"></ion-icon>
+              </div>
+            </div>
+
+            <div class="text-section">
+              <div class="plan-name">
+                <span *ngIf="pkg.packageType === 'ANNUAL'">Annual</span>
+                <span *ngIf="pkg.packageType === 'MONTHLY'">Monthly</span>
+                <!-- Fallback for other types -->
+                <span *ngIf="pkg.packageType !== 'ANNUAL' && pkg.packageType !== 'MONTHLY'">{{ pkg?.product?.title || 'Premium' }}</span>
+              </div>
+              <div class="plan-details">
+                <span *ngIf="pkg.packageType === 'ANNUAL'">12 mo • {{ pkg?.product?.priceString || '$59.99' }}</span>
+                <span *ngIf="pkg.packageType === 'MONTHLY'">1 mo • {{ pkg?.product?.priceString || '$9.99' }}</span>
+                <span *ngIf="pkg.packageType !== 'ANNUAL' && pkg.packageType !== 'MONTHLY'">{{ pkg?.product?.description }}</span>
+              </div>
+            </div>
+
+            <div class="price-section">
+              <span class="price-per-period" *ngIf="pkg.packageType === 'ANNUAL'">{{ pkg?.product?.priceString || '$59.99' }}/year</span>
+              <span class="price-per-period" *ngIf="pkg.packageType === 'MONTHLY'">{{ pkg?.product?.priceString || '$9.99' }}/mo</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Continue Button -->
+    <div class="action-section">
+      <ion-button expand="block" class="continue-btn" (click)="purchase()" [disabled]="isLoading || !selectedPackage">
+        Continue
       </ion-button>
+      
+      <div class="footer-links">
+        <span (click)="restorePurchases()">Restore</span>
+        <span class="separator">•</span>
+        <span (click)="openTerms()">Terms</span>
+        <span class="separator">•</span>
+        <span (click)="openPrivacy()">Privacy</span>
+      </div>
     </div>
   </div>
 </ion-content>

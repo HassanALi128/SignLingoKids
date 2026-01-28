@@ -5,13 +5,19 @@ import {
   LoadingController,
 } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import {
-  RevenueCatUI,
-  PaywallResultEnum,
-} from '@revenuecat/purchases-capacitor-ui';
+
 import { PurchasesService } from '../../services/purchases.service';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
+import { addIcons } from 'ionicons';
+import {
+  closeCircle,
+  checkmarkSharp,
+  bookOutline,
+  handLeftOutline,
+  banOutline,
+  closeOutline,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-paywall-modal',
@@ -21,7 +27,9 @@ import { AlertService } from '../../services/alert.service';
   imports: [IonicModule, CommonModule],
 })
 export class PaywallModalComponent implements OnInit {
-  isLoading = false;
+  isLoading = true;
+  packages: any[] = [];
+  selectedPackage: any = null;
 
   constructor(
     private modalController: ModalController,
@@ -29,65 +37,113 @@ export class PaywallModalComponent implements OnInit {
     private alertService: AlertService,
     private purchasesService: PurchasesService,
     private userService: UserService
-  ) {}
-
-  ngOnInit() {
-    // Present the paywall immediately when modal opens
-    this.presentPaywall();
+  ) {
+    addIcons({
+      closeCircle,
+      checkmarkSharp,
+      bookOutline,
+      handLeftOutline,
+      banOutline,
+      closeOutline,
+    });
   }
 
-  async presentPaywall() {
+  async ngOnInit() {
+    await this.loadOfferings();
+  }
+
+  async loadOfferings() {
     try {
       this.isLoading = true;
+      console.log('Paywall: Loading offerings...');
 
-      // Check if offerings are available
-      const offerings = this.purchasesService.getOfferings();
+      let offerings = this.purchasesService.getOfferings();
+
       if (!offerings || !offerings.current) {
-        await this.showError(
-          'No subscription plans available at the moment. Please try again later.'
-        );
-        this.close();
-        return;
+        console.log('Paywall: No cached offerings, fetching...');
+        offerings = await this.purchasesService.fetchOfferings();
       }
 
-      // Present RevenueCat's native paywall
-      const result = await RevenueCatUI.presentPaywall();
+      console.log('Paywall: Offerings result:', JSON.stringify(offerings));
 
-      // Handle the result
       if (
-        result &&
-        (result.result === PaywallResultEnum.PURCHASED ||
-          result.result === PaywallResultEnum.RESTORED)
+        offerings &&
+        offerings.current &&
+        offerings.current.availablePackages.length > 0
       ) {
-        // Purchase was successful
-        console.log('Paywall purchase successful');
+        this.packages = offerings.current.availablePackages;
+        console.log('Paywall: Available Packages:', this.packages);
 
-        // Sync premium status
-        await this.userService.syncPremiumStatusFromRevenueCat();
+        // Debug pricing
+        if (this.packages.length > 0) {
+          const first = this.packages[0];
+          console.log(
+            'Paywall: First Package Product:',
+            JSON.stringify(first.product)
+          );
+          console.log('Paywall: PriceString:', first.product?.priceString);
+        }
 
-        // Dismiss with success
-        this.modalController.dismiss({
-          role: 'purchased',
-          purchased: true,
-        });
+        // Auto-select the annual package if available
+        const annual = this.packages.find(
+          (p) =>
+            p.packageType === 'ANNUAL' ||
+            p.packageType === 1 ||
+            p.identifier.toLowerCase().includes('annual') ||
+            p.identifier.toLowerCase().includes('yearly')
+        );
+
+        // Fallback to first package if annual not found
+        this.selectedPackage = annual || this.packages[0];
+        console.log('Paywall: Selected Package:', this.selectedPackage);
       } else {
-        // User dismissed without purchasing
-        console.log('Paywall dismissed without purchase');
-        this.close();
+        console.error('Paywall: No packages found. Offerings object:', JSON.stringify(offerings));
+        if (offerings && offerings.current) {
+           console.error('Paywall: Current offering ID:', offerings.current.identifier);
+           console.error('Paywall: Available packages count:', offerings.current.availablePackages.length);
+        }
+        this.packages = [];
+        this.alertService.error('Error', 'No products found. Please check RevenueCat configuration.');
       }
-    } catch (error: any) {
-      console.error('Paywall presentation error:', error);
-
-      // Check if user cancelled
-      if (error.userCancelled || error.code === 'USER_CANCELLED') {
-        console.log('User cancelled paywall');
-        this.close();
-      } else {
-        await this.showError('An error occurred. Please try again.');
-        this.close();
-      }
+    } catch (error) {
+      console.error('Paywall: Error loading offerings:', error);
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  selectPackage(pkg: any) {
+    this.selectedPackage = pkg;
+    console.log('Paywall: User selected:', pkg);
+  }
+
+  async purchase() {
+    if (!this.selectedPackage) return;
+
+    const loading = await this.loadingController.create({
+      message: 'Processing purchase...',
+    });
+    await loading.present();
+
+    try {
+      const customerInfo = await this.purchasesService.purchasePackage(
+        this.selectedPackage
+      );
+      await loading.dismiss();
+
+      if (customerInfo && this.purchasesService.hasProEntitlement()) {
+        await this.userService.syncPremiumStatusFromRevenueCat();
+        this.modalController.dismiss({ role: 'purchased', purchased: true });
+        this.alertService.success('Success', 'Welcome to Premium!');
+      }
+    } catch (error: any) {
+      await loading.dismiss();
+      if (!error.userCancelled) {
+        this.alertService.error(
+          'Purchase Failed',
+          error.message || 'Please try again.'
+        );
+      }
     }
   }
 
@@ -102,40 +158,30 @@ export class PaywallModalComponent implements OnInit {
       await loading.dismiss();
 
       if (customerInfo && this.purchasesService.hasProEntitlement()) {
-        // Sync premium status
         await this.userService.syncPremiumStatusFromRevenueCat();
-
-        await this.showSuccess('Purchases restored successfully!');
-        this.modalController.dismiss({
-          role: 'restored',
-          purchased: true,
-        });
+        this.modalController.dismiss({ role: 'restored', purchased: true });
+        this.alertService.success(
+          'Success',
+          'Purchases restored successfully!'
+        );
       } else {
-        await this.showInfo('No previous purchases found.');
+        this.alertService.info('Restore', 'No active subscriptions found.');
       }
-    } catch (error) {
+    } catch (error: any) {
       await loading.dismiss();
-      console.error('Restore purchases error:', error);
-      await this.showError('Failed to restore purchases. Please try again.');
+      this.alertService.error('Error', 'Failed to restore purchases.');
     }
   }
 
   close() {
-    this.modalController.dismiss({
-      role: 'cancel',
-      purchased: false,
-    });
+    this.modalController.dismiss({ role: 'cancel', purchased: false });
   }
 
-  private async showError(message: string) {
-    await this.alertService.error('Error', message);
+  openPrivacy() {
+    window.open('https://www.handhero3d.com/privacy', '_system');
   }
 
-  private async showSuccess(message: string) {
-    await this.alertService.success('Success', message);
-  }
-
-  private async showInfo(message: string) {
-    await this.alertService.info('Info', message);
+  openTerms() {
+    window.open('https://www.handhero3d.com/terms', '_system');
   }
 }

@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
+import {
+  IonApp,
+  IonRouterOutlet,
+  Platform,
+  ModalController,
+} from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -8,6 +13,7 @@ import { MonetizationService } from './services/monetization.service';
 import { UserService } from './services/user.service';
 import { InitLoaderComponent } from './components/init-loader/init-loader.component';
 import { CommonModule } from '@angular/common';
+import { PaywallModalComponent } from './components/paywall-modal/paywall-modal.component';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +29,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private alertService: AlertService,
     private monetizationService: MonetizationService,
-    private userService: UserService
+    private userService: UserService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -97,6 +104,12 @@ export class AppComponent implements OnInit {
 
     // Navigate to appropriate page
     this.navigateBasedOnPath(navigationPath);
+
+    // After navigation, check premium status and show paywall if needed
+    // We delay slightly to ensure the root page is loaded
+    setTimeout(() => {
+      this.checkPremiumAndShowPaywall();
+    }, 1000);
   }
 
   private delay(ms: number): Promise<void> {
@@ -139,6 +152,23 @@ export class AppComponent implements OnInit {
     const shouldExit = await this.alertService.exitApp();
     if (shouldExit) {
       App.exitApp();
+    }
+  }
+
+  private async checkPremiumAndShowPaywall() {
+    // Check if user is premium
+    if (!this.monetizationService.isPro) {
+      console.log('App: User is not premium, showing paywall...');
+      const modal = await this.modalController.create({
+        component: PaywallModalComponent,
+        backdropDismiss: true, // Allow dismissal
+        componentProps: {
+          // any props
+        },
+      });
+      await modal.present();
+    } else {
+      console.log('App: User is premium, skipping paywall.');
     }
   }
 }

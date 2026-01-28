@@ -1,43 +1,188 @@
 .paywall-content {
-  --background: transparent;
+  --background: #ffffff;
+  font-family: "Outfit", sans-serif; /* Assuming app uses this or similar */
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  z-index: 100;
+  cursor: pointer;
+  opacity: 0.5;
 }
 
 .paywall-container {
+  padding: 0 24px 24px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  position: relative;
+  min-height: 100%;
 }
 
-.loading-container {
+.header-section {
+  text-align: center;
+  padding-top: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 1rem;
 
-  ion-spinner {
-    transform: scale(1.5);
+  .app-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
-  p {
-    color: var(--ion-color-medium);
-    font-size: 0.9rem;
+  .main-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #ff5722; /* Hand Hero Orange */
+    margin: 0 0 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #666;
+    margin: 0 0 24px;
+    padding: 0 20px;
+    line-height: 1.4;
+  }
+
+  .hero-image {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    margin: 0 auto 24px;
+    object-fit: contain;
   }
 }
 
-.restore-container {
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
+.plans-container {
   display: flex;
-  justify-content: center;
-  z-index: 1000;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
 
-  ion-button {
-    --color: var(--ion-color-medium);
-    font-size: 0.85rem;
+  .loading-state {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .plan-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s ease;
+
+    &.selected {
+      border-color: #ff5722;
+      background: #fffbf9;
+    }
+
+    .discount-badge {
+      position: absolute;
+      top: -10px;
+      right: 12px;
+      background: #ff9800;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .radio-section {
+      .custom-radio {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #d1d5db;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.checked {
+          background: #ff5722;
+          border-color: #ff5722;
+          color: white;
+
+          ion-icon {
+            font-size: 14px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .text-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .plan-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .plan-details {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 2px;
+      }
+    }
+
+    .price-section {
+      .price-per-period {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+    }
+  }
+}
+
+.action-section {
+  margin-top: auto;
+
+  .continue-btn {
+    --background: linear-gradient(90deg, #ff5722 0%, #c2185b 100%);
+    --background-activated: linear-gradient(90deg, #e64a19 0%, #ad1457 100%);
+    --border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    height: 52px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(194, 24, 91, 0.3);
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    span {
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 500;
+
+      &.separator {
+        color: #e5e7eb;
+      }
+    }
   }
 }
