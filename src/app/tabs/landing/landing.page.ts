@@ -18,6 +18,7 @@ import {
 import { App } from '@capacitor/app';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { DataService } from 'src/app/services/data';
 import { LearningService } from 'src/app/services/learning.service';
@@ -119,7 +120,8 @@ export class LandingPage implements OnInit, OnDestroy {
     private modalController: ModalController,
     private alertController: AlertController,
     private alertService: AlertService,
-    private platform: Platform
+    private platform: Platform,
+    private route: ActivatedRoute
   ) {
     addIcons({
       arrowBack,
@@ -174,6 +176,29 @@ export class LandingPage implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Error loading categories:', error);
     }
+
+    // Check for query params to open a specific category/item
+    this.route.queryParams.subscribe((params) => {
+      const categoryId = params['categoryId'];
+      const signId = params['signId'];
+
+      if (categoryId) {
+        // Wait for categories to be loaded
+        const checkCategories = setInterval(() => {
+          if (this.categories.length > 0) {
+            clearInterval(checkCategories);
+            const category = this.categories.find((c) => c.id === categoryId);
+            if (category) {
+              console.log('Opening category from URL:', category.label);
+              // Small delay to ensure view is ready
+              setTimeout(() => {
+                this.selectCategory(category, false, signId);
+              }, 500);
+            }
+          }
+        }, 100);
+      }
+    });
 
     // Calculate progress offset for the circle
     this.progressOffset =
@@ -239,7 +264,8 @@ export class LandingPage implements OnInit, OnDestroy {
 
   async selectCategory(
     category: Category,
-    resume: boolean = false
+    resume: boolean = false,
+    targetSignId?: string
   ): Promise<void> {
     this.isLoading3D = true;
     this.selectedCategory = category;
@@ -273,6 +299,17 @@ export class LandingPage implements OnInit, OnDestroy {
           'Resuming learning at last learned item index:',
           initialIndex
         );
+      }
+
+      // If targetSignId is provided, find its index (overrides resume logic)
+      if (targetSignId) {
+        const targetIndex = this.categoryItems.findIndex(
+          (item) => item.id === targetSignId
+        );
+        if (targetIndex !== -1) {
+          initialIndex = targetIndex;
+          console.log('Jumping to target sign index:', initialIndex);
+        }
       }
 
       // Initialize currentSign
@@ -574,6 +611,7 @@ export class LandingPage implements OnInit, OnDestroy {
       type: 'sign',
       bgColor: this.selectedCategory?.color,
       addedAt: Date.now(),
+      route: `/tabs/home?categoryId=${this.selectedCategory?.id}&signId=${item.id}`,
     };
 
     if (item.isPremium && !this.isPremium) {

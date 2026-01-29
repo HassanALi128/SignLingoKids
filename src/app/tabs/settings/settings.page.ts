@@ -35,6 +35,7 @@ import { DeviceService } from '../../services/device.service';
 import { ProgressService } from '../../services/progress.service';
 import { PurchasesService } from '../../services/purchases.service';
 import { CrashlyticsService } from '../../services/crashlytics.service';
+import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-settings',
@@ -266,10 +267,9 @@ export class SettingsPage implements OnInit {
   }
 
   async openPrivacyPolicy() {
-    this.commonService.alertMessage(
-      'Privacy Policy',
-      'Visit www.handhero3d.com/privacy'
-    );
+    await Browser.open({
+      url: 'https://veldorastudio.com/legal/hand-hero-privacy',
+    });
   }
 
   async togglePremium() {
