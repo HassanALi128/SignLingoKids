@@ -19,6 +19,7 @@ import {
   star,
   starOutline,
   personOutline,
+  bugOutline,
 } from 'ionicons/icons';
 
 import { CommonService } from '../../core/services/common';
@@ -33,6 +34,7 @@ import { QuizAttemptService } from '../../services/quiz-attempt.service';
 import { DeviceService } from '../../services/device.service';
 import { ProgressService } from '../../services/progress.service';
 import { PurchasesService } from '../../services/purchases.service';
+import { CrashlyticsService } from '../../services/crashlytics.service';
 
 @Component({
   selector: 'app-settings',
@@ -75,7 +77,8 @@ export class SettingsPage implements OnInit {
     private deviceService: DeviceService,
     private progressService: ProgressService,
     private alertController: AlertController,
-    private purchasesService: PurchasesService
+    private purchasesService: PurchasesService,
+    private crashlyticsService: CrashlyticsService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -89,6 +92,7 @@ export class SettingsPage implements OnInit {
       pencil,
       add,
       starOutline,
+      'bug-outline': bugOutline,
     });
   }
   ngOnInit(): void {
@@ -288,5 +292,24 @@ export class SettingsPage implements OnInit {
       newStatus ? 'success' : 'warning',
       'bottom'
     );
+  }
+
+  async testCrash() {
+    const alert = await this.alertController.create({
+      header: 'Force Crash?',
+      message:
+        'This will crash the app immediately to test Firebase Crashlytics. Are you sure?',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Crash It!',
+          role: 'destructive',
+          handler: () => {
+            this.crashlyticsService.crash();
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 }

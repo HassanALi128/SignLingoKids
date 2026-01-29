@@ -210,6 +210,17 @@
         {{ isPremium ? 'ON' : 'OFF' }}
       </div>
     </div>
+
+    <!-- Testing Mode: Test Crash -->
+    <div class="setting-card testing-mode" (click)="testCrash()">
+      <div class="icon-box crash-test">
+        <ion-icon name="bug-outline"></ion-icon>
+      </div>
+      <div class="text-box">
+        <h3 class="item-title">Test Crash (Crashlytics)</h3>
+        <p class="item-desc">Force a crash to test Firebase Crashlytics.</p>
+      </div>
+    </div>
   </div>
 
   <div class="version-info">
