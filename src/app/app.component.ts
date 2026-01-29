@@ -13,6 +13,7 @@ import { AlertService } from './services/alert.service';
 import { MonetizationService } from './services/monetization.service';
 import { UserService } from './services/user.service';
 import { CrashlyticsService } from './services/crashlytics.service';
+import { AnalyticsService } from './services/analytics.service';
 import { InitLoaderComponent } from './components/init-loader/init-loader.component';
 import { CommonModule } from '@angular/common';
 import { PaywallModalComponent } from './components/paywall-modal/paywall-modal.component';
@@ -33,7 +34,8 @@ export class AppComponent implements OnInit {
     private monetizationService: MonetizationService,
     private userService: UserService,
     private modalController: ModalController,
-    private crashlyticsService: CrashlyticsService
+    private crashlyticsService: CrashlyticsService,
+    private analyticsService: AnalyticsService
   ) {}
 
   ngOnInit() {
@@ -80,6 +82,9 @@ export class AppComponent implements OnInit {
 
     // Initialize Crashlytics
     await this.crashlyticsService.init();
+
+    // Initialize Analytics
+    await this.analyticsService.init();
 
     // Update status
     this.initStatus = 'Initializing...';
