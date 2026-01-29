@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { AlertService } from './services/alert.service';
 import { MonetizationService } from './services/monetization.service';
 import { UserService } from './services/user.service';
@@ -65,6 +66,15 @@ export class AppComponent implements OnInit {
   private async performInitialization() {
     // Wait for platform to be ready
     await this.platform.ready();
+
+    // Lock screen orientation to portrait
+    if (this.platform.is('hybrid')) {
+      try {
+        await ScreenOrientation.lock({ orientation: 'portrait' });
+      } catch (err) {
+        console.warn('Could not lock screen orientation:', err);
+      }
+    }
 
     // Update status
     this.initStatus = 'Initializing...';
