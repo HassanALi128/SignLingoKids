@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
+// import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
 import { Platform } from '@ionic/angular/standalone';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -21,7 +21,7 @@ export class AnalyticsService {
     if (!this.isHybrid) return;
 
     try {
-      await FirebaseAnalytics.setEnabled({ enabled: true });
+      // await FirebaseAnalytics.setEnabled({ enabled: true });
       console.log('Firebase Analytics initialized');
 
       // Setup automatic screen tracking
@@ -45,7 +45,7 @@ export class AnalyticsService {
     if (!this.isHybrid) return;
 
     try {
-      await FirebaseAnalytics.logEvent({ name, params });
+      // await FirebaseAnalytics.logEvent({ name, params });
     } catch (error) {
       // Silently fail
     }
@@ -61,13 +61,13 @@ export class AnalyticsService {
 
     try {
       // In @capacitor-firebase/analytics, setScreenName might be logEvent with screen_view
-      await FirebaseAnalytics.logEvent({
-        name: 'screen_view',
-        params: {
-          firebase_screen: screenName,
-          firebase_screen_class: 'AngularRouter',
-        },
-      });
+      // await FirebaseAnalytics.logEvent({
+      //   name: 'screen_view',
+      //   params: {
+      //     firebase_screen: screenName,
+      //     firebase_screen_class: 'AngularRouter',
+      //   },
+      // });
     } catch (error) {
       // Silently fail
     }
@@ -81,7 +81,7 @@ export class AnalyticsService {
     if (!this.isHybrid) return;
 
     try {
-      await FirebaseAnalytics.setUserId({ userId });
+      // await FirebaseAnalytics.setUserId({ userId });
     } catch (error) {
       console.error('Error setting Analytics user ID:', error);
     }
@@ -96,7 +96,7 @@ export class AnalyticsService {
     if (!this.isHybrid) return;
 
     try {
-      await FirebaseAnalytics.setUserProperty({ key: name, value });
+      // await FirebaseAnalytics.setUserProperty({ key: name, value });
     } catch (error) {
       console.error('Error setting Analytics user property:', error);
     }

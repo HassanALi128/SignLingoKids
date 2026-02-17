@@ -1,0 +1,142 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Upgrade to Premium</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="paywall-content">
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Loading subscription options...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading() && errorMessage()" class="error-container">
+    <ion-icon name="close-circle" color="danger" class="error-icon"></ion-icon>
+    <h2>Oops!</h2>
+    <p>{{ errorMessage() }}</p>
+    <ion-button expand="block" (click)="loadOfferings()">
+      <ion-icon slot="start" name="refresh-outline"></ion-icon>
+      Try Again
+    </ion-button>
+  </div>
+
+  <!-- Paywall Content -->
+  <div *ngIf="!isLoading() && !errorMessage()" class="paywall-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="icon-badge">
+        <ion-icon name="star-outline" class="hero-icon"></ion-icon>
+      </div>
+      <h1 class="hero-title">Unlock Your Full Potential</h1>
+      <p class="hero-subtitle">
+        Join thousands learning ASL with our premium features
+      </p>
+    </div>
+
+    <!-- Features List -->
+    <div class="features-section">
+      <div class="feature-item" *ngFor="let feature of features">
+        <ion-icon name="checkmark-circle" color="success"></ion-icon>
+        <span>{{ feature }}</span>
+      </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="pricing-section">
+      <!-- Annual Package -->
+      <div
+        *ngIf="annualPackage()"
+        class="price-card"
+        [class.selected]="isSelected(annualPackage()!)"
+        (click)="selectPackage(annualPackage()!)"
+      >
+        <div class="best-value-badge" *ngIf="annualSavings()">
+          {{ annualSavings()!.priceString }}
+        </div>
+
+        <div class="price-card-content">
+          <div class="price-title">
+            <h3>Annual Plan</h3>
+            <p class="billing-cycle">Billed yearly</p>
+          </div>
+
+          <div class="price-amount">
+            <span class="price-value">
+              {{ annualPackage()!.product.priceString }}
+            </span>
+            <span class="price-per-month">
+              {{ getMonthlyPrice(annualPackage()!) }}
+            </span>
+          </div>
+
+          <div class="radio-indicator">
+            <div class="radio-circle"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Package -->
+      <div
+        *ngIf="monthlyPackage()"
+        class="price-card"
+        [class.selected]="isSelected(monthlyPackage()!)"
+        (click)="selectPackage(monthlyPackage()!)"
+      >
+        <div class="price-card-content">
+          <div class="price-title">
+            <h3>Monthly Plan</h3>
+            <p class="billing-cycle">Billed monthly</p>
+          </div>
+
+          <div class="price-amount">
+            <span class="price-value">
+              {{ monthlyPackage()!.product.priceString }}
+            </span>
+            <span class="price-per-month">per month</span>
+          </div>
+
+          <div class="radio-indicator">
+            <div class="radio-circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Button -->
+    <div class="cta-section">
+      <ion-button
+        expand="block"
+        size="large"
+        class="purchase-button"
+        (click)="purchase()"
+        [disabled]="!selectedPackage()"
+      >
+        <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+        Start My Free Trial
+      </ion-button>
+
+      <p class="cta-subtitle">Cancel anytime • No commitment</p>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="footer-section">
+      <ion-button fill="clear" size="small" (click)="restorePurchases()">
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Restore Purchases
+      </ion-button>
+
+      <div class="footer-links">
+        <a (click)="openTerms()">Terms of Service</a>
+        <span class="separator">•</span>
+        <a (click)="openPrivacy()">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</ion-content>

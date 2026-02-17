@@ -34,7 +34,8 @@ import { QuizAttemptService } from '../../services/quiz-attempt.service';
 import { DeviceService } from '../../services/device.service';
 import { ProgressService } from '../../services/progress.service';
 import { PurchasesService } from '../../services/purchases.service';
-import { CrashlyticsService } from '../../services/crashlytics.service';
+import { SubscriptionService } from '../../services/subscription.service';
+// import { CrashlyticsService } from '../../services/crashlytics.service';
 import { Browser } from '@capacitor/browser';
 
 @Component({
@@ -51,7 +52,11 @@ export class SettingsPage implements OnInit {
   editName = '';
   editAvatar = '';
   isPremium = false;
-  private backButtonSubscription?: Subscription;
+
+  // Subscription packages
+  packages: any[] = [];
+  isLoadingPackages = false;
+  packagesError: string | null = null;
 
   avatars: string[] = [
     'assets/images/avaters/blode.webp',
@@ -79,7 +84,7 @@ export class SettingsPage implements OnInit {
     private progressService: ProgressService,
     private alertController: AlertController,
     private purchasesService: PurchasesService,
-    private crashlyticsService: CrashlyticsService
+    private subscriptionService: SubscriptionService // private crashlyticsService: CrashlyticsService
   ) {
     addIcons({
       'card-outline': cardOutline,
@@ -104,19 +109,80 @@ export class SettingsPage implements OnInit {
         this.isPremium = profile.isPremium || false;
       }
     });
+
+    // Load subscription packages
+    this.loadSubscriptionPackages();
   }
 
-  ionViewDidEnter() {
-    this.backButtonSubscription =
-      this.platform.backButton.subscribeWithPriority(10, () => {
-        this.router.navigate(['/tabs/home']);
-      });
-  }
+  async loadSubscriptionPackages() {
+    try {
+      this.isLoadingPackages = true;
+      this.packagesError = null;
 
-  ionViewWillLeave() {
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
+      // Get offerings from PurchasesService
+      let offerings = this.purchasesService.getOfferings();
+
+      if (!offerings || !offerings.current) {
+        // Fetch fresh offerings if not cached
+        offerings = await this.purchasesService.fetchOfferings();
+      }
+
+      if (
+        offerings &&
+        offerings.current &&
+        offerings.current.availablePackages.length > 0
+      ) {
+        this.packages = offerings.current.availablePackages;
+        console.log('✅ Loaded subscription packages:', this.packages.length);
+      } else {
+        this.packagesError = 'No subscription plans available';
+      }
+    } catch (error: any) {
+      console.error('❌ Error loading packages:', error);
+      this.packagesError = 'Failed to load subscription plans';
+    } finally {
+      this.isLoadingPackages = false;
     }
+  }
+
+  getPackageDisplayName(pkg: any): string {
+    if (pkg.packageType === 'ANNUAL') return 'Annual Plan';
+    if (pkg.packageType === 'MONTHLY') return 'Monthly Plan';
+    if (pkg.packageType === 'WEEKLY') return 'Weekly Plan';
+
+    const identifier = pkg.identifier?.toLowerCase() || '';
+    if (identifier.includes('weekly') || identifier.includes('week'))
+      return 'Weekly Plan';
+    if (
+      identifier.includes('annual') ||
+      identifier.includes('yearly') ||
+      identifier.includes('year')
+    )
+      return 'Annual Plan';
+    if (identifier.includes('monthly') || identifier.includes('month'))
+      return 'Monthly Plan';
+
+    return pkg?.product?.title || 'Premium Plan';
+  }
+
+  getPackagePeriod(pkg: any): string {
+    if (pkg.packageType === 'ANNUAL') return 'per year';
+    if (pkg.packageType === 'MONTHLY') return 'per month';
+    if (pkg.packageType === 'WEEKLY') return 'per week';
+
+    const identifier = pkg.identifier?.toLowerCase() || '';
+    if (identifier.includes('weekly') || identifier.includes('week'))
+      return 'per week';
+    if (
+      identifier.includes('annual') ||
+      identifier.includes('yearly') ||
+      identifier.includes('year')
+    )
+      return 'per year';
+    if (identifier.includes('monthly') || identifier.includes('month'))
+      return 'per month';
+
+    return '';
   }
 
   openPremium() {
@@ -148,7 +214,7 @@ export class SettingsPage implements OnInit {
         'Name cannot exceed 10 characters',
         2000,
         'warning',
-        'bottom'
+        'top'
       );
       return;
     }
@@ -163,7 +229,7 @@ export class SettingsPage implements OnInit {
       'Profile updated successfully!',
       2000,
       'success',
-      'bottom'
+      'top'
     );
   }
 
@@ -182,14 +248,14 @@ export class SettingsPage implements OnInit {
           'Purchases restored successfully!',
           2000,
           'success',
-          'bottom'
+          'top'
         );
       } else {
         this.commonService.messageWithToast(
           'No previous purchases found.',
           2000,
           'primary',
-          'bottom'
+          'top'
         );
       }
     } catch (error) {
@@ -199,7 +265,7 @@ export class SettingsPage implements OnInit {
         'Failed to restore purchases. Please try again.',
         2000,
         'danger',
-        'bottom'
+        'top'
       );
     }
   }
@@ -245,7 +311,7 @@ export class SettingsPage implements OnInit {
                 'Progress reset successfully ✨',
                 2000,
                 'success',
-                'bottom'
+                'top'
               );
             } catch (error) {
               console.error('Error resetting progress:', error);
@@ -253,7 +319,7 @@ export class SettingsPage implements OnInit {
                 'Failed to reset progress. Please try again.',
                 2000,
                 'danger',
-                'bottom'
+                'top'
               );
             } finally {
               await this.commonService.hideLoadingSpinner();
@@ -290,7 +356,7 @@ export class SettingsPage implements OnInit {
       `Premium Mode: ${newStatus ? 'Enabled' : 'Disabled'}`,
       2000,
       newStatus ? 'success' : 'warning',
-      'bottom'
+      'top'
     );
   }
 
@@ -305,7 +371,7 @@ export class SettingsPage implements OnInit {
           text: 'Crash It!',
           role: 'destructive',
           handler: () => {
-            this.crashlyticsService.crash();
+            // this.crashlyticsService.crash();
           },
         },
       ],

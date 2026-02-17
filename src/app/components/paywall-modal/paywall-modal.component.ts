@@ -30,6 +30,8 @@ export class PaywallModalComponent implements OnInit {
   isLoading = true;
   packages: any[] = [];
   selectedPackage: any = null;
+  errorMessage: string | null = null;
+  showDebugInfo = false; // Set to true for debugging
 
   constructor(
     private modalController: ModalController,
@@ -55,16 +57,17 @@ export class PaywallModalComponent implements OnInit {
   async loadOfferings() {
     try {
       this.isLoading = true;
-      console.log('Paywall: Loading offerings...');
+      this.errorMessage = null;
+      console.log('🛍️ Paywall: Loading offerings...');
 
       let offerings = this.purchasesService.getOfferings();
 
       if (!offerings || !offerings.current) {
-        console.log('Paywall: No cached offerings, fetching...');
+        console.log(
+          '📡 Paywall: No cached offerings, fetching from RevenueCat...'
+        );
         offerings = await this.purchasesService.fetchOfferings();
       }
-
-      console.log('Paywall: Offerings result:', JSON.stringify(offerings));
 
       if (
         offerings &&
@@ -72,44 +75,75 @@ export class PaywallModalComponent implements OnInit {
         offerings.current.availablePackages.length > 0
       ) {
         this.packages = offerings.current.availablePackages;
-        console.log('Paywall: Available Packages:', this.packages);
+        console.log(`✅ Found ${this.packages.length} package(s)`);
 
-        // Debug pricing
-        if (this.packages.length > 0) {
-          const first = this.packages[0];
-          console.log(
-            'Paywall: First Package Product:',
-            JSON.stringify(first.product)
-          );
-          console.log('Paywall: PriceString:', first.product?.priceString);
-        }
-
-        // Auto-select the annual package if available
+        // Auto-select the annual package if available, otherwise monthly, otherwise first
         const annual = this.packages.find(
           (p) =>
             p.packageType === 'ANNUAL' ||
             p.packageType === 1 ||
+            p.packageType === '$rc_annual' ||
             p.identifier.toLowerCase().includes('annual') ||
             p.identifier.toLowerCase().includes('yearly')
         );
 
-        // Fallback to first package if annual not found
-        this.selectedPackage = annual || this.packages[0];
-        console.log('Paywall: Selected Package:', this.selectedPackage);
+        const monthly = this.packages.find(
+          (p) =>
+            p.packageType === 'MONTHLY' ||
+            p.packageType === 0 ||
+            p.packageType === '$rc_monthly' ||
+            p.identifier.toLowerCase().includes('monthly')
+        );
+
+        // Prefer annual, fallback to monthly, then first package
+        this.selectedPackage = annual || monthly || this.packages[0];
+        console.log('📦 Selected package:', this.selectedPackage.identifier);
       } else {
-        console.error('Paywall: No packages found. Offerings object:', JSON.stringify(offerings));
-        if (offerings && offerings.current) {
-           console.error('Paywall: Current offering ID:', offerings.current.identifier);
-           console.error('Paywall: Available packages count:', offerings.current.availablePackages.length);
+        // No products found - show helpful error
+        console.error('❌ No packages found in offerings');
+
+        const errorDetails = this.purchasesService.getLastError();
+        this.errorMessage = errorDetails || 'No products available';
+
+        if (this.showDebugInfo) {
+          console.log(
+            'Debug info:',
+            this.purchasesService.getLastErrorDetails()
+          );
         }
+
+        // Show user-friendly alert
+        const message = this.getNoProductsHelpMessage();
+        this.alertService.error('Products Unavailable', message);
+
         this.packages = [];
-        this.alertService.error('Error', 'No products found. Please check RevenueCat configuration.');
       }
-    } catch (error) {
-      console.error('Paywall: Error loading offerings:', error);
+    } catch (error: any) {
+      console.error('❌ Paywall: Error loading offerings:', error);
+      this.errorMessage = error?.message || 'Failed to load products';
+
+      this.alertService.error(
+        'Error',
+        'Unable to load subscription options. Please try again later.'
+      );
     } finally {
       this.isLoading = false;
     }
+  }
+
+  private getNoProductsHelpMessage(): string {
+    const platform = this.purchasesService['platform'].is('ios')
+      ? 'iOS'
+      : 'Android';
+
+    return (
+      `Could not load products for ${platform}. Please ensure:\n\n` +
+      `1. You're connected to the internet\n` +
+      `2. You're signed in to ${
+        platform === 'iOS' ? 'your Apple ID' : 'Google Play'
+      }\n` +
+      `3. Products are configured in RevenueCat dashboard`
+    );
   }
 
   selectPackage(pkg: any) {
@@ -118,7 +152,10 @@ export class PaywallModalComponent implements OnInit {
   }
 
   async purchase() {
-    if (!this.selectedPackage) return;
+    if (!this.selectedPackage) {
+      this.alertService.error('Error', 'Please select a subscription plan.');
+      return;
+    }
 
     const loading = await this.loadingController.create({
       message: 'Processing purchase...',
@@ -126,24 +163,42 @@ export class PaywallModalComponent implements OnInit {
     await loading.present();
 
     try {
+      console.log('💳 Starting purchase flow...');
+
       const customerInfo = await this.purchasesService.purchasePackage(
         this.selectedPackage
       );
+
       await loading.dismiss();
 
       if (customerInfo && this.purchasesService.hasProEntitlement()) {
+        console.log('✅ Purchase successful - syncing premium status');
         await this.userService.syncPremiumStatusFromRevenueCat();
         this.modalController.dismiss({ role: 'purchased', purchased: true });
-        this.alertService.success('Success', 'Welcome to Premium!');
+        this.alertService.success('Success', '🎉 Welcome to Premium!');
+      } else {
+        console.warn('⚠️ Purchase completed but no entitlement found');
+        this.alertService.error(
+          'Purchase Issue',
+          'Purchase processed but premium status not activated. Please try restoring your purchases.'
+        );
       }
     } catch (error: any) {
       await loading.dismiss();
-      if (!error.userCancelled) {
-        this.alertService.error(
-          'Purchase Failed',
-          error.message || 'Please try again.'
-        );
+
+      console.error('Purchase error:', error);
+
+      // Handle user cancellation silently
+      if (error.message === 'CANCELLED' || error.userCancelled) {
+        console.log('User cancelled purchase');
+        return;
       }
+
+      // Show user-friendly error
+      let errorMessage =
+        error.message || 'An unexpected error occurred. Please try again.';
+
+      this.alertService.error('Purchase Failed', errorMessage);
     }
   }
 

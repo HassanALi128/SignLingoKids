@@ -19,7 +19,7 @@ import {
 import { DeviceService } from './device.service';
 import { PurchasesService } from './purchases.service';
 import { AlertService } from './alert.service'; // Added for debug alerts
-import { CrashlyticsService } from './crashlytics.service';
+// import { CrashlyticsService } from './crashlytics.service';
 import { AnalyticsService } from './analytics.service';
 import { Platform } from '@ionic/angular';
 
@@ -56,7 +56,7 @@ export class UserService {
     private purchasesService: PurchasesService,
     private alertService: AlertService, // Injected for debug
     private platform: Platform,
-    private crashlyticsService: CrashlyticsService,
+    // private crashlyticsService: CrashlyticsService,
     private analyticsService: AnalyticsService
   ) {
     console.log('UserService: Initializing...');
@@ -69,7 +69,7 @@ export class UserService {
       switchMap(([u, isTestPremium]) => {
         if (u) {
           console.log('UserService: User authenticated', u.uid);
-          this.crashlyticsService.setUserId(u.uid);
+          // this.crashlyticsService.setUserId(u.uid);
           this.analyticsService.setUserId(u.uid);
           const userDoc = doc(this.firestore, `users/${u.uid}`);
           return docData(userDoc).pipe(

@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Parent Verification</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="content-wrapper">
+    <div class="instruction-section">
+      <ion-icon name="shield-checkmark" class="lock-icon"></ion-icon>
+      <h2>Parent/Guardian Required</h2>
+      <p class="instruction-text">
+        To continue with this purchase, please ask a parent or guardian to solve this simple math problem:
+      </p>
+    </div>
+
+    <div class="question-card">
+      <div class="math-question">
+        <span class="number">{{ num1 }}</span>
+        <span class="operator">+</span>
+        <span class="number">{{ num2 }}</span>
+        <span class="equals">=</span>
+        <span class="question-mark">?</span>
+      </div>
+    </div>
+
+    <div class="answer-section">
+      <ion-item class="answer-input" [class.error]="showError">
+        <ion-label position="floating">Your Answer</ion-label>
+        <ion-input
+          type="number"
+          [(ngModel)]="userAnswer"
+          placeholder="Enter answer"
+          (keyup.enter)="submit()"
+        ></ion-input>
+      </ion-item>
+
+      @if(showError) {
+        <div class="error-message">
+          <ion-icon name="alert-circle"></ion-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="button-section">
+      <ion-button expand="block" class="submit-btn" (click)="submit()">
+        Verify & Continue
+      </ion-button>
+      <ion-button expand="block" fill="clear" class="cancel-btn" (click)="cancel()">
+        Cancel
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+<!-- <div class="parental-gate-modal">
+</div> -->

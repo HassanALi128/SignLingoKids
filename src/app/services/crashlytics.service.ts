@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirebaseCrashlytics } from '@capacitor-firebase/crashlytics';
+// import { FirebaseCrashlytics } from '@capacitor-firebase/crashlytics';
 import { Platform } from '@ionic/angular/standalone';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class CrashlyticsService {
 
     try {
       // Ensure Crashlytics is enabled
-      await FirebaseCrashlytics.setEnabled({ enabled: true });
+      // await FirebaseCrashlytics.setEnabled({ enabled: true });
       console.log('Firebase Crashlytics initialized');
     } catch (error) {
       console.error('Error initializing Firebase Crashlytics:', error);
@@ -37,7 +37,7 @@ export class CrashlyticsService {
     if (!this.isHybrid) return;
 
     try {
-      await FirebaseCrashlytics.log({ message });
+      // await FirebaseCrashlytics.log({ message });
     } catch (error) {
       // Silently fail to not interrupt app flow
     }
@@ -51,7 +51,7 @@ export class CrashlyticsService {
     if (!this.isHybrid) return;
 
     try {
-      await FirebaseCrashlytics.setUserId({ userId });
+      // await FirebaseCrashlytics.setUserId({ userId });
     } catch (error) {
       console.error('Error setting Crashlytics user ID:', error);
     }
@@ -74,11 +74,11 @@ export class CrashlyticsService {
     }
 
     try {
-      await FirebaseCrashlytics.setCustomKey({
-        key,
-        value: value.toString(),
-        type,
-      });
+      // await FirebaseCrashlytics.setCustomKey({
+      //   key,
+      //   value: value.toString(),
+      //   type,
+      // });
     } catch (error) {
       console.error('Error setting Crashlytics custom key:', error);
     }
@@ -94,10 +94,10 @@ export class CrashlyticsService {
     if (!this.isHybrid) return;
 
     try {
-      await FirebaseCrashlytics.recordException({
-        message,
-        stacktrace: Array.isArray(stacktrace) ? stacktrace : undefined,
-      });
+      // await FirebaseCrashlytics.recordException({
+      //   message,
+      //   stacktrace: Array.isArray(stacktrace) ? stacktrace : undefined,
+      // });
     } catch (error) {
       // Silently fail
     }
@@ -111,8 +111,8 @@ export class CrashlyticsService {
     if (!this.isHybrid) {
       throw new Error('Crashlytics test crash (web)');
     }
-    await FirebaseCrashlytics.crash({
-      message: 'Test crash from CrashlyticsService',
-    });
+    // await FirebaseCrashlytics.crash({
+    //   message: 'Test crash from CrashlyticsService',
+    // });
   }
 }

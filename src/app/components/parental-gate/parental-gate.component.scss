@@ -1,0 +1,161 @@
+.parental-gate-modal {
+  --background: white;
+
+  ion-header {
+    ion-toolbar {
+      --background: transparent;
+      --border-width: 0;
+
+      ion-title {
+        font-weight: 700;
+        color: var(--text-matte-black);
+        text-align: center;
+      }
+
+      ion-buttons {
+        ion-button {
+          --color: #666;
+        }
+      }
+    }
+  }
+
+  ion-content {
+    --background: white;
+  }
+}
+
+.content-wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 20px 20px;
+}
+
+.instruction-section {
+  text-align: center;
+  margin-bottom: 30px;
+
+  .lock-icon {
+    font-size: 64px;
+    color: #f34f27;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-matte-black);
+    margin: 0 0 12px;
+  }
+
+  .instruction-text {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+.question-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  .math-question {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    font-family: "Arial", sans-serif;
+
+    .number {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--text-matte-black);
+      background: linear-gradient(135deg, #ef8d1b 0%, #f34f27 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .operator,
+    .equals {
+      font-size: 36px;
+      font-weight: 700;
+      color: #666;
+    }
+
+    .question-mark {
+      font-size: 48px;
+      font-weight: 800;
+      color: #f34f27;
+    }
+  }
+}
+
+.answer-section {
+  margin-bottom: 30px;
+
+  .answer-input {
+    --background: white;
+    --border-radius: 16px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 12px;
+
+    &.error {
+      --border-color: #f44336;
+    }
+
+    ion-label {
+      font-weight: 600;
+    }
+
+    ion-input {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+    }
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(244, 67, 54, 0.1);
+    border-radius: 12px;
+    color: #f44336;
+    font-size: 14px;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+.button-section {
+  .submit-btn {
+    --background: var(--primary-gradient);
+    background: var(--primary-gradient);
+    --border-radius: 16px;
+    border-radius: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: none;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 20px rgba(243, 79, 39, 0.3);
+  }
+
+  .cancel-btn {
+    --color: #666;
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: none;
+  }
+}

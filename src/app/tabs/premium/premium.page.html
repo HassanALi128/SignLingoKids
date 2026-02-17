@@ -9,24 +9,129 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="premium-content ion-padding">
-  <div class="premium-banner">
-    <div class="premium-content">
-      <div class="premium-text">
-        <h3>SLK School</h3>
-        <p>Unlock 200+ signs and premium features.</p>
-        <ion-button class="premium-btn" expand="block">
-          1000 Rs
-        </ion-button>
-      </div>
-      <div class="premium-characters">
-        <ion-img src="assets/landing/landing.png" alt="Characters" class="characters-img"></ion-img>
-      </div>
-    </div>
-
+<ion-content class="premium-content">
+  <!-- Character Image Section -->
+  <div class="hero-section">
+    <ion-img
+      src="assets/landing/landing.png"
+      alt="Characters"
+      class="hero-img"
+    ></ion-img>
   </div>
 
-  <ion-button class="restore-premium-btn" expand="block">
-    Restore Purchase
-  </ion-button>
+  <!-- Main Content Card -->
+  <div class="content-card">
+    <h2 class="main-title">Hand Hero ASL Premium</h2>
+    <p class="subtitle">Unlock 200+ signs and premium features</p>
+
+    <!-- Loading State -->
+    @if(isLoadingPackages) {
+    <div class="loading-packages">
+      <ion-spinner color="primary"></ion-spinner>
+      <p>Loading plans...</p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @else if(packagesError) {
+    <div class="error-packages">
+      <p>{{ packagesError }}</p>
+      <ion-button class="retry-btn" (click)="loadSubscriptionPackages()">
+        Retry
+      </ion-button>
+    </div>
+    }
+
+    <!-- Package Selection -->
+    @else if(packages.length > 0) {
+    <div class="packages-container">
+      @for(pkg of packages; track pkg.identifier) {
+      <div
+        class="package-card"
+        [class.selected]="selectedPackage === pkg"
+        (click)="selectPackage(pkg)"
+      >
+        @if(selectedPackage === pkg) {
+        <div class="selected-badge">
+          <ion-icon name="checkmark-circle"></ion-icon>
+        </div>
+        }
+
+        <div class="package-content">
+          <div class="package-pricing">
+            <span class="price">{{ pkg?.product?.priceString || 'N/A' }}</span>
+            <span class="period">{{ getPackagePeriod(pkg) }}</span>
+          </div>
+
+          <h3 class="package-name">{{ getPackageDisplayName(pkg) }}</h3>
+
+          <p class="package-description">
+            @if(pkg.packageType === 'ANNUAL' ||
+            pkg.identifier.toLowerCase().includes('annual') ||
+            pkg.identifier.toLowerCase().includes('yearly') ||
+            pkg.identifier.toLowerCase().includes('year')) { Best value! Save
+            money with our annual subscription } @else if(pkg.packageType ===
+            'WEEKLY' || pkg.identifier.toLowerCase().includes('weekly') ||
+            pkg.identifier.toLowerCase().includes('week')) { Try premium for a
+            week, perfect for getting started } @else { Flexible monthly
+            subscription, cancel anytime }
+          </p>
+
+          <div class="features-list">
+            <div class="feature-item">
+              <ion-icon name="checkmark-circle" class="feature-icon"></ion-icon>
+              <span>200+ Sign Language videos</span>
+            </div>
+            <div class="feature-item">
+              <ion-icon name="checkmark-circle" class="feature-icon"></ion-icon>
+              <span>Interactive quizzes & games</span>
+            </div>
+            <div class="feature-item">
+              <ion-icon name="checkmark-circle" class="feature-icon"></ion-icon>
+              <span>Progress tracking & reports</span>
+            </div>
+            <div class="feature-item">
+              <ion-icon name="checkmark-circle" class="feature-icon"></ion-icon>
+              <span>Ad-free learning experience</span>
+            </div>
+            @if(pkg.packageType === 'ANNUAL' ||
+            pkg.identifier.toLowerCase().includes('annual') ||
+            pkg.identifier.toLowerCase().includes('yearly')) {
+            <div class="feature-item featured">
+              <ion-icon name="star" class="feature-icon"></ion-icon>
+              <span>Save over 15% compared to monthly</span>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <ion-button
+      class="subscribe-btn"
+      expand="block"
+      (click)="buyPremium()"
+      [disabled]="!selectedPackage"
+    >
+      Subscribe Now
+    </ion-button>
+    }
+
+    <!-- Fallback -->
+    @else {
+    <ion-button class="subscribe-btn" expand="block" disabled>
+      No plans available
+    </ion-button>
+    }
+
+    <ion-button
+      class="restore-btn"
+      fill="clear"
+      expand="block"
+      (click)="restorePurchases()"
+    >
+      Restore Purchase
+    </ion-button>
+  </div>
 </ion-content>

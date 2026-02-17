@@ -21,10 +21,10 @@ export const environment = {
     apiKeyAndroid: 'test_kNqZGrgYazUtarYFFNXglytzQAk',
     // Entitlement identifier (must match RevenueCat dashboard)
     entitlementId: 'premium',
-    // Product identifiers (must match RevenueCat dashboard)
+    // Product identifiers (MUST MATCH App Store Connect & RevenueCat exactly!)
     products: {
-      monthly: 'monthly',
-      yearly: 'yearly',
+      monthly: 'premium_monthly_19.99',
+      yearly: 'premium_anual',
     },
   },
   admob: {

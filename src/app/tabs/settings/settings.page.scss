@@ -192,6 +192,35 @@ ion-header {
       color: #666;
       // font-family: 'Comic Neue', cursive;
     }
+
+    .subscription-packages {
+      margin-top: 4px;
+
+      .package-item {
+        font-size: 12px;
+        margin: 4px 0 0;
+        color: #555;
+        line-height: 1.4;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+
+        .package-name {
+          font-weight: 600;
+          color: var(--text-matte-black);
+        }
+
+        .package-divider {
+          margin: 0 4px;
+          color: #999;
+        }
+
+        .package-price {
+          color: #666;
+          font-size: 11px;
+        }
+      }
+    }
   }
 
   .arrow {

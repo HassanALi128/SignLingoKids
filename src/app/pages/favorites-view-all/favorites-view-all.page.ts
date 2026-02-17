@@ -40,10 +40,9 @@ interface GroupedFavorites {
     IonIcon,
   ],
 })
-export class FavoritesViewAllPage implements OnInit, OnDestroy {
+export class FavoritesViewAllPage implements OnInit {
   groupedFavorites: GroupedFavorites[] = [];
   totalFavorites: number = 0;
-  private backButtonSubscription?: Subscription;
 
   private typeLabels: Record<string, { label: string; icon: string }> = {
     abc: { label: 'ABC Letters', icon: 'text-outline' },
@@ -66,26 +65,7 @@ export class FavoritesViewAllPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    // Reload favorites when returning to this page
     this.loadFavorites();
-
-    // Handle back button with high priority
-    this.backButtonSubscription =
-      this.platform.backButton.subscribeWithPriority(9999, () => {
-        this.navController.navigateBack('/tabs/home');
-      });
-  }
-
-  ionViewWillLeave() {
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
-    }
   }
 
   private loadFavorites() {

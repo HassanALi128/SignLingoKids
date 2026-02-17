@@ -12,7 +12,8 @@ import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { AlertService } from './services/alert.service';
 import { MonetizationService } from './services/monetization.service';
 import { UserService } from './services/user.service';
-import { CrashlyticsService } from './services/crashlytics.service';
+import { HardwareBackBtnService } from './services/hardware-back-btn.service';
+// import { CrashlyticsService } from './services/crashlytics.service';
 import { AnalyticsService } from './services/analytics.service';
 import { InitLoaderComponent } from './components/init-loader/init-loader.component';
 import { CommonModule } from '@angular/common';
@@ -34,8 +35,9 @@ export class AppComponent implements OnInit {
     private monetizationService: MonetizationService,
     private userService: UserService,
     private modalController: ModalController,
-    private crashlyticsService: CrashlyticsService,
-    private analyticsService: AnalyticsService
+    // private crashlyticsService: CrashlyticsService,
+    private analyticsService: AnalyticsService,
+    private hardwareBackBtnService: HardwareBackBtnService
   ) {}
 
   ngOnInit() {
@@ -81,7 +83,7 @@ export class AppComponent implements OnInit {
     }
 
     // Initialize Crashlytics
-    await this.crashlyticsService.init();
+    // await this.crashlyticsService.init();
 
     // Initialize Analytics
     await this.analyticsService.init();
@@ -107,8 +109,8 @@ export class AppComponent implements OnInit {
     // Give a brief moment for the status to show
     await this.delay(500);
 
-    // Setup back button handler
-    this.handleBackButton();
+    // Initialize Hardware Back Button Service
+    this.hardwareBackBtnService.init();
 
     // Update status
     this.initStatus = 'Almost ready!';
@@ -143,35 +145,6 @@ export class AppComponent implements OnInit {
       this.router.navigateByUrl('/profile-setup');
     } else {
       this.router.navigateByUrl('/tabs/home');
-    }
-  }
-
-  private handleBackButton() {
-    this.platform.backButton.subscribeWithPriority(
-      10,
-      async (processNextHandler) => {
-        const url = this.router.url;
-
-        if (url === '/tabs/home' || url === '/') {
-          await this.showExitConfirm();
-        } else if (url.includes('favorites-view-all')) {
-          // Navigate back to home/landing page
-          this.router.navigateByUrl('/tabs/home');
-        } else if (url.includes('quiz-progress-view-all')) {
-          // Navigate back to quiz page
-          this.router.navigateByUrl('/tabs/quiz');
-        } else {
-          // Allow default Ionic back navigation for other pages
-          processNextHandler();
-        }
-      }
-    );
-  }
-
-  private async showExitConfirm() {
-    const shouldExit = await this.alertService.exitApp();
-    if (shouldExit) {
-      App.exitApp();
     }
   }
 

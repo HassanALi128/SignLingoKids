@@ -26,14 +26,15 @@ export const environment = {
     // AdMob Ad Unit IDs - REPLACE WITH PRODUCTION AD UNIT IDs
     // Get them from: https://apps.admob.com/
     android: {
-      banner: 'ca-app-pub-3940256099942544/6300978111', // REPLACE: Test banner ID
-      interstitial: 'ca-app-pub-3940256099942544/1033173712', // REPLACE: Test interstitial ID
-      rewarded: 'ca-app-pub-3940256099942544/5224354917', // REPLACE: Test rewarded ID
+      banner: 'ca-app-pub-4296184061584014/2916209158', // REPLACE: Test banner ID
+      interstitial: 'ca-app-pub-4296184061584014/1165919887', // REPLACE: Test interstitial ID
+      rewarded: 'ca-app-pub-4296184061584014/4887766375', // REPLACE: Test rewarded ID
     },
     ios: {
-      banner: 'ca-app-pub-3940256099942544/2934735716', // REPLACE: Test banner ID
-      interstitial: 'ca-app-pub-3940256099942544/4411468910', // REPLACE: Test interstitial ID
-      rewarded: 'ca-app-pub-3940256099942544/1712485313', // REPLACE: Test rewarded ID
+      // iOS AdMob Ad Unit IDs - Production values
+      banner: 'ca-app-pub-4296184061584014/2916209158',       // iOS Banner ad unit
+      interstitial: 'ca-app-pub-4296184061584014/1165919887', // iOS Interstitial ad unit
+      rewarded: 'ca-app-pub-4296184061584014/4887766375',     // iOS Rewarded ad unit
     },
   },
 };

@@ -241,10 +241,8 @@ export class LandingPage implements OnInit, OnDestroy {
           if (this.selectedCategory) {
             this.closeCategoryDetail();
           } else {
-            const shouldExit = await this.alertService.exitApp();
-            if (shouldExit) {
-              App.exitApp();
-            }
+            // Let the global handler (Priority 10) take over
+            processNextHandler();
           }
         }
       );
@@ -682,7 +680,7 @@ export class LandingPage implements OnInit, OnDestroy {
     const toast = await this.toastController.create({
       message: message,
       duration: 2000,
-      position: 'bottom',
+      position: 'top',
       color: 'dark',
       cssClass: 'custom-toast',
     });

@@ -313,7 +313,7 @@ ion-header {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 0 16px 16px;
+  padding: 0 0px 16px;
 }
 
 .result-card {
@@ -403,7 +403,7 @@ ion-header {
 // Dark mode support
 @media (prefers-color-scheme: dark) {
   .result-card {
-    background: var(--ion-color-step-50);
+    // background: var(--ion-color-step-50);
   }
 
   .result-image {

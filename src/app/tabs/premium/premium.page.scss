@@ -1,70 +1,254 @@
-.premium-banner {
-  margin: 16px 20px;
-  // padding: 16px;
-  --background: linear-gradient(to bottom, #232f46, #142343);
-  background: linear-gradient(to bottom, #232f46, #142343);
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
 .premium-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  --background: #f7f1e5;
+  background: #f7f1e5;
 }
 
-.premium-text {
-  margin-left: 10px;
+// Hero Section with Character Image
+.hero-section {
+  padding: 20px 20px 10px;
+  text-align: center;
+  background: #f7f1e5;
 
-  h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: white;
+  .hero-img {
+    max-width: 280px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+// Main Content Card
+.content-card {
+  background: white;
+  border-radius: 24px 24px 0 0;
+  padding: 30px 20px 40px;
+  margin-top: -10px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  min-height: calc(100vh - 300px);
+
+  .main-title {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-matte-black);
+    text-align: center;
+    background: linear-gradient(135deg, #ef8d1b 0%, #f34f27 50%, #6e1664 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    margin: 0 0 28px;
+    font-size: 15px;
+    color: #666;
+    text-align: center;
+    font-weight: 500;
+  }
+}
+
+// Loading and Error States
+.loading-packages,
+.error-packages {
+  text-align: center;
+  padding: 30px 0;
+
+  ion-spinner {
+    margin-bottom: 12px;
   }
 
   p {
-    margin: 4px 0 0 0;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    margin: 10px 0;
+    color: #666;
+  }
+
+  .retry-btn {
+    --background: var(--primary-gradient);
+    --color: white;
+    margin-top: 14px;
   }
 }
 
-.premium-characters {
-  .characters-img {
-    width: 10rem;
-    height: auto;
+// Package Container
+.packages-container {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// Package Cards - Modern Design
+.package-card {
+  position: relative;
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(239, 141, 27, 0.05) 0%,
+      rgba(243, 79, 39, 0.05) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.selected {
+    border-color: #f34f27;
+    background: white;
+    box-shadow: 0 8px 24px rgba(243, 79, 39, 0.2);
+
+    &::before {
+      opacity: 1;
+    }
+
+    .package-name {
+      color: #f34f27;
+    }
+  }
+
+  .selected-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    ion-icon {
+      font-size: 28px;
+      color: #4caf50;
+      filter: drop-shadow(0 2px 4px rgba(76, 175, 80, 0.3));
+    }
+  }
+
+  .package-content {
+    position: relative;
+    z-index: 1;
+
+    .package-pricing {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 12px;
+
+      .price {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text-matte-black);
+        letter-spacing: -0.5px;
+      }
+
+      .period {
+        font-size: 14px;
+        font-weight: 600;
+        color: #888;
+      }
+    }
+
+    .package-name {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-matte-black);
+      transition: color 0.3s ease;
+    }
+
+    .package-description {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+
+        .feature-icon {
+          font-size: 18px;
+          color: #4caf50;
+          margin-top: 2px;
+          flex-shrink: 0;
+        }
+
+        span {
+          font-size: 14px;
+          color: #555;
+          line-height: 1.4;
+        }
+
+        &.featured {
+          background: linear-gradient(135deg, rgba(239, 141, 27, 0.1) 0%, rgba(243, 79, 39, 0.1) 100%);
+          padding: 8px 10px;
+          border-radius: 8px;
+          margin-top: 4px;
+
+          .feature-icon {
+            color: #F34F27;
+          }
+
+          span {
+            color: #F34F27;
+            font-weight: 600;
+          }
+        }
+      }
+    }
   }
 }
 
-.premium-btn {
+// Subscribe Button
+.subscribe-btn {
   --background: var(--primary-gradient);
   background: var(--primary-gradient);
-  --border-radius: 24px;
-  border-radius: 24px;
+  --border-radius: 16px;
+  border-radius: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 700;
+  font-size: 17px;
+  text-transform: none;
+  margin: 0 0 12px;
+  color: white;
+  box-shadow: 0 8px 20px rgba(243, 79, 39, 0.3);
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Restore Button
+.restore-btn {
+  --color: #666;
   --padding-top: 12px;
   --padding-bottom: 12px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 15px;
   text-transform: none;
   margin: 0;
-  margin-top: 10px;
-  color: white;
-}
 
-.restore-premium-btn {
-  --background: var(--primary-gradient);
-  background: var(--primary-gradient);
-  --border-radius: 24px;
-  border-radius: 24px;
-  --padding-top: 24px;
-  --padding-bottom: 24px;
-  font-weight: 700;
-  font-size: 15px;
-  text-transform: none;
-  margin: 0;
-  margin-top: 10px;
-  color: white;
+  &:hover {
+    --color: #f34f27;
+  }
 }

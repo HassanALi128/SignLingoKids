@@ -198,6 +198,7 @@ export class PurchasesService {
   }
 
   public lastError: string | null = null;
+  public lastErrorDetails: any = null;
 
   /**
    * Fetch available offerings from RevenueCat
@@ -206,12 +207,73 @@ export class PurchasesService {
     if (!this.isInitialized) await this.init();
     try {
       this.lastError = null;
+      this.lastErrorDetails = null;
+
       const offerings = await Purchases.getOfferings();
+
+      // Log detailed product information for debugging
+      if (offerings?.current) {
+        console.log('✅ Offerings fetched successfully');
+        console.log('Current offering ID:', offerings.current.identifier);
+        console.log(
+          'Available packages:',
+          offerings.current.availablePackages.length
+        );
+
+        // Log each package details
+        offerings.current.availablePackages.forEach((pkg, index) => {
+          console.log(`Package ${index + 1}:`, {
+            identifier: pkg.identifier,
+            packageType: pkg.packageType,
+            product: {
+              identifier: pkg.product.identifier,
+              title: pkg.product.title,
+              price: pkg.product.price,
+              priceString: pkg.product.priceString,
+              currencyCode: pkg.product.currencyCode,
+            },
+          });
+        });
+      } else {
+        console.warn('⚠️ No current offering found');
+        console.log('All offerings:', Object.keys(offerings?.all || {}));
+        this.lastError =
+          'No offerings available. Please check RevenueCat dashboard configuration.';
+      }
+
       this.offeringsSubject.next(offerings);
       return offerings;
     } catch (error: any) {
-      console.error('Failed to fetch offerings:', error);
-      this.lastError = error?.message || JSON.stringify(error);
+      console.error('❌ Failed to fetch offerings:', error);
+
+      // Detailed error messages for common issues
+      let userFriendlyError = 'Unable to load products. ';
+
+      if (error?.message?.includes('API key')) {
+        userFriendlyError +=
+          'Invalid API key. Please check your RevenueCat configuration.';
+      } else if (error?.message?.includes('Network')) {
+        userFriendlyError +=
+          'Network error. Please check your internet connection.';
+      } else if (error?.message?.includes('No products')) {
+        userFriendlyError +=
+          'No products configured. Please set up products in RevenueCat dashboard.';
+      } else if (error?.message?.includes('cannot connect to App Store')) {
+        userFriendlyError +=
+          'Cannot connect to App Store. Make sure you are signed in to your Apple ID.';
+      } else {
+        userFriendlyError += 'Please try again later.';
+      }
+
+      this.lastError = userFriendlyError;
+      this.lastErrorDetails = {
+        message: error?.message,
+        code: error?.code,
+        underlyingErrorMessage: error?.underlyingErrorMessage,
+        fullError: error,
+      };
+
+      console.error('Error details:', this.lastErrorDetails);
       return null;
     }
   }
@@ -223,19 +285,52 @@ export class PurchasesService {
     packageToBuy: PurchasesPackage
   ): Promise<CustomerInfo | null> {
     if (!this.isInitialized) await this.init();
+
+    console.log('🛒 Initiating purchase for:', {
+      identifier: packageToBuy.identifier,
+      productId: packageToBuy.product.identifier,
+      price: packageToBuy.product.priceString,
+    });
+
     try {
       const { customerInfo } = await Purchases.purchasePackage({
         aPackage: packageToBuy,
       });
-      console.log('Purchase successful:', customerInfo);
+
+      console.log('✅ Purchase successful!');
+      console.log(
+        'Active entitlements:',
+        Object.keys(customerInfo.entitlements.active)
+      );
+
       this.customerInfoSubject.next(customerInfo);
       this.updatePremiumStatus(customerInfo);
       return customerInfo;
     } catch (error: any) {
       if (error.userCancelled) {
         console.log('User cancelled purchase');
+        throw new Error('CANCELLED');
       } else {
-        console.error('Purchase failed:', error);
+        console.error('❌ Purchase failed:', {
+          message: error?.message,
+          code: error?.code,
+          underlyingError: error?.underlyingErrorMessage,
+        });
+
+        // Provide helpful error messages
+        if (error?.message?.includes('Product already purchased')) {
+          throw new Error(
+            'You already own this subscription. Try restoring your purchases instead.'
+          );
+        } else if (error?.message?.includes('payment')) {
+          throw new Error(
+            'Payment failed. Please check your payment method and try again.'
+          );
+        } else if (error?.message?.includes('Network')) {
+          throw new Error(
+            'Network error. Please check your internet connection.'
+          );
+        }
       }
       throw error;
     }
@@ -316,5 +411,73 @@ export class PurchasesService {
   hasProEntitlement(): boolean {
     const customerInfo = this.getCustomerInfo();
     return customerInfo?.entitlements.active['premium'] !== undefined;
+  }
+
+  /**
+   * Get human-readable error message
+   */
+  getLastError(): string | null {
+    return this.lastError;
+  }
+
+  /**
+   * Get detailed error information for debugging
+   */
+  getLastErrorDetails(): any {
+    return this.lastErrorDetails;
+  }
+
+  /**
+   * Validate product configuration
+   */
+  async validateProducts(): Promise<{
+    isValid: boolean;
+    issues: string[];
+  }> {
+    const issues: string[] = [];
+
+    try {
+      const offerings = await this.fetchOfferings();
+
+      if (!offerings) {
+        issues.push('No offerings returned from RevenueCat');
+        return { isValid: false, issues };
+      }
+
+      if (!offerings.current) {
+        issues.push('No current offering configured');
+      }
+
+      if (offerings.current?.availablePackages.length === 0) {
+        issues.push('Current offering has no packages');
+      }
+
+      // Check for expected package types
+      const packageTypes: any =
+        offerings.current?.availablePackages.map((pkg) => pkg.packageType) ||
+        [];
+
+      if (
+        !packageTypes.includes('MONTHLY') &&
+        !packageTypes.includes('$rc_monthly')
+      ) {
+        issues.push('No monthly package found');
+      }
+
+      if (
+        !packageTypes.includes('ANNUAL') &&
+        !packageTypes.includes('$rc_annual')
+      ) {
+        issues.push('No annual package found');
+      }
+
+      return {
+        isValid: issues.length === 0,
+        issues,
+      };
+    } catch (error) {
+      issues.push(`Error validating products: ${error}`);
+      return { isValid: false, issues };
+    }
   }
 }
