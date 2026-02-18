@@ -13,13 +13,11 @@ import {
   IonLabel,
   NavController,
   ModalController,
-  Platform,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBack, checkmarkCircle, closeCircle } from 'ionicons/icons';
 import { QuizService, QuizResult } from '../../services/quiz';
 import { ResultModalComponent } from '../../tabs/quiz/result-modal/result-modal.component';
-import { Subscription } from 'rxjs';
 
 interface QuizStatistics {
   totalQuizzes: number;
@@ -61,13 +59,11 @@ export class QuizProgressViewAllPage implements OnInit, OnDestroy {
     totalQuestions: 0,
   };
   isPremium = false;
-  private backButtonSubscription?: Subscription;
 
   constructor(
     private navController: NavController,
     private quizService: QuizService,
-    private modalController: ModalController,
-    private platform: Platform
+    private modalController: ModalController
   ) {
     addIcons({ arrowBack, checkmarkCircle, closeCircle });
   }
@@ -83,25 +79,7 @@ export class QuizProgressViewAllPage implements OnInit, OnDestroy {
     });
   }
 
-  ionViewWillEnter() {
-    // Handle back button with high priority
-    this.backButtonSubscription =
-      this.platform.backButton.subscribeWithPriority(9999, () => {
-        this.navController.navigateBack('/tabs/quiz');
-      });
-  }
-
-  ionViewWillLeave() {
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
-    }
-  }
+  ngOnDestroy() {}
 
   private loadAllResults() {
     const results = this.quizService.getResults();

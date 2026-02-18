@@ -625,23 +625,23 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   openCertificate(): void {
-    this.navController.navigateForward('/abc');
+    this.navController.navigateForward('/tabs/abc');
   }
 
   goToHandSign(): void {
-    this.navController.navigateForward('/home');
+    this.navController.navigateForward('/tabs/home');
   }
 
   goToSettings(): void {
-    this.navController.navigateForward('/settings');
+    this.navController.navigateForward('/tabs/setting');
   }
 
   goToAbc(): void {
-    this.navController.navigateForward('/abc');
+    this.navController.navigateForward('/tabs/abc');
   }
 
   goToQuiz(): void {
-    this.navController.navigateForward('/quiz');
+    this.navController.navigateForward('/tabs/quiz');
   }
 
   // Action Button Handlers

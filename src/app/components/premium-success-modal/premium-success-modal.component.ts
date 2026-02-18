@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular/standalone';
 import { register } from 'swiper/element/bundle';
 
 register();
@@ -10,7 +10,7 @@ register();
   templateUrl: './premium-success-modal.component.html',
   styleUrls: ['./premium-success-modal.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class PremiumSuccessModalComponent implements OnInit {

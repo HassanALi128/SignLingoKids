@@ -1,4 +1,6 @@
 <ion-app>
   <app-init-loader [show]="showInitLoader" [status]="initStatus"></app-init-loader>
-  <ion-router-outlet></ion-router-outlet>
+  <!-- app.component.html -->
+<ion-router-outlet [swipeGesture]="true"></ion-router-outlet>
+
 </ion-app>

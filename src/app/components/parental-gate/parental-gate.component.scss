@@ -5,6 +5,8 @@
     ion-toolbar {
       --background: transparent;
       --border-width: 0;
+      --padding-top: env(safe-area-inset-top);
+      padding-top: env(safe-area-inset-top);
 
       ion-title {
         font-weight: 700;
@@ -142,6 +144,8 @@
     --background: var(--primary-gradient);
     background: var(--primary-gradient);
     --border-radius: 16px;
+    color: white;
+    --color: white;
     border-radius: 16px;
     --padding-top: 16px;
     --padding-bottom: 16px;

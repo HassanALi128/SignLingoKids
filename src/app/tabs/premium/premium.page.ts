@@ -2,13 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   NavController,
-  IonicModule,
-  Platform,
   LoadingController,
   ModalController,
-} from '@ionic/angular';
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonSpinner,
+  IonImg,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, checkmarkCircle } from 'ionicons/icons';
+import { arrowBackOutline, checkmarkCircle, star } from 'ionicons/icons';
 import { MonetizationService } from '../../services/monetization.service';
 import { PurchasesService } from '../../services/purchases.service';
 import { UserService } from '../../services/user.service';
@@ -20,11 +27,20 @@ import { ParentalGateComponent } from '../../components/parental-gate/parental-g
   templateUrl: './premium.page.html',
   styleUrls: ['./premium.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [
+    CommonModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonSpinner,
+    IonImg,
+  ],
 })
 export class PremiumPage implements OnInit {
-  private backButtonSubscription: any;
-
   // Subscription packages
   packages: any[] = [];
   selectedPackage: any = null;
@@ -34,7 +50,6 @@ export class PremiumPage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private monetizationService: MonetizationService,
-    private platform: Platform,
     private purchasesService: PurchasesService,
     private userService: UserService,
     private commonService: CommonService,
@@ -44,6 +59,7 @@ export class PremiumPage implements OnInit {
     addIcons({
       'arrow-back': arrowBackOutline,
       'checkmark-circle': checkmarkCircle,
+      star,
     });
   }
 
@@ -94,6 +110,8 @@ export class PremiumPage implements OnInit {
 
   selectPackage(pkg: any) {
     this.selectedPackage = pkg;
+    // Immediately trigger purchase when user taps a plan card
+    this.buyPremium();
   }
 
   getPackageDisplayName(pkg: any): string {
@@ -138,21 +156,8 @@ export class PremiumPage implements OnInit {
     return '';
   }
 
-  ionViewWillEnter() {
-    this.backButtonSubscription =
-      this.platform.backButton.subscribeWithPriority(10, () => {
-        this.goBack();
-      });
-  }
-
-  ionViewWillLeave() {
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
-    }
-  }
-
   goBack() {
-    this.navCtrl.navigateBack('/tabs/setting');
+    this.navCtrl.back();
   }
 
   async buyPremium() {

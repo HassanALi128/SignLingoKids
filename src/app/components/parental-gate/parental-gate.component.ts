@@ -1,7 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  ModalController,
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { alertCircle, close, shieldCheckmark } from 'ionicons/icons';
 
@@ -10,7 +22,20 @@ import { alertCircle, close, shieldCheckmark } from 'ionicons/icons';
   templateUrl: './parental-gate.component.html',
   styleUrls: ['./parental-gate.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonItem,
+    IonLabel,
+    IonInput,
+  ],
 })
 export class ParentalGateComponent implements OnInit {
   num1: number = 0;
@@ -21,7 +46,7 @@ export class ParentalGateComponent implements OnInit {
   errorMessage: string = '';
 
   constructor(private modalController: ModalController) {
-    addIcons({close, shieldCheckmark, alertCircle})
+    addIcons({ close, shieldCheckmark, alertCircle });
   }
 
   ngOnInit() {
@@ -33,7 +58,7 @@ export class ParentalGateComponent implements OnInit {
     this.num1 = Math.floor(Math.random() * 10) + 1;
     this.num2 = Math.floor(Math.random() * 10) + 1;
     this.correctAnswer = this.num1 + this.num2;
-    
+
     // Reset input
     this.userAnswer = '';
     this.showError = false;
@@ -41,7 +66,7 @@ export class ParentalGateComponent implements OnInit {
 
   submit() {
     const answer = parseInt(this.userAnswer);
-    
+
     if (isNaN(answer)) {
       this.showError = true;
       this.errorMessage = 'Please enter a number';
@@ -55,7 +80,7 @@ export class ParentalGateComponent implements OnInit {
       // Wrong answer - show error and generate new question
       this.showError = true;
       this.errorMessage = 'Incorrect answer. Please try again.';
-      
+
       // Generate new question after 1.5 seconds
       setTimeout(() => {
         this.generateQuestion();

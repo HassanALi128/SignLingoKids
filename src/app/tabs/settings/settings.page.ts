@@ -25,7 +25,7 @@ import {
 import { CommonService } from '../../core/services/common';
 import { ProfileService } from '../../services/profile.service';
 import { UserService } from '../../services/user.service';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { PremiumSuccessModalComponent } from '../../components/premium-success-modal/premium-success-modal.component';
 import { CustomerCenterModalComponent } from '../../components/customer-center-modal/customer-center-modal.component';
 import { FormsModule } from '@angular/forms';
@@ -76,6 +76,7 @@ export class SettingsPage implements OnInit {
     public profileService: ProfileService,
     private commonService: CommonService,
     private modalController: ModalController,
+    private navCtrl: NavController,
     private platform: Platform,
     private quizService: QuizService,
     private userService: UserService,
@@ -186,7 +187,7 @@ export class SettingsPage implements OnInit {
   }
 
   openPremium() {
-    this.router.navigate(['/tabs/premium']);
+    this.navCtrl.navigateForward('/tabs/premium');
   }
 
   editProfile() {

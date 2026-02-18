@@ -10,11 +10,11 @@ import {
   IonImg,
   IonProgressBar,
   ModalController,
-  Platform,
+  NavController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personCircleOutline, lockClosedOutline } from 'ionicons/icons';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QuizService, QuizResult } from '../../services/quiz';
 import { ProfileService } from '../../services/profile.service';
@@ -56,7 +56,6 @@ export class QuizPage implements OnInit, OnDestroy {
   private recentResultsSubject = new BehaviorSubject<ResultDisplay[]>([]);
   private isPremiumSubject = new BehaviorSubject<boolean>(false);
   private destroy$ = new Subject<void>();
-  private backButtonSubscription?: Subscription;
 
   // Public Observables
   userName$: Observable<string> = this.userNameSubject.asObservable();
@@ -78,7 +77,7 @@ export class QuizPage implements OnInit, OnDestroy {
     private router: Router,
     private profileService: ProfileService,
     private modalController: ModalController,
-    private platform: Platform
+    private navCtrl: NavController
   ) {
     addIcons({ personCircleOutline, lockClosedOutline });
   }
@@ -88,19 +87,6 @@ export class QuizPage implements OnInit, OnDestroy {
     this.loadRecentResults();
     this.subscribeToPremiumStatus();
     this.subscribeToPremiumStatus();
-  }
-
-  ionViewDidEnter() {
-    this.backButtonSubscription =
-      this.platform.backButton.subscribeWithPriority(10, () => {
-        this.router.navigate(['/tabs/home']);
-      });
-  }
-
-  ionViewWillLeave() {
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
-    }
   }
 
   ngOnDestroy() {
@@ -187,7 +173,7 @@ export class QuizPage implements OnInit, OnDestroy {
 
     if (!isPremium && attempts >= 5) {
       // Show premium modal or alert
-      this.router.navigate(['/tabs/premium']);
+      this.navCtrl.navigateForward('/tabs/premium');
       return;
     }
 
@@ -195,7 +181,7 @@ export class QuizPage implements OnInit, OnDestroy {
     this.quizService.incrementAttempts();
 
     // Navigate to quiz questions page
-    this.router.navigate(['/tabs/quiz/quiz-questions']);
+    this.navCtrl.navigateForward('/tabs/quiz/quiz-questions');
   }
 
   async openResultModal(result: ResultDisplay) {
@@ -212,10 +198,10 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   viewAllResults() {
-    this.router.navigate(['/quiz-progress-view-all']);
+    this.navCtrl.navigateForward('/quiz-progress-view-all');
   }
 
   goToProfile() {
-    this.router.navigate(['tabs/setting']);
+    this.navCtrl.navigateForward('/tabs/setting');
   }
 }

@@ -5,12 +5,17 @@
 
 .close-button {
   position: absolute;
-  top: 15px;
+  top: calc(15px + env(safe-area-inset-top));
   right: 15px;
   font-size: 24px;
   z-index: 100;
   cursor: pointer;
   opacity: 0.5;
+  padding: 8px;
+
+  ion-icon {
+    display: block;
+  }
 }
 
 .paywall-container {
@@ -163,6 +168,8 @@
     --background: linear-gradient(90deg, #ff5722 0%, #c2185b 100%);
     --background-activated: linear-gradient(90deg, #e64a19 0%, #ad1457 100%);
     --border-radius: 12px;
+    color: white;
+    --color: white;
     font-weight: 700;
     font-size: 16px;
     height: 52px;
