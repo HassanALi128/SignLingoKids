@@ -31,14 +31,16 @@ export const environment = {
     // AdMob Ad Unit IDs
     // Using Google's test ad unit IDs for development
     android: {
-      banner: 'ca-app-pub-3940256099942544/6300978111', // Test banner ID
-      interstitial: 'ca-app-pub-3940256099942544/1033173712', // Test interstitial ID
-      rewarded: 'ca-app-pub-3940256099942544/5224354917', // Test rewarded ID
+      banner: 'ca-app-pub-4296184061584014/2916209158', // REPLACE: Test banner ID
+      interstitial: 'ca-app-pub-4296184061584014/1165919887', // REPLACE: Test interstitial ID
+      rewarded: 'ca-app-pub-4296184061584014/4887766375', // REPLACE: Test rewarded ID
+      appOpen: 'ca-app-pub-4296184061584014/3029725967', // REPLACE: Test app open ID
     },
     ios: {
-      banner: 'ca-app-pub-3940256099942544/2934735716', // Test banner ID
-      interstitial: 'ca-app-pub-3940256099942544/4411468910', // Test interstitial ID
-      rewarded: 'ca-app-pub-3940256099942544/1712485313', // Test rewarded ID
+      banner: 'ca-app-pub-4296184061584014/2916209158', // Test banner ID
+      interstitial: 'ca-app-pub-4296184061584014/1165919887', // Test interstitial ID
+      rewarded: 'ca-app-pub-4296184061584014/4887766375', // Test rewarded ID
+      appOpen: 'ca-app-pub-4296184061584014/3029725967', // Test app open ID
     },
   },
 };

@@ -233,10 +233,10 @@ export class PaywallModalComponent implements OnInit {
   }
 
   openPrivacy() {
-    window.open('https://www.handhero3d.com/privacy', '_system');
+    window.open('https://veldorastudio.com/legal/hand-hero-privacy', '_system');
   }
 
   openTerms() {
-    window.open('https://www.handhero3d.com/terms', '_system');
+    window.open('https://veldorastudio.com/legal/hand-hero-terms', '_system');
   }
 }

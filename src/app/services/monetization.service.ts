@@ -44,6 +44,7 @@ export class MonetizationService {
 
   // Track AdMob initialization status
   private adMobInitialized = false;
+  private isInitializingAdMob = false;
   private adMobInitPromise: Promise<void>;
 
   constructor(
@@ -116,6 +117,8 @@ export class MonetizationService {
 
   // ADMOB
   private async initAdMob() {
+    if (this.adMobInitialized || this.isInitializingAdMob) return;
+    this.isInitializingAdMob = true;
     try {
       await AdMob.initialize();
       this.adMobInitialized = true; // Mark as ready
@@ -148,6 +151,8 @@ export class MonetizationService {
       // this.showBanner();
     } catch (e) {
       console.error('AdMob Init Error:', e);
+    } finally {
+      this.isInitializingAdMob = false;
     }
   }
 
@@ -165,6 +170,11 @@ export class MonetizationService {
     // Wait for initialization before engaging plugin
     if (!this.adMobInitialized) {
       console.log('AdMob not initialized yet, waiting...');
+
+      if (!this.isInitializingAdMob) {
+        this.initAdMob();
+      }
+
       // Race a 5s timeout vs the actual init
       await Promise.race([
         this.adMobInitPromise,
