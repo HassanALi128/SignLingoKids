@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   IonicModule,
   ModalController,
@@ -8,7 +8,9 @@ import { CommonModule } from '@angular/common';
 
 import { PurchasesService } from '../../services/purchases.service';
 import { UserService } from '../../services/user.service';
+import { MonetizationService } from '../../services/monetization.service';
 import { AlertService } from '../../services/alert.service';
+import { ParentalGateComponent } from '../parental-gate/parental-gate.component';
 import { addIcons } from 'ionicons';
 import {
   closeCircle,
@@ -26,7 +28,7 @@ import {
   standalone: true,
   imports: [IonicModule, CommonModule],
 })
-export class PaywallModalComponent implements OnInit {
+export class PaywallModalComponent implements OnInit, OnDestroy {
   isLoading = true;
   packages: any[] = [];
   selectedPackage: any = null;
@@ -38,7 +40,8 @@ export class PaywallModalComponent implements OnInit {
     private loadingController: LoadingController,
     private alertService: AlertService,
     private purchasesService: PurchasesService,
-    private userService: UserService
+    private userService: UserService,
+    private monetizationService: MonetizationService
   ) {
     addIcons({
       closeCircle,
@@ -51,7 +54,12 @@ export class PaywallModalComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.monetizationService.freezeAdsForPaywall();
     await this.loadOfferings();
+  }
+
+  ngOnDestroy() {
+    this.monetizationService.unfreezeAdsForPaywall();
   }
 
   async loadOfferings() {
@@ -152,54 +160,57 @@ export class PaywallModalComponent implements OnInit {
   }
 
   async purchase() {
-    if (!this.selectedPackage) {
-      this.alertService.error('Error', 'Please select a subscription plan.');
-      return;
-    }
-
-    const loading = await this.loadingController.create({
-      message: 'Processing purchase...',
-    });
-    await loading.present();
-
-    try {
-      console.log('💳 Starting purchase flow...');
-
-      const customerInfo = await this.purchasesService.purchasePackage(
-        this.selectedPackage
-      );
-
-      await loading.dismiss();
-
-      if (customerInfo && this.purchasesService.hasProEntitlement()) {
-        console.log('✅ Purchase successful - syncing premium status');
-        await this.userService.syncPremiumStatusFromRevenueCat();
-        this.modalController.dismiss({ role: 'purchased', purchased: true });
-        this.alertService.success('Success', '🎉 Welcome to Premium!');
-      } else {
-        console.warn('⚠️ Purchase completed but no entitlement found');
-        this.alertService.error(
-          'Purchase Issue',
-          'Purchase processed but premium status not activated. Please try restoring your purchases.'
-        );
-      }
-    } catch (error: any) {
-      await loading.dismiss();
-
-      console.error('Purchase error:', error);
-
-      // Handle user cancellation silently
-      if (error.message === 'CANCELLED' || error.userCancelled) {
-        console.log('User cancelled purchase');
+    // strict parental gate interceptor for purchases
+    await this.executeWithParentalGate(async () => {
+      if (!this.selectedPackage) {
+        this.alertService.error('Error', 'Please select a subscription plan.');
         return;
       }
 
-      // Show user-friendly error
-      let errorMessage =
-        error.message || 'An unexpected error occurred. Please try again.';
+      const loading = await this.loadingController.create({
+        message: 'Processing purchase...',
+      });
+      await loading.present();
 
-      this.alertService.error('Purchase Failed', errorMessage);
-    }
+      try {
+        console.log('💳 Starting purchase flow...');
+
+        const customerInfo = await this.purchasesService.purchasePackage(
+          this.selectedPackage
+        );
+
+        await loading.dismiss();
+
+        if (customerInfo && this.purchasesService.hasProEntitlement()) {
+          console.log('✅ Purchase successful - syncing premium status');
+          await this.userService.syncPremiumStatusFromRevenueCat();
+          this.modalController.dismiss({ role: 'purchased', purchased: true });
+          this.alertService.success('Success', '🎉 Welcome to Premium!');
+        } else {
+          console.warn('⚠️ Purchase completed but no entitlement found');
+          this.alertService.error(
+            'Purchase Issue',
+            'Purchase processed but premium status not activated. Please try restoring your purchases.'
+          );
+        }
+      } catch (error: any) {
+        await loading.dismiss();
+
+        console.error('Purchase error:', error);
+
+        // Handle user cancellation silently
+        if (error.message === 'CANCELLED' || error.userCancelled) {
+          console.log('User cancelled purchase');
+          return;
+        }
+
+        // Show user-friendly error
+        let errorMessage =
+          error.message || 'An unexpected error occurred. Please try again.';
+
+        this.alertService.error('Purchase Failed', errorMessage);
+      }
+    });
   }
 
   async restorePurchases() {
@@ -231,12 +242,39 @@ export class PaywallModalComponent implements OnInit {
   close() {
     this.modalController.dismiss({ role: 'cancel', purchased: false });
   }
-
-  openPrivacy() {
-    window.open('https://veldorastudio.com/legal/hand-hero-privacy', '_system');
+ 
+  async openPrivacy() {
+    await this.executeWithParentalGate(() => {
+      window.open(
+        'https://veldorastudio.com/legal/hand-hero-privacy',
+        '_system'
+      );
+    });
   }
 
-  openTerms() {
-    window.open('https://veldorastudio.com/legal/hand-hero-terms', '_system');
+  async openTerms() {
+    await this.executeWithParentalGate(() => {
+      window.open('https://veldorastudio.com/legal/hand-hero-terms', '_system');
+    });
+  }
+
+  /**
+   * strict interceptor that presents the math gate before executing an action.
+   */
+  private async executeWithParentalGate(action: () => void | Promise<void>) {
+    const modal = await this.modalController.create({
+      component: ParentalGateComponent,
+      cssClass: 'parental-gate-modal',
+      backdropDismiss: false,
+    });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data && data.verified) {
+      // Parent verified, proceed with action
+      await action();
+    } else {
+      console.log('Parental gate cancelled or failed verification.');
+    }
   }
 }

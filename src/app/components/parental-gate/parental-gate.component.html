@@ -9,54 +9,59 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div class="content-wrapper">
-    <div class="instruction-section">
-      <ion-icon name="shield-checkmark" class="lock-icon"></ion-icon>
-      <h2>Parent/Guardian Required</h2>
-      <p class="instruction-text">
-        To continue with this purchase, please ask a parent or guardian to solve this simple math problem:
+<ion-content>
+  <div class="gate-wrapper" [class.success]="showSuccess">
+    <!-- ── Header icon + copy ──────────────────────────────────── -->
+    <div class="gate-header">
+      <div class="shield-wrap">
+        <ion-icon name="shield-checkmark"></ion-icon>
+      </div>
+      <h2>Parents Only</h2>
+      <p>
+        To continue, a parent or guardian must solve this problem. This keeps
+        purchases safe from little fingers! 🤚
       </p>
     </div>
 
+    <!-- ── Math question card ──────────────────────────────────── -->
     <div class="question-card">
-      <div class="math-question">
-        <span class="number">{{ num1 }}</span>
-        <span class="operator">+</span>
-        <span class="number">{{ num2 }}</span>
-        <span class="equals">=</span>
-        <span class="question-mark">?</span>
+      <span class="operand">{{ num1 }}</span>
+      <span class="operator">{{ operator }}</span>
+      <span class="operand">{{ num2 }}</span>
+      <span class="equals">=</span>
+      <span class="answer-display" [class.has-value]="displayValue.length > 0">
+        {{ displayValue || "?" }}
+      </span>
+    </div>
+
+    <!-- ── Error / success feedback ────────────────────────────── -->
+    @if (showError) {
+    <div class="feedback error-feedback">
+      <ion-icon name="alert-circle"></ion-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+    } @if (showSuccess) {
+    <div class="feedback success-feedback">
+      <span>✅ Verified! Opening…</span>
+    </div>
+    }
+
+    <!-- ── Custom numpad ───────────────────────────────────────── -->
+    <div class="numpad">
+      @for (row of numpadRows; track $index) {
+      <div class="numpad-row">
+        @for (key of row; track key) {
+        <button
+          class="numpad-key"
+          [class.action-key]="key === '⌫' || key === '✓'"
+          [class.confirm-key]="key === '✓'"
+          (click)="onKey(key)"
+        >
+          {{ key }}
+        </button>
+        }
       </div>
-    </div>
-
-    <div class="answer-section">
-      <ion-item class="answer-input" [class.error]="showError">
-        <!-- <ion-label position="floating">Your Answer</ion-label> -->
-        <ion-input
-          type="number"
-          [(ngModel)]="userAnswer"
-          placeholder="Enter answer"
-          (keyup.enter)="submit()"
-        ></ion-input>
-      </ion-item>
-
-      @if(showError) {
-        <div class="error-message">
-          <ion-icon name="alert-circle"></ion-icon>
-          <span>{{ errorMessage }}</span>
-        </div>
       }
-    </div>
-
-    <div class="button-section">
-      <ion-button expand="block" class="submit-btn" (click)="submit()">
-        Verify & Continue
-      </ion-button>
-      <ion-button expand="block" fill="clear" class="cancel-btn" (click)="cancel()">
-        Cancel
-      </ion-button>
     </div>
   </div>
 </ion-content>
-<!-- <div class="parental-gate-modal">
-</div> -->

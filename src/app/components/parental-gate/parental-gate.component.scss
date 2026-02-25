@@ -1,165 +1,224 @@
-.parental-gate-modal {
-  --background: white;
+:host {
+  --gate-bg: #0f172a;
+  --card-bg: #1e293b;
+  --accent: #6366f1;
+  --accent-confirm: #22c55e;
+  --text-primary: #f1f5f9;
+  --text-muted: #94a3b8;
+  --key-bg: #1e293b;
+  --key-bg-action: #334155;
+  --key-border: #334155;
+  --error-color: #f87171;
+  --success-color: #4ade80;
+}
 
-  ion-header {
-    ion-toolbar {
-      --background: transparent;
-      --border-width: 0;
-      --padding-top: env(safe-area-inset-top);
-      padding-top: env(safe-area-inset-top);
+ion-toolbar {
+  --background: var(--gate-bg);
+  --color: var(--text-primary);
 
-      ion-title {
-        font-weight: 700;
-        color: var(--text-matte-black);
-        text-align: center;
-      }
-
-      ion-buttons {
-        ion-button {
-          --color: #666;
-        }
-      }
-    }
-  }
-
-  ion-content {
-    --background: white;
+  ion-title {
+    font-weight: 700;
+    letter-spacing: 0.3px;
   }
 }
 
-.content-wrapper {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 0 20px 20px;
+ion-content {
+  --background: var(--gate-bg);
 }
 
-.instruction-section {
+// ─── Layout wrapper ─────────────────────────────────────────────────────────
+.gate-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px 32px;
+  min-height: 100%;
+  box-sizing: border-box;
+  transition: background 0.3s ease;
+
+  &.success {
+    background: rgba(34, 197, 94, 0.08);
+  }
+}
+
+// ─── Header section ──────────────────────────────────────────────────────────
+.gate-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 
-  .lock-icon {
-    font-size: 64px;
-    color: #f34f27;
-    margin-bottom: 16px;
+  .shield-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.15);
+    margin-bottom: 14px;
+
+    ion-icon {
+      font-size: 32px;
+      color: var(--accent);
+    }
   }
 
   h2 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text-matte-black);
-    margin: 0 0 12px;
+    color: var(--text-primary);
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 8px;
   }
 
-  .instruction-text {
-    font-size: 15px;
-    color: #666;
-    line-height: 1.6;
-    margin: 0;
-  }
-}
-
-.question-card {
-  background: white;
-  border-radius: 20px;
-  padding: 40px 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-
-  .math-question {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    font-family: "Arial", sans-serif;
-
-    .number {
-      font-size: 48px;
-      font-weight: 800;
-      color: var(--text-matte-black);
-      background: linear-gradient(135deg, #ef8d1b 0%, #f34f27 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .operator,
-    .equals {
-      font-size: 36px;
-      font-weight: 700;
-      color: #666;
-    }
-
-    .question-mark {
-      font-size: 48px;
-      font-weight: 800;
-      color: #f34f27;
-    }
-  }
-}
-
-.answer-section {
-  margin-bottom: 30px;
-
-  .answer-input {
-    --background: white;
-    --border-radius: 16px;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    margin-bottom: 12px;
-
-    &.error {
-      --border-color: #f44336;
-    }
-
-    ion-label {
-      font-weight: 600;
-    }
-
-    ion-input {
-      font-size: 20px;
-      font-weight: 600;
-      text-align: center;
-    }
-  }
-
-  .error-message {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background: rgba(244, 67, 54, 0.1);
-    border-radius: 12px;
-    color: #f44336;
+  p {
+    color: var(--text-muted);
     font-size: 14px;
-    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 280px;
+  }
+}
 
-    ion-icon {
-      font-size: 20px;
+// ─── Question card ───────────────────────────────────────────────────────────
+.question-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--key-border);
+  border-radius: 20px;
+  padding: 20px 28px;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 340px;
+  box-sizing: border-box;
+
+  .operand,
+  .operator,
+  .equals {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .operator,
+  .equals {
+    color: var(--accent);
+    font-size: 28px;
+  }
+
+  .answer-display {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    height: 52px;
+    border-radius: 12px;
+    border: 2px dashed var(--key-border);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.04);
+    transition: border-color 0.2s, color 0.2s;
+
+    &.has-value {
+      border-color: var(--accent);
+      border-style: solid;
+      color: var(--text-primary);
     }
   }
 }
 
-.button-section {
-  .submit-btn {
-    --background: var(--primary-gradient);
-    background: var(--primary-gradient);
-    --border-radius: 16px;
-    color: white;
-    --color: white;
-    border-radius: 16px;
-    --padding-top: 16px;
-    --padding-bottom: 16px;
-    font-weight: 700;
-    font-size: 17px;
-    text-transform: none;
-    margin-bottom: 12px;
-    box-shadow: 0 8px 20px rgba(243, 79, 39, 0.3);
+// ─── Feedback messages ────────────────────────────────────────────────────────
+.feedback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.2s ease;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
   }
 
-  .cancel-btn {
-    --color: #666;
-    font-weight: 600;
-    font-size: 15px;
-    text-transform: none;
+  &.error-feedback {
+    color: var(--error-color);
+    background: rgba(248, 113, 113, 0.12);
+  }
+
+  &.success-feedback {
+    color: var(--success-color);
+    background: rgba(74, 222, 128, 0.12);
+    font-size: 16px;
+    justify-content: center;
+  }
+}
+
+// ─── Custom numpad ────────────────────────────────────────────────────────────
+.numpad {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.numpad-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.numpad-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 62px;
+  border-radius: 16px;
+  border: 1.5px solid var(--key-border);
+  background: var(--key-bg);
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.1s ease, opacity 0.12s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+
+  &:active {
+    transform: scale(0.93);
+    opacity: 0.8;
+  }
+
+  &.action-key {
+    background: var(--key-bg-action);
+    font-size: 20px;
+  }
+
+  &.confirm-key {
+    background: var(--accent-confirm);
+    color: #fff;
+    border-color: transparent;
+    font-size: 22px;
+  }
+}
+
+// ─── Animations ───────────────────────────────────────────────────────────────
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -13,6 +13,7 @@ import {
   RewardAdPluginEvents,
   AdMobError,
   AdMobBannerSize,
+  MaxAdContentRating,
 } from '@capacitor-community/admob';
 import { PurchasesService } from './purchases.service';
 import { UserService } from './user.service';
@@ -115,12 +116,45 @@ export class MonetizationService {
     }
   }
 
+  // ─── PAYWALL AD FREEZE ────────────────────────────────────────────────────
+  // Set to true while any paywall/subscription modal is open so ads never
+  // fire mid-purchase — Apple will reject if an ad overlaps subscription terms.
+  private paywallActive = false;
+
+  /** Call this before opening any subscription paywall or RevenueCat modal */
+  freezeAdsForPaywall() {
+    this.paywallActive = true;
+    this.hideBanner();
+    console.log('[AdMob] Ads frozen — paywall is active');
+  }
+
+  /** Call this after the paywall/subscription modal is dismissed */
+  unfreezeAdsForPaywall() {
+    this.paywallActive = false;
+    if (!this.isPro) {
+      this.showBanner();
+    }
+    console.log('[AdMob] Ads unfrozen — paywall dismissed');
+  }
+
   // ADMOB
   private async initAdMob() {
     if (this.adMobInitialized || this.isInitializingAdMob) return;
     this.isInitializingAdMob = true;
     try {
-      await AdMob.initialize();
+      // ── COPPA / CHILD-DIRECTED TREATMENT ─────────────────────────────────
+      // tagForChildDirectedTreatment: true  → tells Google this app targets kids;
+      //   AdMob will ONLY serve child-safe ads (no behavioural targeting, no personalization).
+      // maxAdContentRating: 'G'             → restricts all ad creatives to G-rated content only.
+      // tagForUnderAgeOfConsent: true       → applies EU GDPR child-protection rules globally.
+      // Without these flags, Google can ban the AdMob account for serving inappropriate
+      // ads to minors and Apple will reject the app for COPPA non-compliance.
+      await AdMob.initialize({
+        tagForChildDirectedTreatment: true,
+        tagForUnderAgeOfConsent: true,
+        maxAdContentRating: MaxAdContentRating.General,
+        initializeForTesting: false, // set true only during local dev
+      });
       this.adMobInitialized = true; // Mark as ready
 
       // Listen for banner load to set height
@@ -166,6 +200,8 @@ export class MonetizationService {
 
   async showBanner() {
     if (this.isPro) return;
+    // Never show an ad while a paywall/subscription screen is active.
+    if (this.paywallActive) return;
 
     // Wait for initialization before engaging plugin
     if (!this.adMobInitialized) {

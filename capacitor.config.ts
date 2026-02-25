@@ -3,7 +3,7 @@ import { KeyboardResize, KeyboardStyle } from '@capacitor/keyboard';
 
 const config: CapacitorConfig = {
   appId: 'com.handhero.asl',
-  appName: 'Hand Hero 3D ASL',
+  appName: 'Hand Hero 3D',
   webDir: 'www',
   plugins: {
     SplashScreen: {
@@ -27,7 +27,6 @@ const config: CapacitorConfig = {
       style: KeyboardStyle.Dark,
       resizeOnFullScreen: true,
     },
-    
   },
 };
 
