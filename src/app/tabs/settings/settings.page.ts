@@ -14,12 +14,15 @@ import {
   personCircleOutline,
   person,
   arrowBack,
+  arrowBackOutline,
   pencil,
+  pencilOutline,
   add,
   star,
   starOutline,
   personOutline,
   bugOutline,
+  closeCircleOutline,
 } from 'ionicons/icons';
 
 import { CommonService } from '../../core/services/common';
@@ -96,10 +99,14 @@ export class SettingsPage implements OnInit {
       'person-circle-outline': personCircleOutline,
       personOutline,
       'arrow-back': arrowBack,
+      'arrow-back-outline': arrowBackOutline,
       pencil,
+      'pencil-outline': pencilOutline,
       add,
+      star,
       starOutline,
       'bug-outline': bugOutline,
+      'close-circle-outline': closeCircleOutline,
     });
   }
   ngOnInit(): void {
@@ -188,6 +195,76 @@ export class SettingsPage implements OnInit {
 
   openPremium() {
     this.navCtrl.navigateForward('/tabs/premium');
+  }
+
+  /**
+   * Open the RevenueCat Customer Center / platform subscription management
+   * so the user can view and modify their subscription.
+   */
+  async manageSubscription() {
+    try {
+      // Open RevenueCat's customer center modal
+      const modal = await this.modalController.create({
+        component: CustomerCenterModalComponent,
+        cssClass: 'customer-center-modal',
+      });
+      await modal.present();
+    } catch (error) {
+      console.error('Error opening customer center:', error);
+      // Fallback: open platform subscription settings
+      await this.openPlatformSubscriptionSettings();
+    }
+  }
+
+  /**
+   * Show a confirmation alert before cancelling the subscription,
+   * then redirect to the platform-native subscription management page.
+   */
+  async cancelSubscription() {
+    const alert = await this.alertController.create({
+      header: 'Cancel Subscription?',
+      message:
+        'You will continue to have Premium access until the end of your current billing period. Do you want to proceed to cancel?',
+      cssClass: 'kids-alert',
+      mode: 'md', // Forces horizontal side-by-side buttons on iOS
+      buttons: [
+        {
+          text: 'Keep Premium',
+          role: 'cancel',
+          cssClass: 'cancel-button',
+        },
+        {
+          text: 'Cancel Plan',
+          role: 'destructive',
+          cssClass: 'reset-button',
+          handler: async () => {
+            await this.openPlatformSubscriptionSettings();
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  /**
+   * Navigate to the platform-native subscription management page.
+   * iOS → subscriptions page in App Store
+   * Android → Google Play subscriptions
+   */
+  private async openPlatformSubscriptionSettings() {
+    try {
+      if (this.platform.is('ios')) {
+        await Browser.open({
+          url: 'https://apps.apple.com/account/subscriptions',
+        });
+      } else {
+        await Browser.open({
+          url: 'https://play.google.com/store/account/subscriptions',
+        });
+      }
+    } catch (err) {
+      console.error('Could not open subscription settings:', err);
+    }
   }
 
   editProfile() {
@@ -285,6 +362,7 @@ export class SettingsPage implements OnInit {
       message:
         'This will clear all your learning progress and quiz history. You can start fresh anytime.',
       cssClass: 'kids-alert',
+      mode: 'md', // Forces horizontal side-by-side buttons on iOS (default iOS stacks them vertically)
       buttons: [
         {
           text: 'Cancel',

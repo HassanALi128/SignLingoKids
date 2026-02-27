@@ -106,10 +106,9 @@ export class PurchasesService {
         // Continue anyway - we'll retry later
       }
 
-      // Fetch offerings with timeout
-      // Don't block app startup if this fails
+      // Fetch offerings (non-blocking; 5s max — RevenueCat retries internally)
       try {
-        await this.withTimeout(this.fetchOfferings(), 10000, 'fetchOfferings');
+        await this.withTimeout(this.fetchOfferings(), 5000, 'fetchOfferings');
       } catch (error) {
         console.warn('Could not fetch offerings:', error);
         // Continue anyway - we'll retry later
@@ -213,27 +212,11 @@ export class PurchasesService {
 
       // Log detailed product information for debugging
       if (offerings?.current) {
-        console.log('✅ Offerings fetched successfully');
-        console.log('Current offering ID:', offerings.current.identifier);
         console.log(
-          'Available packages:',
-          offerings.current.availablePackages.length
+          '✅ Offerings fetched:',
+          offerings.current.availablePackages.length,
+          'packages'
         );
-
-        // Log each package details
-        offerings.current.availablePackages.forEach((pkg, index) => {
-          console.log(`Package ${index + 1}:`, {
-            identifier: pkg.identifier,
-            packageType: pkg.packageType,
-            product: {
-              identifier: pkg.product.identifier,
-              title: pkg.product.title,
-              price: pkg.product.price,
-              priceString: pkg.product.priceString,
-              currencyCode: pkg.product.currencyCode,
-            },
-          });
-        });
       } else {
         console.warn('⚠️ No current offering found');
         console.log('All offerings:', Object.keys(offerings?.all || {}));

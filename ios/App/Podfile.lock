@@ -23,6 +23,10 @@ PODS:
     - Capacitor
   - CapacitorKeyboard (7.0.2):
     - Capacitor
+  - CapacitorNetwork (7.0.4):
+    - Capacitor
+  - CapacitorPreferences (7.0.4):
+    - Capacitor
   - CapacitorScreenOrientation (7.0.3):
     - Capacitor
   - CapacitorSplashScreen (7.0.4):
@@ -125,6 +129,8 @@ DEPENDENCIES:
   - "CapacitorFirebaseAuthentication (from `../../node_modules/@capacitor-firebase/authentication`)"
   - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
+  - "CapacitorNetwork (from `../../node_modules/@capacitor/network`)"
+  - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorScreenOrientation (from `../../node_modules/@capacitor/screen-orientation`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
@@ -175,6 +181,10 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/haptics"
   CapacitorKeyboard:
     :path: "../../node_modules/@capacitor/keyboard"
+  CapacitorNetwork:
+    :path: "../../node_modules/@capacitor/network"
+  CapacitorPreferences:
+    :path: "../../node_modules/@capacitor/preferences"
   CapacitorScreenOrientation:
     :path: "../../node_modules/@capacitor/screen-orientation"
   CapacitorSplashScreen:
@@ -196,6 +206,8 @@ SPEC CHECKSUMS:
   CapacitorFirebaseAuthentication: c5d02225dc97a1192f3b615f8c0df2ef910c40b7
   CapacitorHaptics: b3fb2869e72c4466e18ce9ccbeb60a3d8723b3d4
   CapacitorKeyboard: a86aa9e4741b6444a802df26440a92ae041b34a6
+  CapacitorNetwork: b719d692a8d1310da8d26d6648d3aa1ef1e100e1
+  CapacitorPreferences: 69d9991307507aeab8ef8019c10b9babfda0e9ca
   CapacitorScreenOrientation: dbc5cb20775d43a8184830792808c71116b12d56
   CapacitorSplashScreen: 000f7591d546907dda5cbb514bd6b6d9e6048cf8
   CapacitorStatusBar: e04d05e121d5a5979c29eb4249186a4e4a84cacb
@@ -222,6 +234,6 @@ SPEC CHECKSUMS:
   RevenuecatPurchasesCapacitorUi: 969baeb81228e051e2b9e3e764f86f577e73a4b9
   RevenueCatUI: c6acb3648fa58ccb4f0f178556ed0278b796234f
 
-PODFILE CHECKSUM: ee35f4644d0bced5d6de668934266348acd3ac2b
+PODFILE CHECKSUM: 1cd4c7f456e455e50958f1291a2c035fa8e92feb
 
 COCOAPODS: 1.16.2

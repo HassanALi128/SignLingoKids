@@ -17,6 +17,9 @@ export class ProfileService {
   private profileSubject = new BehaviorSubject<UserProfile | null>(null);
   profile$: Observable<UserProfile | null> = this.profileSubject.asObservable();
 
+  /** Track last ID sent to RevenueCat to prevent duplicate logIn calls */
+  private lastIdentifiedUserId: string | null = null;
+
   constructor(
     private userService: UserService,
     private purchasesService: PurchasesService
@@ -39,12 +42,13 @@ export class ProfileService {
           };
           this.profileSubject.next(profile);
 
-          // Identify user in RevenueCat
-          // Use deviceIdHash for better persistence across reinstalls
-          if (userData.deviceIdHash) {
-            this.purchasesService.identifyUser(userData.deviceIdHash);
-          } else if (userData.uid) {
-            this.purchasesService.identifyUser(userData.uid);
+          // Identify user in RevenueCat — only when the ID actually changes
+          // (userData$ emits multiple times per session; without this guard,
+          //  RevenueCat.logIn fires 4+ times causing redundant network calls)
+          const userIdForRC = userData.deviceIdHash || userData.uid;
+          if (userIdForRC && userIdForRC !== this.lastIdentifiedUserId) {
+            this.lastIdentifiedUserId = userIdForRC;
+            this.purchasesService.identifyUser(userIdForRC);
           }
         } else {
           // If no user data yet (e.g. just created), create it
@@ -64,7 +68,18 @@ export class ProfileService {
         displayName: profile.name,
         photoURL: profile.avatar,
       });
-      // Local subject will be updated via subscription
+
+      // ── Immediate local update ──────────────────────────────────────────
+      // Don't wait for Firestore to round-trip back through userData$.
+      // Update the BehaviorSubject right now so the UI reflects the change instantly.
+      const current = this.profileSubject.value;
+      if (current) {
+        this.profileSubject.next({
+          ...current,
+          name: profile.name,
+          avatar: profile.avatar,
+        });
+      }
     } catch (error) {
       console.error('Error saving profile to Firestore:', error);
     }

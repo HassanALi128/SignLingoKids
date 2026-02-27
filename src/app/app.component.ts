@@ -6,7 +6,6 @@ import {
   ModalController,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { App } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { AlertService } from './services/alert.service';
@@ -16,17 +15,33 @@ import { HardwareBackBtnService } from './services/hardware-back-btn.service';
 // import { CrashlyticsService } from './services/crashlytics.service';
 import { AnalyticsService } from './services/analytics.service';
 import { InitLoaderComponent } from './components/init-loader/init-loader.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { PaywallModalComponent } from './components/paywall-modal/paywall-modal.component';
+import { NetworkService } from './services/network.service';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet, InitLoaderComponent, CommonModule],
+  styleUrls: ['app.component.scss'],
+  imports: [
+    IonApp,
+    IonRouterOutlet,
+    InitLoaderComponent,
+    CommonModule,
+    AsyncPipe,
+  ],
 })
 export class AppComponent implements OnInit {
   showInitLoader = true;
   initStatus = 'Starting up...';
+
+  /** Exposed to template for the offline banner (used with async pipe). */
+  readonly isOnline$ = this.networkService.isOnline$;
+
+  /** Only show paywall once every 24 hours to avoid annoying daily users */
+  private readonly PAYWALL_SHOWN_KEY = 'last_paywall_shown_ts';
+  private readonly PAYWALL_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
   constructor(
     private platform: Platform,
@@ -37,7 +52,9 @@ export class AppComponent implements OnInit {
     private modalController: ModalController,
     // private crashlyticsService: CrashlyticsService,
     private analyticsService: AnalyticsService,
-    private hardwareBackBtnService: HardwareBackBtnService
+    private hardwareBackBtnService: HardwareBackBtnService,
+    readonly networkService: NetworkService,
+    private storageService: StorageService
   ) {}
 
   ngOnInit() {
@@ -45,18 +62,20 @@ export class AppComponent implements OnInit {
   }
 
   async initializeApp() {
+    // Flag so the background continuation knows it should NOT navigate if the
+    // timeout already fired and the error handler took over.
+    let aborted = false;
+
     try {
-      // Wrap entire initialization in a timeout to prevent indefinite hanging
+      // On cold start, the iOS Networking process can take 9-12s to spin up.
+      // 20s gives enough headroom without waiting forever.
       await Promise.race([
-        this.performInitialization(),
+        this.performInitialization(() => aborted),
         new Promise((_, reject) =>
-          setTimeout(
-            () =>
-              reject(
-                new Error('App initialization timed out after 10 seconds')
-              ),
-            10000
-          )
+          setTimeout(() => {
+            aborted = true;
+            reject(new Error('App initialization timed out after 20 seconds'));
+          }, 20000)
         ),
       ]);
     } catch (error) {
@@ -69,7 +88,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private async performInitialization() {
+  private async performInitialization(isAborted: () => boolean = () => false) {
     // Wait for platform to be ready
     await this.platform.ready();
 
@@ -100,8 +119,15 @@ export class AppComponent implements OnInit {
     this.initStatus = 'Checking your device...';
 
     // Initialize user from device (this handles Firebase auth and device check)
-    // This will call purchasesService.identifyUser() which requires RevenueCat to be initialized
     const navigationPath = await this.userService.initializeUserFromDevice();
+
+    // If the timeout already fired, do not navigate — the error handler already did.
+    if (isAborted()) {
+      console.warn(
+        'performInitialization: timeout already fired, aborting navigation.'
+      );
+      return;
+    }
 
     // Update status
     this.initStatus = 'Loading your data...';
@@ -128,7 +154,6 @@ export class AppComponent implements OnInit {
     this.navigateBasedOnPath(navigationPath);
 
     // After navigation, check premium status and show paywall if needed
-    // We delay slightly to ensure the root page is loaded
     setTimeout(() => {
       this.checkPremiumAndShowPaywall();
     }, 1000);
@@ -149,15 +174,23 @@ export class AppComponent implements OnInit {
   }
 
   private async checkPremiumAndShowPaywall() {
-    // Check if user is premium
     if (!this.monetizationService.isPro) {
+      // Throttle: only show once per 24h so daily users aren't battered with the paywall.
+      // Uses StorageService (Capacitor Preferences) instead of localStorage so it
+      // survives WebView resets and is native-backed on iOS / Android.
+      const lastShown = await this.storageService.getLastPaywallShown();
+      const now = Date.now();
+      if (now - lastShown < this.PAYWALL_INTERVAL_MS) {
+        console.log('App: Paywall skipped (shown within last 24h)');
+        return;
+      }
+      await this.storageService.setLastPaywallShown(now);
+
       console.log('App: User is not premium, showing paywall...');
       const modal = await this.modalController.create({
         component: PaywallModalComponent,
-        backdropDismiss: true, // Allow dismissal
-        componentProps: {
-          // any props
-        },
+        backdropDismiss: true,
+        componentProps: {},
       });
       await modal.present();
     } else {

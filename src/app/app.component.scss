@@ -1,0 +1,50 @@
+// ─── Offline Banner ──────────────────────────────────────────────────────────
+//
+// A slim, non-intrusive status bar that slides in from the top when the device
+// loses internet connectivity.
+
+.offline-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  // Float just above the Ionic tab bar (tab bar ≈ 56px + device safe area)
+  position: fixed;
+  bottom: calc(56px + env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+  padding: 8px 16px;
+
+  // Warm amber — visible but not alarming
+  background: rgba(160, 96, 0, 0.93);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  // Typography
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  // Smooth entrance from bottom
+  animation: bannerSlideUp 0.3s ease-out;
+
+  .offline-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+}
+
+@keyframes bannerSlideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

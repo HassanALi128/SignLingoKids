@@ -18,9 +18,17 @@
     <div class="avatar-section">
       <div class="avatar-wrapper">
         <div class="avatar-circle" [class.has-image]="selectedAvatar">
-          <ion-img *ngIf="selectedAvatar" [src]="selectedAvatar" class="selected-avatar-img">
+          <ion-img
+            *ngIf="selectedAvatar"
+            [src]="selectedAvatar"
+            class="selected-avatar-img"
+          >
           </ion-img>
-          <ion-icon *ngIf="!selectedAvatar" name="person" class="default-avatar-icon">
+          <ion-icon
+            *ngIf="!selectedAvatar"
+            name="person"
+            class="default-avatar-icon"
+          >
           </ion-icon>
         </div>
         <!-- <button class="upload-btn" (click)="uploadPhoto()">
@@ -32,8 +40,13 @@
     <!-- Name Input Section -->
     <div class="name-section">
       <ion-item lines="none" class="name-input-item">
-        <ion-input [(ngModel)]="userName" placeholder="Enter your name" class="name-input" type="text" maxlength="10">
-        </ion-input>
+        <input
+          [(ngModel)]="userName"
+          placeholder="Enter your name"
+          class="name-input"
+          type="text"
+          maxlength="10"
+        />
       </ion-item>
       <p class="helper-text">Only 10 characters are allowed</p>
     </div>
@@ -42,8 +55,12 @@
     <div class="avatar-selection-section">
       <p class="selection-label">Or choose a Signlingo Avatar</p>
       <div class="avatar-grid">
-        <div *ngFor="let avatar of avatars; let i = index" class="avatar-item"
-          [class.selected]="selectedAvatar === avatar" (click)="selectAvatar(avatar)">
+        <div
+          *ngFor="let avatar of avatars; let i = index"
+          class="avatar-item"
+          [class.selected]="selectedAvatar === avatar"
+          (click)="selectAvatar(avatar)"
+        >
           <ion-img [src]="avatar"></ion-img>
         </div>
       </div>
@@ -53,7 +70,12 @@
 
 <ion-footer>
   <ion-toolbar>
-    <ion-button expand="block" class="save-btn" [disabled]="!userName || !selectedAvatar" (click)="saveProfile()">
+    <ion-button
+      expand="block"
+      class="save-btn"
+      [disabled]="!userName || !selectedAvatar"
+      (click)="saveProfile()"
+    >
       Save
     </ion-button>
   </ion-toolbar>

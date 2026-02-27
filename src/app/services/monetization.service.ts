@@ -157,21 +157,22 @@ export class MonetizationService {
       });
       this.adMobInitialized = true; // Mark as ready
 
-      // Listen for banner load to set height
-      // Note: Loaded event does not provide size info in this plugin version
+      // Listen for size changes — only apply height when banner actually loaded
+      // When an ad fails, this event fires with width=0, height=0; we must set 0
+      // not fallback to 60, otherwise a blank 60px gap appears below content.
       AdMob.addListener(BannerAdPluginEvents.Loaded, () => {
-        console.log('Banner loaded');
-        // Default to 60px if height is missing (standard adaptive banner height)
-        this.setBannerHeight(60);
+        // Height will be set correctly by the SizeChanged event below
       });
 
-      // Listen for size changes
       AdMob.addListener(
         BannerAdPluginEvents.SizeChanged,
         (info: AdMobBannerSize) => {
-          console.log('Banner size changed:', info);
-          const height = info.height || 60;
-          this.setBannerHeight(height);
+          if (info.width > 0 && info.height > 0) {
+            this.setBannerHeight(info.height);
+          } else {
+            // Ad failed or was hidden — collapse the reserved space
+            this.setBannerHeight(0);
+          }
         }
       );
 
@@ -223,10 +224,9 @@ export class MonetizationService {
       }
     }
 
-    // Set a default height immediately to start the transition
-    // Standard iOS/Android banner height is often roughly 50-60dp.
-    // We start with a safe guess to prevent overlap while the real size loads.
-    this.setBannerHeight(60);
+    // Do NOT pre-set height here — the SizeChanged listener will set the
+    // correct height once the ad actually loads. Pre-setting 60 caused a blank
+    // gap whenever the ad failed to fill.
 
     const adId = this.platform.is('ios')
       ? this.BANNER_ID_IOS

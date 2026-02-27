@@ -51,10 +51,7 @@ export class TabsPage implements OnInit {
     this.quizService.isPremium$.subscribe((status: boolean) => {
       this.isPremium = status;
     });
-
-    // Attempt to show banner explicitly on initialization
-    // Required to prevent cold-load reset bug on non-premium
-    this.monetizationService.showBanner();
+    // Banner is shown/hidden by ionViewWillEnter / ionViewWillLeave below
   }
 
   ionViewWillEnter() {
