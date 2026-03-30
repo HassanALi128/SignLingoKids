@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from './data';
 import { LearningService } from './learning.service';
+import { MonetizationService } from './monetization.service';
 import { QuizAttemptService } from './quiz-attempt.service';
 import { UserService } from './user.service';
 import { DeviceService } from './device.service';
@@ -44,8 +45,8 @@ export class QuizService {
   private resultsKey = 'quiz_results';
   private readonly PROGRESS_THRESHOLD = 25; // 25% learning progress required
 
-  private premiumSubject = new BehaviorSubject<boolean>(false);
-  public isPremium$ = this.premiumSubject.asObservable();
+  // isPremium$ delegates to MonetizationService — single source of truth (RevenueCat + test toggle + Firestore)
+  public isPremium$: Observable<boolean>;
 
   private firstQuizCompletedSubject = new BehaviorSubject<boolean>(false);
 
@@ -53,62 +54,62 @@ export class QuizService {
   private resultsSubject = new BehaviorSubject<QuizResult[]>([]);
   public results$ = this.resultsSubject.asObservable();
 
-  // Quiz unlock state: combines progress and first quiz check
-  public canStartQuiz$: Observable<boolean> = combineLatest([
-    this.premiumSubject,
-    this.firstQuizCompletedSubject,
-    this.learningService.overallProgress$,
-  ]).pipe(
-    map(([isPremium, firstCompleted, progress]) => {
-      // Premium users always have access
-      if (isPremium) return true;
-
-      // If user hasn't completed their first quiz, they can start
-      if (!firstCompleted) return true;
-
-      // After first quiz, check progress threshold
-      return progress >= this.PROGRESS_THRESHOLD;
-    })
-  );
-
-  // Combined unlock state with progress info for UI
-  public quizUnlockState$: Observable<{
+  // canStartQuiz$ and quizUnlockState$ are built in constructor after isPremium$ is set
+  public canStartQuiz$!: Observable<boolean>;
+  public quizUnlockState$!: Observable<{
     canStart: boolean;
     progress: number;
     message: string;
-  }> = combineLatest([
-    this.canStartQuiz$,
-    this.learningService.overallProgress$,
-  ]).pipe(
-    map(([canStart, progress]) => ({
-      canStart,
-      progress,
-      message: this.getQuizLockMessage(canStart, progress),
-    }))
-  );
+  }>;
 
   constructor(
     private http: HttpClient,
     private dataService: DataService,
     private learningService: LearningService,
+    private monetizationService: MonetizationService,
     private quizAttemptService: QuizAttemptService,
     private userService: UserService,
     private deviceService: DeviceService
   ) {
+    // Wire isPremium$ from the single source of truth
+    this.isPremium$ = this.monetizationService.isPremium$;
+
+    // Build unlock observables after isPremium$ is set
+    this.canStartQuiz$ = combineLatest([
+      this.isPremium$,
+      this.firstQuizCompletedSubject,
+      this.learningService.overallProgress$,
+    ]).pipe(
+      map(([isPremium, firstCompleted, progress]) => {
+        if (isPremium) return true;
+        if (!firstCompleted) return true;
+        return progress >= this.PROGRESS_THRESHOLD;
+      })
+    );
+
+    this.quizUnlockState$ = combineLatest([
+      this.canStartQuiz$,
+      this.learningService.overallProgress$,
+    ]).pipe(
+      map(([canStart, progress]) => ({
+        canStart,
+        progress,
+        message: this.getQuizLockMessage(canStart, progress),
+      }))
+    );
+
     this.initialize();
   }
 
   private initialize() {
-    // Subscribe to user data to handle auth changes and load data
+    // Subscribe to user data to handle auth changes and reload quiz data
     this.userService.userData$.subscribe((user) => {
       if (user) {
-        this.premiumSubject.next(user.isPremium || false);
         this.loadResults();
         this.checkFirstQuizStatus();
       } else {
         // Clear results if no user (e.g. logout)
         this.resultsSubject.next([]);
-        this.premiumSubject.next(false);
         this.firstQuizCompletedSubject.next(false);
       }
     });
@@ -273,7 +274,7 @@ export class QuizService {
   }
 
   isPremium(): boolean {
-    return this.premiumSubject.value;
+    return this.monetizationService.isPro;
   }
 
   // Initialize total items count for progress calculation (non-premium items only)
@@ -319,7 +320,7 @@ export class QuizService {
 
   // Get current quiz accessibility (synchronous check)
   canStartQuizNow(): boolean {
-    const isPremium = this.premiumSubject.value;
+    const isPremium = this.monetizationService.isPro;
     if (isPremium) return true;
 
     const firstCompleted = this.firstQuizCompletedSubject.value;

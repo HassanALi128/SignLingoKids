@@ -1,70 +1,52 @@
+<ion-content class="landing-content kids-gradient-bg" [fullscreen]="true">
+  <!-- Dynamic Background Orbs -->
+  <div class="animated-background">
+    <div class="animated-bg-shape animated-bg-shape-1"></div>
+    <div class="animated-bg-shape animated-bg-shape-2"></div>
+    <div class="animated-bg-shape animated-bg-shape-3"></div>
+  </div>
+
 @if(!selectedCategory) {
-<ion-header>
-  <ion-toolbar>
-    <div class="header-content">
-      <div class="greeting">
-        <h2>
-          Hi <span class="user-name">{{userName}}</span>, Ready to Learn Today?
-        </h2>
-        <p>Let's Start Learning!</p>
-      </div>
-      @if(userAvatar){
-      <div class="user-avatar" (click)="goToProfile()">
-        <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
-        @if(isPremium) {
-        <div class="premium-badge-star">
-          <ion-icon name="star"></ion-icon>
-        </div>
-        }
-      </div>
-      } @else {
-      <div class="user-avatar" (click)="goToProfile()">
-        <ion-icon name="person-circle-outline"></ion-icon>
-        @if(isPremium) {
-        <div class="premium-badge-star">
-          <ion-icon name="star"></ion-icon>
-        </div>
-        }
+<div class="transparent-header home-header">
+  <div class="header-content">
+    <div class="greeting">
+      <h2>
+        Hi <span class="user-name">{{userName}}</span>, Ready to Learn Today?
+      </h2>
+      <p>Let's Start Learning!</p>
+    </div>
+    @if(userAvatar){
+    <div class="user-avatar shadow-avatar" (click)="goToProfile()">
+      <ion-img [src]="userAvatar" class="avatar-img"></ion-img>
+      @if(isPremium) {
+      <div class="premium-badge-star">
+        <ion-icon name="star"></ion-icon>
       </div>
       }
     </div>
-  </ion-toolbar>
-</ion-header>
-} @else {
-<ion-header class="category-header">
-  <ion-toolbar>
-    <div class="category-header-content">
-      <ion-button fill="clear" (click)="closeCategoryDetail()" class="back-btn">
-        <ion-icon
-          name="arrow-back"
-          class="back-icon"
-          slot="icon-only"
-        ></ion-icon>
-      </ion-button>
-      <div class="category-info">
-        <div class="category-icon-small">
-          <img
-            [src]="selectedCategory.thumbUrl"
-            [alt]="selectedCategory.label"
-          />
-        </div>
-        <h2>{{selectedCategory.label}}</h2>
+    } @else {
+    <div class="user-avatar shadow-avatar" (click)="goToProfile()">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      @if(isPremium) {
+      <div class="premium-badge-star">
+        <ion-icon name="star"></ion-icon>
       </div>
-      <div class="header-spacer"></div>
+      }
     </div>
-  </ion-toolbar>
-</ion-header>
+    }
+  </div>
+</div>
 }
 
-<ion-content class="landing-content">
   <!-- Premium Banner -->
   @if(!isPremium) {
   <div class="premium-banner" (click)="goToPremium()">
     <div class="premium-content">
       <div class="premium-text">
-        <h3>Buy Premium</h3>
-        <p>Unlock all features</p>
-        <ion-button class="premium-btn" expand="block"> Buy Now </ion-button>
+        <p class="premium-eyebrow">Limited Offer</p>
+        <h3>Go Premium</h3>
+        <p class="premium-sub">Unlock 200+ Signs & Stories</p>
+        <ion-button class="premium-btn"> Unlock Now </ion-button>
       </div>
       <div class="premium-characters">
         <ion-img
@@ -89,7 +71,7 @@
         [class.premium-item]="isPremium"
         (click)="selectCategory(category)"
       >
-        <div class="category-circle">
+        <div class="category-circle squircle-btn">
           <img [src]="category.thumbUrl" [alt]="category.label" />
         </div>
         <p class="category-label">{{category.label}}</p>
@@ -154,25 +136,28 @@
     <a class="see-all" (click)="viewAllFavorites()">See All</a>
   </div>
   @if(featuredItems.length === 0){
-  <div class="empty-message">Your Favorites will appear here.</div>
+  <div class="empty-favorites dashed-dropzone">
+    <div class="empty-icon heartbeat-icon">
+      <ion-icon name="heart-outline"></ion-icon>
+    </div>
+    <p class="empty-title">No favorites yet</p>
+    <p class="empty-hint">Tap the heart on any sign to save it here</p>
+  </div>
   } @if(featuredItems.length > 0){
   <div class="featured-grid">
     @for(item of featuredItems; track $index){
     <div class="featured-card" (click)="openFeatured(item)">
-      <div class="card-container" [style.background-color]="item.bgColor">
-        <ion-icon
-          [name]="item.isFavorite ? 'heart' : 'heart-outline'"
-          class="favorite-icon"
-          [class.active]="item.isFavorite"
-          (click)="toggleFavorite(item, $event)"
-        >
-        </ion-icon>
-
+      <div class="card-container">
+        <!-- Gradient color wash from item color -->
+        <div class="card-color-wash" [style.background]="getCardGradient(item.bgColor)"></div>
+        <!-- Heart badge -->
+        <div class="fav-heart-badge" (click)="toggleFavorite(item, $event)" [class.active]="item.isFavorite">
+          <ion-icon [name]="item.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+        </div>
         <div class="featured-image">
           <img [src]="item.image" [alt]="item.name" />
         </div>
       </div>
-
       <p class="featured-label">{{ item.name }}</p>
     </div>
     }
@@ -206,10 +191,34 @@
     </div>
   </div> -->
 
-  <!-- Category Detail Overlay -->
+  <!-- Blur backdrop — sits below the category-detail-view so backdrop-filter blurs the home
+       content without touching the 3D canvas inside the view above it (z-index 999). -->
   @if(selectedCategory) {
-  <div class="category-detail-view">
-    <!-- Premium Loader Overlay -->
+  <div class="category-backdrop-blur"></div>
+  }
+
+  <!-- Category Detail View — always in DOM so the canvas (and its WebGL context) survive
+       category changes. CSS opacity:0 + z-index:-1 hides it without destroying the context. -->
+  <div class="category-detail-view" [class.category-detail-hidden]="!selectedCategory">
+
+    <!-- Back-button header — lives INSIDE the fixed overlay so it's always above the canvas -->
+    <div class="transparent-header category-header detail-header">
+      <div class="category-header-content">
+        <ion-button fill="clear" (click)="closeCategoryDetail()" class="back-btn">
+          <ion-icon name="arrow-back" class="back-icon" slot="icon-only"></ion-icon>
+        </ion-button>
+        @if(selectedCategory) {
+        <div class="category-info">
+          <div class="category-icon-small squircle">
+            <img [src]="selectedCategory.thumbUrl" [alt]="selectedCategory.label" />
+          </div>
+          <h2>{{selectedCategory.label}}</h2>
+        </div>
+        }
+        <div class="header-spacer"></div>
+      </div>
+    </div>
+    <!-- Loading Overlay -->
     @if(isLoading3D) {
     <div class="custom-loader">
       <div class="loader-content">
@@ -225,43 +234,35 @@
       [style.visibility]="isLoading3D ? 'hidden' : 'visible'"
     >
       <div class="character-container">
-        <!-- 3D Character Canvas -->
         <canvas #canvas class="character-3d-canvas"></canvas>
       </div>
-
       <div class="action-buttons" [class.lowered]="isFullscreen">
         <div class="action-btn-wrapper">
-          <img
-            src="assets/images/categories/resize.png"
-            alt="Resize"
-            (click)="toggleFullscreen()"
-          />
+          <button class="glass-action-btn" (click)="toggleFullscreen()">
+            <ion-icon name="resize"></ion-icon>
+          </button>
         </div>
 
         <div class="action-btn-wrapper center">
-          <img
-            src="assets/images/categories/play.png"
-            alt="Play"
-            (click)="playAnimation()"
-          />
-        </div>
-        <!-- <div class="action-btn-wrapper">
-          <button class="action-btn sound" (click)="playSound()">
-            <ion-icon name="volume-high"></ion-icon>
+          <button class="glass-action-btn play-btn" (click)="playAnimation()">
+            <ion-icon name="play"></ion-icon>
           </button>
-        </div> -->
+        </div>
+
         <div class="action-btn-wrapper">
-          <img
-            src="assets/images/categories/learning.png"
-            alt="Learn"
-            (click)="markAsLearned()"
+          <button 
+            class="glass-action-btn learned-btn" 
             [class.active-learned]="currentSign && isItemLearned(currentSign)"
-          />
+            (click)="markAsLearned()"
+          >
+            <ion-icon name="school"></ion-icon>
+          </button>
         </div>
       </div>
     </div>
 
     <div class="bottom-sheet" [class.hidden]="isFullscreen">
+      <div class="sheet-drag-handle"></div>
       <div class="sheet-header">
         <h3>Select an item</h3>
       </div>
@@ -279,6 +280,7 @@
           coverflow-effect-depth="100"
           coverflow-effect-modifier="2.5"
           coverflow-effect-slide-shadows="false"
+          speed="300"
           initial-slide="0"
           observer="true"
           observe-parents="true"
@@ -287,8 +289,9 @@
           @for(item of categoryItems; track item.id) {
           <swiper-slide>
             <div
-              class="item-card shadow-card"
-              [style.background-color]="isItemLearned(item) ? '#DCFCE7' : (selectedCategory.color || '#ffffff')"
+              class="item-card shadow-card glass-item-card"
+              [style.background-color]="isItemLearned(item) ? '#DCFCE7' : (selectedCategory?.color || 'rgba(255,255,255,0.7)')"
+              [style.border-color]="selectedCategory?.color || 'white'"
               (click)="playSign(item, $index)"
               [class.premium-locked]="item.isPremium"
               [class.learned]="isItemLearned(item)"
@@ -327,5 +330,4 @@
       </div>
     </div>
   </div>
-  }
 </ion-content>

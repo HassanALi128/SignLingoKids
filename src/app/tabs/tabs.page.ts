@@ -51,16 +51,6 @@ export class TabsPage implements OnInit {
     this.quizService.isPremium$.subscribe((status: boolean) => {
       this.isPremium = status;
     });
-    // Banner is shown/hidden by ionViewWillEnter / ionViewWillLeave below
   }
-
-  ionViewWillEnter() {
-    // Show banner when entering tabs
-    this.monetizationService.showBanner();
-  }
-
-  ionViewWillLeave() {
-    // Hide banner when leaving tabs (e.g. to onboarding or profile setup)
-    this.monetizationService.hideBanner();
-  }
+  // Banner logic formally removed; child pages control display sequences directly now.
 }

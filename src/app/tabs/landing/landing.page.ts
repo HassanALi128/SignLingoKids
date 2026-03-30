@@ -8,17 +8,25 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import {
-  IonicModule,
+  IonHeader,
+  IonToolbar,
+  IonContent,
+  IonButton,
+  IonIcon,
+  IonImg,
+  IonSpinner,
   NavController,
   ToastController,
   ModalController,
   AlertController,
   Platform,
-} from '@ionic/angular';
+} from '@ionic/angular/standalone';
 import { App } from '@capacitor/app';
+import { Preferences } from '@capacitor/preferences';
 import { FavoritesService, FavoriteItem } from '../../services/favorites';
-import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Subject, BehaviorSubject, combineLatest } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ThreeRenderer } from 'src/app/services/three-renderer.service';
 import { DataService } from 'src/app/services/data';
 import { LearningService } from 'src/app/services/learning.service';
@@ -27,6 +35,7 @@ import {
   arrowBack,
   heart,
   heartOutline,
+  personCircleOutline,
   play,
   refresh,
   resize,
@@ -36,12 +45,12 @@ import {
   volumeHigh,
   lockClosed,
 } from 'ionicons/icons';
-import { QuizService } from 'src/app/services/quiz';
 import { register } from 'swiper/element/bundle';
 import { CommonService } from 'src/app/core/services/common';
 import { ProfileService } from 'src/app/services/profile.service';
 import { SubscriptionModalComponent } from 'src/app/components/subscription-modal/subscription-modal.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { MonetizationService } from '../../services/monetization.service';
 
 register();
 
@@ -68,7 +77,7 @@ interface Category {
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [CommonModule, IonContent, IonButton, IonIcon, IonImg, IonSpinner],
   templateUrl: './landing.page.html',
   styleUrls: ['./landing.page.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -77,10 +86,12 @@ export class LandingPage implements OnInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('swiper') swiperRef!: ElementRef;
 
+  private destroy$ = new Subject<void>();
+  private backButtonSub?: { unsubscribe: () => void };
+
   userName: string = 'User';
   userAvatar: string = '';
   isPremium: boolean = false;
-  private favoritesSubscription?: Subscription;
 
   categories: Category[] = [];
   private categoriesSubject = new BehaviorSubject<Category[]>([]);
@@ -88,24 +99,22 @@ export class LandingPage implements OnInit, OnDestroy {
   featuredItems: (FavoriteItem & { isFavorite: boolean })[] = [];
 
   certificateProgress: number = 0;
-  progressCircumference: number = 2 * Math.PI * 24; // 2πr where r=24
+  progressCircumference: number = 2 * Math.PI * 24;
   progressOffset: number = 0;
 
-  // ABC Learning tracking
   abcLearnedCount: number = 0;
   totalABCLetters: number = 26;
 
   selectedCategory: Category | null = null;
   categoryItems: AslSign[] = [];
 
-  // Learning Progress
   currentSign: AslSign | null = null;
   recentLearningList: { category: Category; progress: number }[] = [];
 
   isLoading3D: boolean = false;
   isFullscreen: boolean = false;
-
-  private backButtonSubscription: Subscription | undefined;
+  private isInitializing3D: boolean = false;
+  private isSwiperProgrammaticSlide: boolean = false;
 
   constructor(
     private navController: NavController,
@@ -115,13 +124,14 @@ export class LandingPage implements OnInit, OnDestroy {
     private learningService: LearningService,
     private toastController: ToastController,
     private commonService: CommonService,
-    private quizService: QuizService,
     private profileService: ProfileService,
     private modalController: ModalController,
     private alertController: AlertController,
     private alertService: AlertService,
     private platform: Platform,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private monetizationService: MonetizationService
   ) {
     addIcons({
       arrowBack,
@@ -131,6 +141,7 @@ export class LandingPage implements OnInit, OnDestroy {
       volumeHigh,
       school,
       heartOutline,
+      personCircleOutline,
       shareSocialOutline,
       heart,
       star,
@@ -143,71 +154,87 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    // Subscribe to profile updates
-    this.profileService.profile$.subscribe((profile) => {
-      if (profile) {
-        this.userName = profile.name || 'User';
-        this.userAvatar = profile.avatar || '';
-      }
-    });
+    this.profileService.profile$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((profile) => {
+        if (profile) {
+          this.userName = profile.name || 'User';
+          this.userAvatar = profile.avatar || '';
+        }
+      });
 
-    // Subscribe to premium status
-    this.quizService.isPremium$.subscribe((status) => {
-      this.isPremium = status;
-    });
+    this.monetizationService.isPremium$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((status) => {
+        this.isPremium = status;
+      });
 
-    // Reactive setup for Recent Learning & Certificate Progress
-    // We combine progress updates and categories loading to ensure data is ready
-    combineLatest([
-      this.learningService.progress$,
-      this.categoriesSubject,
-    ]).subscribe(([progress, categories]) => {
-      if (progress && categories.length > 0) {
-        this.loadRecentLearning();
-        this.updateCertificateProgress();
-      }
-    });
+    combineLatest([this.learningService.progress$, this.categoriesSubject])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([progress, categories]) => {
+        if (progress && categories.length > 0) {
+          this.loadRecentLearning();
+          this.updateCertificateProgress();
+        }
+      });
 
     // Load Categories
     try {
       this.categories = await this.dataService.loadCategories();
-      console.log('Loaded categories:', this.categories);
       this.categoriesSubject.next(this.categories);
+
+      // Preload the model + ALL category action files in background so every
+      // category opens instantly (not just Basics). Files are staggered to
+      // avoid hammering the network simultaneously.
+      setTimeout(async () => {
+        await this.three.preloadModel();
+
+        // Always-needed idle/default animation first
+        await this.three.preloadAction(
+          'assets/aslkidanimation/actions/new-asl-default-animation.glb'
+        );
+
+        // Collect all unique actionFiles from loaded categories
+        const actionFiles = [
+          ...new Set(
+            this.categories
+              .map((c) => c.actionFile)
+              .filter((f): f is string => !!f)
+          ),
+        ];
+
+        // Stagger preloads 300 ms apart so they don't race for bandwidth
+        for (const file of actionFiles) {
+          this.three.preloadAction(file).catch(() => {}); // fire-and-forget
+          await new Promise((r) => setTimeout(r, 300));
+        }
+      }, 1500);
     } catch (error) {
       console.error('Error loading categories:', error);
     }
 
-    // Check for query params to open a specific category/item
-    this.route.queryParams.subscribe((params) => {
-      const categoryId = params['categoryId'];
-      const signId = params['signId'];
+    // Open category from query params (no setInterval — categories already loaded above)
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        const categoryId = params['categoryId'];
+        const signId = params['signId'];
 
-      if (categoryId) {
-        // Wait for categories to be loaded
-        const checkCategories = setInterval(() => {
-          if (this.categories.length > 0) {
-            clearInterval(checkCategories);
-            const category = this.categories.find((c) => c.id === categoryId);
-            if (category) {
-              console.log('Opening category from URL:', category.label);
-              // Small delay to ensure view is ready
-              setTimeout(() => {
-                this.selectCategory(category, false, signId);
-              }, 500);
-            }
+        if (categoryId && this.categories.length > 0) {
+          const category = this.categories.find((c) => c.id === categoryId);
+          if (category) {
+            setTimeout(() => this.selectCategory(category, false, signId), 300);
           }
-        }, 100);
-      }
-    });
+        }
+      });
 
-    // Calculate progress offset for the circle
     this.progressOffset =
       this.progressCircumference -
       (this.certificateProgress / 100) * this.progressCircumference;
 
-    // Subscribe to favorites updates
-    this.favoritesSubscription = this.favoritesService.favorites$.subscribe(
-      (favorites) => {
+    this.favoritesService.favorites$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
         this.featuredItems = this.favoritesService
           .getRecentFavorites(4)
           .map((f) => ({
@@ -215,43 +242,60 @@ export class LandingPage implements OnInit, OnDestroy {
             isFavorite: this.favoritesService.isFavorite(f.id),
             bgColor: f.bgColor ?? '#ffffff',
           }));
-      }
-    );
+      });
   }
 
-  ionViewWillLeave() {
-    this.stopAudio();
-    this.three.pauseRendering();
-    this.toggleTabBar(true);
-
-    if (this.backButtonSubscription) {
-      this.backButtonSubscription.unsubscribe();
+  ionViewWillEnter() {
+    if (!this.isPremium) {
+      this.monetizationService.showBanner();
     }
   }
 
+  ionViewWillLeave() {
+    this.monetizationService.hideBanner();
+    this.stopAudio();
+    this.three.pauseRendering();
+    this.toggleTabBar(true);
+    this.backButtonSub?.unsubscribe();
+    this.backButtonSub = undefined;
+  }
+
   ionViewDidEnter() {
+    // Pre-initialize the WebGL renderer while idle (before any category is tapped).
+    // This creates the renderer once; subsequent category opens reuse it via reinitialize().
+    if (this.canvasRef) {
+      const el = this.canvasRef.nativeElement;
+      const w = el.clientWidth || window.innerWidth;
+      const h = el.clientHeight || window.innerHeight;
+      this.three.preInitializeRenderer(this.canvasRef, w, h);
+      // Renderer is created but we don't need to render on the home screen.
+      // reinitialize() will call startRendering() when a category is opened.
+      if (!this.selectedCategory) {
+        this.three.pauseRendering();
+      }
+    }
+
     if (this.selectedCategory) {
       this.three.resumeRendering();
     }
 
-    this.backButtonSubscription =
-      this.platform.backButton.subscribeWithPriority(
-        20,
-        async (processNextHandler) => {
-          if (this.selectedCategory) {
-            this.closeCategoryDetail();
-          } else {
-            // Let the global handler (Priority 10) take over
-            processNextHandler();
-          }
+    // Hardware back button: close category detail if open, else default handler
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(
+      20,
+      (processNextHandler) => {
+        if (this.selectedCategory) {
+          this.closeCategoryDetail();
+        } else {
+          processNextHandler();
         }
-      );
+      }
+    );
   }
 
   ngOnDestroy() {
-    if (this.favoritesSubscription) {
-      this.favoritesSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.backButtonSub?.unsubscribe();
     this.three.dispose();
     this.toggleTabBar(true);
   }
@@ -265,99 +309,81 @@ export class LandingPage implements OnInit, OnDestroy {
     resume: boolean = false,
     targetSignId?: string
   ): Promise<void> {
+    if (!this.isPremium) {
+      await this.monetizationService.showInterstitial();
+    }
+
     this.isLoading3D = true;
     this.selectedCategory = category;
     this.categoryItems = category.signs || [];
     this.toggleTabBar(false);
 
-    // Show tooltip when entering category
-    this.showToast('Select an item to see the animation');
+    // this.showToast('Select an item to see the animation');
 
-    // Give time for the view to render the canvas
-    setTimeout(async () => {
-      await this.init3DModel(category);
+    // Canvas is always in DOM (outside @if block) so no tick delay needed
+    await this.init3DModel(category);
 
-      let initialIndex = 0;
-      if (resume) {
-        // Find the LAST item that was marked as learned
-        // We iterate backwards or use lastIndexOf logic
-        // Since isItemLearned checks a service, we map first
-        const learnedStatuses = this.categoryItems.map((item) =>
-          this.isItemLearned(item)
-        );
-        const lastLearnedIndex = learnedStatuses.lastIndexOf(true);
+    let initialIndex = 0;
+    if (resume) {
+      const learnedStatuses = this.categoryItems.map((item) =>
+        this.isItemLearned(item)
+      );
+      const lastLearnedIndex = learnedStatuses.lastIndexOf(true);
+      if (lastLearnedIndex !== -1) initialIndex = lastLearnedIndex;
+    }
 
-        if (lastLearnedIndex !== -1) {
-          initialIndex = lastLearnedIndex;
-        } else {
-          // If nothing is learned yet, start at 0
-          initialIndex = 0;
-        }
-        console.log(
-          'Resuming learning at last learned item index:',
-          initialIndex
-        );
-      }
+    if (targetSignId) {
+      const targetIndex = this.categoryItems.findIndex(
+        (item) => item.id === targetSignId
+      );
+      if (targetIndex !== -1) initialIndex = targetIndex;
+    }
 
-      // If targetSignId is provided, find its index (overrides resume logic)
-      if (targetSignId) {
-        const targetIndex = this.categoryItems.findIndex(
-          (item) => item.id === targetSignId
-        );
-        if (targetIndex !== -1) {
-          initialIndex = targetIndex;
-          console.log('Jumping to target sign index:', initialIndex);
-        }
-      }
+    if (this.categoryItems.length > 0) {
+      this.currentSign = this.categoryItems[initialIndex];
+    }
 
-      // Initialize currentSign
-      if (this.categoryItems.length > 0) {
-        this.currentSign = this.categoryItems[initialIndex];
-      }
-
-      // Slide to the calculated index
-      if (initialIndex > 0 && this.swiperRef && this.swiperRef.nativeElement) {
-        const swiperEl = this.swiperRef.nativeElement;
-        if (swiperEl.swiper) {
-          // Use 0ms duration for instant jump if resuming, or small animation
-          swiperEl.swiper.slideTo(initialIndex, 500, true);
-        }
-      }
-    }, 100);
+    // Give Swiper web component one cycle to initialize before calling slideTo
+    if (initialIndex > 0) {
+      await new Promise((r) => setTimeout(r, 50));
+      this.swiperRef?.nativeElement?.swiper?.slideTo(initialIndex, 300, true);
+    }
   }
 
   onSlideChange(event: any) {
     const swiper = event.target.swiper;
-    const index = swiper.realIndex; // Use realIndex for loop mode compatibility if needed, or activeIndex
-    if (this.categoryItems && this.categoryItems[index]) {
+    const index = swiper.realIndex;
+    if (this.categoryItems?.[index]) {
       this.currentSign = this.categoryItems[index];
-      console.log('Active item updated via swipe:', this.currentSign.label);
     }
+    this.isSwiperProgrammaticSlide = false;
+    // Auto-play animation on every slide change — whether from card tap or manual swipe
+    this.playAnimation();
   }
 
   async init3DModel(category: Category) {
     if (!this.canvasRef) return;
+    if (this.isInitializing3D) return;
 
+    this.isInitializing3D = true;
     this.isLoading3D = true;
 
     try {
       const canvas = this.canvasRef.nativeElement;
       const width = canvas.clientWidth || window.innerWidth;
-      const height = canvas.clientHeight || window.innerHeight * 0.6;
+      const height = canvas.clientHeight || window.innerHeight;
 
-      this.three.initialize(this.canvasRef, width, height);
+      // reinitialize() reuses the existing WebGL renderer (preserves context, avoids freeze).
+      // Falls back to full initialize() only on the very first call.
+      this.three.reinitialize(this.canvasRef, width, height);
 
-      // Load the main character model
       await this.three.loadModel(
         'assets/aslkidanimation/models/asl_new_modle.glb'
       );
 
-      // Load category-specific actions if available
       if (category.actionFile) {
-        console.log('Loading actions for category:', category.label);
         await this.three.loadActions(category.actionFile);
       } else {
-        // Fallback to default actions
         await this.three.loadActions(
           'assets/aslkidanimation/actions/asl_new_Animation_Basic.glb'
         );
@@ -365,26 +391,38 @@ export class LandingPage implements OnInit, OnDestroy {
 
       this.three.centerModel();
 
-      // Load idle animations from the default animation file
       await this.three.loadActions(
         'assets/aslkidanimation/actions/new-asl-default-animation.glb'
       );
 
-      // Start Idle Loop
       this.three.play('idel-common');
     } catch (error) {
       console.error('Error initializing 3D model:', error);
     } finally {
       this.isLoading3D = false;
+      this.isInitializing3D = false;
     }
   }
 
   closeCategoryDetail(): void {
+    // Reset init guard so rapid tap-back-tap doesn't permanently block re-init
+    this.isInitializing3D = false;
+    this.isLoading3D = false;
+
     this.three.stop();
+    this.three.pauseRendering(); // Stop RAF loop — renderer stays alive for next open
     this.selectedCategory = null;
     this.categoryItems = [];
     this.stopAudio();
     this.toggleTabBar(true);
+
+    // Clear query parameters so switching tabs doesn't falsely trigger re-open
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { categoryId: null, signId: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   private toggleTabBar(show: boolean) {
@@ -394,59 +432,91 @@ export class LandingPage implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Opens a favorited sign directly in the category viewer on this page.
+   * Parses categoryId/signId from the saved route instead of navigating away
+   * (navigating away loses the canvas context and breaks 3D).
+   */
   openFeatured(item: FavoriteItem & { isFavorite: boolean }): void {
+    if (!item.route) return;
+
+    // Route format: /tabs/home?categoryId=XXX&signId=YYY
+    const url = new URL(item.route, window.location.origin);
+    const categoryId = url.searchParams.get('categoryId');
+    const signId = url.searchParams.get('signId') || undefined;
+
+    if (this.categories.length > 0) {
+      // Primary: match by categoryId (works for properly-encoded new routes)
+      let category = categoryId
+        ? this.categories.find((c) => c.id === categoryId)
+        : undefined;
+
+      // Fallback for legacy broken routes (e.g. "emotions&colors" split the URL):
+      // Search all categories for a sign matching signId
+      if (!category && signId) {
+        category = this.categories.find((c) =>
+          c.signs.some((s) => s.id === signId)
+        );
+      }
+
+      if (category) {
+        this.selectCategory(category, false, signId);
+        return;
+      }
+    }
+
+    // Final fallback: navigate if we still can't resolve locally
     if (item.route) {
       this.navController.navigateForward(item.route);
     }
   }
 
-  // Audio Management
+  // ── Audio ──────────────────────────────────────────────────────────────────
+
+  /** Returns a translucent gradient wash for a favorite card based on the category color. */
+  getCardGradient(bgColor?: string): string {
+    const base = bgColor || '#ff9a9e';
+    return `linear-gradient(135deg, ${base}44, ${base}22)`;
+  }
+
   private currentAudio?: HTMLAudioElement;
 
   playAudio(audioUrl: string): void {
     this.stopAudio();
     try {
       this.currentAudio = new Audio(audioUrl);
-      this.currentAudio.play().catch((error) => {
-        console.warn('Could not play audio:', error);
-      });
+      this.currentAudio
+        .play()
+        .catch((e) => console.warn('Audio play failed:', e));
     } catch (error) {
       console.warn('Error creating audio:', error);
     }
   }
 
   stopAudio(): void {
-    if (this.currentAudio) {
-      this.currentAudio.pause();
-      this.currentAudio = undefined;
-    }
+    this.currentAudio?.pause();
+    this.currentAudio = undefined;
   }
 
+  // ── Sign playback ──────────────────────────────────────────────────────────
+
+  /**
+   * Called when user taps a card inside the swiper.
+   * Slides to the tapped card; playAnimation() fires via onSlideChange.
+   * If the swiper isn't ready yet, falls back to playing animation directly.
+   */
   async playSign(item: AslSign, index: number = -1): Promise<void> {
-    // We update the currentSign immediately for responsiveness
     this.currentSign = item;
 
-    // Slide to the selected item if index is provided
-    if (index >= 0 && this.swiperRef && this.swiperRef.nativeElement) {
-      const swiperEl = this.swiperRef.nativeElement;
-      if (swiperEl.swiper) {
-        swiperEl.swiper.slideTo(index, 500, true);
-      } else {
-        console.warn('Swiper instance not ready yet');
-      }
+    const swiper = this.swiperRef?.nativeElement?.swiper;
+    if (index >= 0 && swiper) {
+      this.isSwiperProgrammaticSlide = true;
+      swiper.slideTo(index, 300, true);
+      // playAnimation() will be triggered by onSlideChange once the slide settles
+    } else {
+      // Swiper not ready or no index — play animation directly
+      this.playAnimation();
     }
-
-    // We do NOT automatically play the animation here anymore when clicking a card,
-    // unless we want to maintain that behavior. The user said:
-    // "Clicking an item card inside the swiper is optional, but it should NOT be required to make an item active."
-    // And "When the PLAY button is clicked: It must play the animation of the CURRENTLY CENTERED swiper item"
-    // However, usually clicking a card implies "select and play".
-    // Let's keep the "play on click" behavior for better UX, but route it through the central logic if needed.
-    // Actually, the user's problem was that clicking PLAY played the LAST CLICKED item, not the CENTERED one.
-    // By updating currentSign on slideChange, we solve that.
-    // So here we can just play it if we want immediate feedback.
-
-    this.playAnimation();
   }
 
   async openSubscriptionModal() {
@@ -459,48 +529,43 @@ export class LandingPage implements OnInit, OnDestroy {
 
     await modal.present();
 
-    const { data, role } = await modal.onWillDismiss();
-
+    const { role } = await modal.onWillDismiss();
     if (role === 'unlock') {
       this.goToPremium();
     }
   }
 
   async markAsLearned() {
-    if (this.currentSign && this.selectedCategory) {
-      // Check Premium Status
-      if (this.currentSign.isPremium && !this.isPremium) {
-        this.openSubscriptionModal();
-        return;
-      }
+    if (!this.currentSign || !this.selectedCategory) return;
 
-      const signId = this.currentSign.id;
-      const categoryId = this.selectedCategory.id;
+    if (this.currentSign.isPremium && !this.isPremium) {
+      this.openSubscriptionModal();
+      return;
+    }
 
-      if (this.learningService.isLearned(signId)) {
-        // Already learned, ask to unlearn
-        const confirmed = await this.alertService.confirm(
-          'Unlearn Item?',
-          'Do you want to unlearn this item?',
-          'Unlearn',
-          'Cancel',
-          'unlearn'
-        );
+    const signId = this.currentSign.id;
+    const categoryId = this.selectedCategory.id;
 
-        if (confirmed) {
-          this.learningService.unlearn(signId);
-          this.loadRecentLearning();
-          this.updateCertificateProgress();
-          this.showToast('Item unlearned');
-        }
-      } else {
-        // Not learned, mark as learned
-        this.learningService.markAsLearned(signId, categoryId);
+    if (this.learningService.isLearned(signId)) {
+      const confirmed = await this.alertService.confirm(
+        'Unlearn Item?',
+        'Do you want to unlearn this item?',
+        'Unlearn',
+        'Cancel',
+        'unlearn'
+      );
+
+      if (confirmed) {
+        this.learningService.unlearn(signId);
         this.loadRecentLearning();
         this.updateCertificateProgress();
-        console.log('Marked as learned:', this.currentSign.label);
-        this.showToast('Great job! Item learned!');
+        this.showToast('Item unlearned');
       }
+    } else {
+      this.learningService.markAsLearned(signId, categoryId);
+      this.loadRecentLearning();
+      this.updateCertificateProgress();
+      this.showToast('Great job! Item learned!');
     }
   }
 
@@ -519,7 +584,6 @@ export class LandingPage implements OnInit, OnDestroy {
   }
 
   updateCertificateProgress() {
-    // Calculate total signs across all categories
     let totalSigns = 0;
     let learnedCount = 0;
 
@@ -531,35 +595,31 @@ export class LandingPage implements OnInit, OnDestroy {
       ).length;
     });
 
-    // Add ABC letters to the total count
     totalSigns += this.totalABCLetters;
-
-    // Get learned ABC letters from localStorage
-    const learnedLetters = this.getLearnedABCLetters();
-    this.abcLearnedCount = learnedLetters.length; // Update the count for display
-    learnedCount += learnedLetters.length;
+    this.abcLearnedCount = this.learnedABCCount;
+    learnedCount += this.learnedABCCount;
 
     if (totalSigns > 0) {
       this.certificateProgress = Math.round((learnedCount / totalSigns) * 100);
-
-      // Update circle
       this.progressOffset =
         this.progressCircumference -
         (this.certificateProgress / 100) * this.progressCircumference;
     }
   }
 
-  // Get learned ABC letters from localStorage
-  getLearnedABCLetters(): string[] {
+  /**
+   * Cached count of learned ABC letters, loaded from Capacitor Preferences.
+   * Starts at 0 and updates asynchronously.
+   */
+  private learnedABCCount = 0;
+
+  private async loadLearnedABCCount(): Promise<void> {
     try {
-      const saved = localStorage.getItem('learnedLetters');
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch (error) {
-      console.error('Error loading learned letters:', error);
+      const { value } = await Preferences.get({ key: 'learnedLetters' });
+      this.learnedABCCount = value ? (JSON.parse(value) as string[]).length : 0;
+    } catch {
+      this.learnedABCCount = 0;
     }
-    return [];
   }
 
   isItemLearned(item: AslSign): boolean {
@@ -572,7 +632,6 @@ export class LandingPage implements OnInit, OnDestroy {
   ): Promise<void> {
     event.stopPropagation();
 
-    // If currently a favorite, ask for confirmation before removing
     if (item.isFavorite) {
       const confirmed = await this.alertService.confirm(
         'Remove Favorite?',
@@ -587,7 +646,6 @@ export class LandingPage implements OnInit, OnDestroy {
         item.isFavorite = newStatus;
       }
     } else {
-      // If adding, just do it
       const newStatus = this.favoritesService.toggleFavorite(item);
       item.isFavorite = newStatus;
     }
@@ -597,11 +655,14 @@ export class LandingPage implements OnInit, OnDestroy {
     return this.favoritesService.isFavorite(item.id);
   }
 
-  // Item Favorites (AslSign)
   toggleItemFavorite(item: AslSign, event: Event): void {
     event.stopPropagation();
 
-    // Map AslSign to FavoriteItem
+    if (item.isPremium && !this.isPremium) {
+      this.openSubscriptionModal();
+      return;
+    }
+
     const favoriteItem: FavoriteItem = {
       id: item.id,
       name: item.label,
@@ -609,13 +670,9 @@ export class LandingPage implements OnInit, OnDestroy {
       type: 'sign',
       bgColor: this.selectedCategory?.color,
       addedAt: Date.now(),
-      route: `/tabs/home?categoryId=${this.selectedCategory?.id}&signId=${item.id}`,
+      // Properly encode categoryId so special chars like & in 'emotions&colors' don't corrupt the URL
+      route: `/tabs/home?categoryId=${encodeURIComponent(this.selectedCategory?.id ?? '')}&signId=${encodeURIComponent(item.id)}`,
     };
-
-    if (item.isPremium && !this.isPremium) {
-      this.openSubscriptionModal();
-      return;
-    }
 
     this.favoritesService.toggleFavorite(favoriteItem);
   }
@@ -628,14 +685,6 @@ export class LandingPage implements OnInit, OnDestroy {
     this.navController.navigateForward('/tabs/abc');
   }
 
-  goToHandSign(): void {
-    this.navController.navigateForward('/tabs/home');
-  }
-
-  goToSettings(): void {
-    this.navController.navigateForward('/tabs/setting');
-  }
-
   goToAbc(): void {
     this.navController.navigateForward('/tabs/abc');
   }
@@ -644,60 +693,39 @@ export class LandingPage implements OnInit, OnDestroy {
     this.navController.navigateForward('/tabs/quiz');
   }
 
-  // Action Button Handlers
   toggleFullscreen() {
     this.isFullscreen = !this.isFullscreen;
   }
 
   playAnimation() {
-    // Play the animation of the current sign (which is always the centered one)
-    if (this.currentSign) {
-      // Check Premium Status
-      if (this.currentSign.isPremium && !this.isPremium) {
-        this.openSubscriptionModal();
-        return;
-      }
+    if (!this.currentSign) {
+      this.showToast('Select an item to play the animation');
+      return;
+    }
 
-      if (this.currentSign.actionName) {
-        // Play sign animation temporarily, will return to idle animations when done
-        this.three.playTemporary(this.currentSign.actionName);
-        console.log('Playing current sign:', this.currentSign.actionName);
-      }
+    if (this.currentSign.isPremium && !this.isPremium) {
+      this.openSubscriptionModal();
+      return;
+    }
 
-      // Also play audio if available
-      if (this.currentSign.audioUrl) {
-        this.playAudio(this.currentSign.audioUrl);
-      } else {
-        console.log('No audio available for:', this.currentSign.label);
-      }
-    } else {
-      // Show tooltip if no item is selected
-      this.showToast('Select the item to play the animation');
+    if (this.currentSign.actionName) {
+      this.three.playTemporary(this.currentSign.actionName);
+    }
+
+    if (this.currentSign.audioUrl) {
+      this.playAudio(this.currentSign.audioUrl);
     }
   }
 
   async showToast(message: string) {
     const toast = await this.toastController.create({
-      message: message,
+      message,
       duration: 2000,
       position: 'top',
       color: 'dark',
       cssClass: 'custom-toast',
     });
     await toast.present();
-  }
-
-  async showPremiumAlert(type: string) {
-    // Deprecated in favor of openSubscriptionModal
-    this.openSubscriptionModal();
-  }
-
-  playSound() {
-    if (this.currentSign && this.currentSign.audioUrl) {
-      this.playAudio(this.currentSign.audioUrl);
-    } else {
-      this.showToast('No audio available for this item');
-    }
   }
 
   viewAllFavorites() {

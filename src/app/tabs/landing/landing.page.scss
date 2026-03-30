@@ -1,27 +1,27 @@
 // @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap');
 
 .landing-content {
-  --background: #fdf8f0;
+  --background: transparent;
   --padding-bottom: 80px;
 }
 
-// Header
-ion-header {
-  ion-toolbar {
-    --background: #fdf8f0;
-    --border-width: 0;
-    padding: calc(0px + var(--ion-safe-area-top, 0px)) 20px 0px;
-  }
+// ── Header ──────────────────────────────────────────────────────────────────
+
+.transparent-header {
+  position: relative;
+  z-index: 10000;
+  width: 100%;
+  padding: calc(20px + var(--ion-safe-area-top, 0px)) 20px 10px;
+  background: transparent;
 
   &.category-header {
-    z-index: 10000;
-
-    ion-toolbar {
-      --background: #fdf8f0;
-      --padding-top: 8px;
-      --padding-bottom: 8px;
-    }
+    padding-top: calc(8px + var(--ion-safe-area-top, 0px));
+    padding-bottom: 8px;
   }
+}
+
+.header-md {
+  box-shadow: none !important;
 }
 
 .category-header-content {
@@ -68,7 +68,7 @@ ion-header {
   }
 
   .header-spacer {
-    width: 48px; // Same as back button width to center the info
+    width: 48px;
   }
 }
 
@@ -82,10 +82,11 @@ ion-header {
     flex: 1;
 
     h2 {
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 22px;
+      font-weight: 900;
       margin: 0 0 4px 0;
-      color: var(--text-matte-black);
+      color: #383838;
+      text-shadow: 2px 2px 0px rgba(255,255,255,0.9);
 
       .user-name {
         color: #f34f27;
@@ -93,34 +94,40 @@ ion-header {
     }
 
     p {
-      font-size: 14px;
+      font-size: 15px;
+      font-weight: 700;
       margin: 0;
-      color: #666;
+      color: #636363;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
     }
   }
 
   .user-avatar {
+    position: relative; // needed for premium-badge-star absolute positioning
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    overflow: hidden;
+    // removed overflow hidden so shadow isn't clipped
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--ion-color-light);
     cursor: pointer;
-    transition: transform 0.2s ease;
-    border: none; // Removed specific border
-    box-shadow: none; // Removed specific shadow
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+    border: 3px solid white;
 
     &:active {
-      transform: scale(0.95);
+      transform: scale(0.9) translateY(4px);
+      box-shadow: 0 0px 0 rgba(0,0,0,0.1);
     }
 
     .avatar-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 50%;
+      overflow: hidden;
     }
 
     ion-icon {
@@ -142,6 +149,7 @@ ion-header {
       border: 2px solid white;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       z-index: 10;
+      overflow: visible;
 
       ion-icon {
         font-size: 10px;
@@ -151,63 +159,115 @@ ion-header {
   }
 }
 
-// Premium Banner
+// ── Premium Banner ───────────────────────────────────────────────────────────
+
 .premium-banner {
   margin: 16px 20px;
-  // padding: 16px;
-  background: linear-gradient(135deg, #8b4513 0%, #5d2e1a 100%);
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #f34f27 0%, #c0392b 50%, #6e1664 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(243, 79, 39, 0.35);
   cursor: pointer;
+  overflow: hidden;
+  position: relative;
+
+  &.active-premium-banner {
+    background: linear-gradient(135deg, #70dc87 0%, #A2E5B5 99%, #A2E5B5 100%);
+    box-shadow: 0 8px 24px rgba(112, 220, 135, 0.35);
+    cursor: default;
+
+    h3 {
+      color: #215c32;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.7);
+    }
+    .premium-eyebrow {
+      color: rgba(33, 92, 50, 0.8);
+      font-weight: 800;
+    }
+    .premium-sub {
+      color: rgba(33, 92, 50, 0.9);
+      font-weight: 700;
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%);
+    border-radius: 20px 20px 0 0;
+    pointer-events: none;
+  }
+
+  &:active {
+    transform: scale(0.98);
+    transition: transform 0.15s ease;
+  }
 }
 
 .premium-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
 }
 
 .premium-text {
-  margin-left: 20px;
+  padding: 20px 0 20px 20px;
+  flex: 1;
 
-  h3 {
-    margin: 0;
-    font-size: 18px;
+  .premium-eyebrow {
+    margin: 0 0 4px 0;
+    font-size: 11px;
     font-weight: 700;
-    color: white;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
-  p {
-    margin: 4px 0 0 0;
+  h3 {
+    margin: 0 0 2px 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: white;
+    line-height: 1.2;
+  }
+
+  .premium-sub {
+    margin: 0 0 12px 0;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.85);
   }
 }
 
 .premium-characters {
   .characters-img {
-    width: 10rem;
+    width: 9rem;
     height: auto;
+    margin-right: -4px;
   }
 }
 
 .premium-btn {
-  --background: var(--primary-gradient);
-  background: var(--primary-gradient);
-  --border-radius: 12px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
+  --background: rgba(255, 255, 255, 0.2);
+  --background-activated: rgba(255, 255, 255, 0.3);
+  --border-radius: 10px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --padding-start: 18px;
+  --padding-end: 18px;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   text-transform: none;
+  height: 36px;
   margin: 0;
-  margin-top: 10px;
   color: white;
-  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
 }
 
-// Section Headers
+// ── Section Headers ──────────────────────────────────────────────────────────
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -216,20 +276,32 @@ ion-header {
 
   h3 {
     margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-matte-black);
+    font-size: 22px;
+    font-weight: 900;
+    color: #383838;
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.9);
   }
 
   .see-all {
     font-size: 14px;
-    color: #ff6b6b;
+    color: #f34f27;
     text-decoration: none;
     cursor: pointer;
+    font-weight: 800;
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: transform 0.2s;
+
+    &:active {
+      transform: scale(0.95);
+    }
   }
 }
 
-// Categories
+// ── Categories ───────────────────────────────────────────────────────────────
+
 .categories-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -241,25 +313,59 @@ ion-header {
 
 .categories-container {
   display: flex;
+  flex-wrap: nowrap;
   gap: 16px;
-  padding: 0 20px 16px;
+  padding: 0 20px 24px;
 }
 
-.category-item {
+.category-wrapper {
+  cursor: pointer;
+  min-width: 110px;
+  flex: 0 0 auto;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding-bottom: 8px; /* Room for shadow */
+
+  &.premium-locked {
+    opacity: 0.9;
+    filter: brightness(0.95);
+  }
+
+  &:active {
+    transform: translateY(6px);
+    .category-item-card {
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+.category-item-card {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 28px;
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
-  min-width: 80px;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.08); /* 3D bottom edge */
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  transition: box-shadow 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .category-circle {
-  width: 78px;
-  height: 90px;
-  // border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
   overflow: hidden;
-  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  // margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 3px solid white;
+  margin-bottom: 10px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
     width: 100%;
@@ -270,125 +376,245 @@ ion-header {
 
 .category-label {
   margin: 0;
-  font-size: 13px;
-  color: var(--text-matte-black);
-  font-weight: 500;
+  font-size: 14px;
+  color: #383838;
+  font-weight: 800;
   text-align: center;
+  max-width: 90px;
+  line-height: 1.3;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.9);
 }
 
-// Featured Grid
+.lock-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #ff4757, #ff6b81);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid white;
+  box-shadow: 0 4px 8px rgba(255, 71, 87, 0.4);
+  z-index: 10;
+
+  ion-icon {
+    color: white;
+    font-size: 16px;
+  }
+}
+
+// ── Favorites Grid ───────────────────────────────────────────────────────────
+
 .featured-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  padding: 0 20px 16px;
+  gap: 14px;
+  padding: 0 20px 20px;
 }
 
 .featured-card {
-  position: relative;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  .card-container {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 24px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease;
+  &:active {
+    transform: scale(0.94) translateY(4px);
 
-    &:active {
-      transform: scale(0.95);
+    .card-container {
+      box-shadow: 0 2px 0 rgba(0,0,0,0.10);
     }
   }
 
-  .favorite-icon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 24px;
-    color: #ff6b6b;
-    z-index: 2;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    padding: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+  .card-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+      0 8px 0 rgba(0,0,0,0.10),    /* 3D bottom edge */
+      0 12px 20px rgba(0,0,0,0.08); /* ambient shadow */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-    &.active {
-      color: #ff6b6b;
-      background-color: rgba(255, 255, 255, 1);
-      transform: scale(1.1);
+  // Gradient tint overlay from category color
+  .card-color-wash {
+    position: absolute;
+    inset: 0;
+    border-radius: 21px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  // Floating heart badge top-right
+  .fav-heart-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    ion-icon {
+      font-size: 18px;
+      color: #ddd;
+      transition: color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    &:not(.active) {
-      color: #ccc;
+    &.active ion-icon {
+      color: #ff4d6d;
+    }
+
+    &:active {
+      transform: scale(1.3);
     }
   }
 
   .featured-image {
-    width: 100%;
-    height: 100%;
+    position: relative;
+    z-index: 1;
+    width: 72%;
+    height: 72%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 20px;
-    overflow: hidden;
 
     img {
-      width: 85%;
-      height: 85%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      border-radius: 16px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
     }
   }
 
   .featured-label {
     margin: 8px 0 0 0;
     font-size: 15px;
-    color: var(--text-matte-black);
-    font-weight: 700;
+    font-weight: 800;
+    color: #333;
     text-align: center;
-    // font-family: 'Outfit', sans-serif;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.9);
   }
 }
 
-// Recent Learning
-.recent-learning-card {
-  margin: 0 20px 24px;
-  padding: 16px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+// ── Empty Favorites ──────────────────────────────────────────────────────────
+
+.empty-favorites {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  margin: 0 20px;
+  border: 4px dashed rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(8px);
+
+  .empty-icon {
+    font-size: 50px;
+    color: #ff6b6b;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 8px rgba(255, 107, 107, 0.4));
+  }
+
+  .heartbeat-icon {
+    animation: heartbeat 1.5s ease-in-out infinite both;
+  }
+
+  @keyframes heartbeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.3); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.3); }
+    70% { transform: scale(1); }
+  }
+
+  .empty-title {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+    font-weight: 900;
+    color: #f34f27;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
+  }
+
+  .empty-hint {
+    margin: 0;
+    font-size: 14px;
+    color: #636363;
+    text-align: center;
+    font-weight: 600;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
+  }
+}
+
+// ── Recent Learning ──────────────────────────────────────────────────────────
+
+// Scrollable horizontal row
+.recent-learning-container {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.recent-learning-card {
+  flex: 0 0 auto;
+  width: 170px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  border-radius: 22px;
+  box-shadow:
+    0 6px 0 rgba(0,0,0,0.08),
+    0 10px 20px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(0.94) translateY(4px);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.08);
   }
 }
 
 .recent-learning-content {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .recent-learning-icon {
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
 
   img {
     width: 100%;
@@ -400,78 +626,33 @@ ion-header {
 .recent-learning-info {
   h4 {
     margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-matte-black);
+    font-size: 14px;
+    font-weight: 800;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90px;
   }
 
   p {
-    margin: 4px 0 0 0;
-    font-size: 13px;
-    color: #666;
+    margin: 2px 0 0 0;
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
   }
 }
 
 .recent-learning-progress {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  align-self: flex-end;
+  margin-left: auto;
 }
 
-// Certificate Learning
-.certificate-card {
-  margin: 0 20px 24px;
-  padding: 16px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
-
-.certificate-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.certificate-icon {
-  width: 50px;
-  height: 50px;
-  background: #ffe8d6;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 30px;
-    height: 30px;
-  }
-}
-
-.certificate-info {
-  h4 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-matte-black);
-  }
-
-  p {
-    margin: 4px 0 0 0;
-    font-size: 13px;
-    color: #666;
-  }
-}
-
-.certificate-progress {
-  position: relative;
-  width: 60px;
-  height: 60px;
-}
+// ── Progress Ring ────────────────────────────────────────────────────────────
 
 .progress-ring {
   transform: rotate(-90deg);
@@ -492,33 +673,52 @@ ion-header {
   color: #ff6b6b;
 }
 
-// Remove old styles
-.header-md {
-  box-shadow: none !important;
+// ── Layer stack for category detail ──────────────────────────────────────────
+//
+//   z-index 997 .category-backdrop-blur  — frosted-glass blur over home content
+//   z-index 999 .category-detail-view    — 3D canvas + action buttons + bottom sheet
+//
+// The blur is on a SEPARATE element below the view. Because the canvas lives
+// INSIDE .category-detail-view (which has no backdrop-filter), it renders crisp.
+// backdrop-filter only blurs what is visually behind the element — not its children.
+
+.category-backdrop-blur {
+  position: fixed;
+  inset: 0;
+  z-index: 997;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
 }
 
-.empty-message {
-  text-align: center;
-  padding: 20px;
-  color: #777;
-  font-size: 16px;
-}
+// ── Category Detail View ─────────────────────────────────────────────────────
+//
+// Always in DOM (CSS visibility, not *ngIf) so the canvas and its WebGL context
+// survive category changes without a freeze-inducing re-creation.
+// No backdrop-filter here — blur lives in .category-backdrop-blur (z-index 997)
+// below this view. Canvas INSIDE this view is therefore NOT blurred.
 
-// Category Detail View Overlay
 .category-detail-view {
   position: fixed;
-  top: calc(56px + var(--ion-safe-area-top, 0px)); // Height of toolbar + safe area
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #fdf8f0;
-  z-index: 999; // Below the header
+  background: transparent;
+  z-index: 999;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
+  opacity: 1;
+  transition: opacity 0.2s ease;
 
-// Removed old detail-header styles as they are now in the main header
+  &.category-detail-hidden {
+    opacity: 0;           // fade out but keep WebGL context alive
+    pointer-events: none; // prevent touches on hidden view
+    z-index: -1;          // push completely behind everything — no bleed-through
+  }
+}
 
 .detail-content {
   flex: 1;
@@ -531,14 +731,17 @@ ion-header {
   height: 100%;
 }
 
-// Custom Loader
+// ── Custom Loader ────────────────────────────────────────────────────────────
+
 .custom-loader {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -551,23 +754,26 @@ ion-header {
     ion-spinner {
       width: 60px;
       height: 60px;
+      color: #f34f27;
       margin-bottom: 20px;
     }
 
     h2 {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
-      color: var(--ion-color-primary);
+      color: var(--text-matte-black);
       margin: 0 0 8px 0;
     }
 
     p {
-      font-size: 16px;
-      color: #666;
+      font-size: 15px;
+      color: #888;
       margin: 0;
     }
   }
 }
+
+// ── 3D Character Canvas ──────────────────────────────────────────────────────
 
 .character-container {
   position: absolute;
@@ -588,9 +794,10 @@ ion-header {
   }
 }
 
+// ── Action Buttons ───────────────────────────────────────────────────────────
+
 .action-buttons {
   position: absolute;
-  // Lift based on bottom sheet height + ad height buffer
   bottom: calc(260px + var(--ad-banner-height, 0px) + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
@@ -601,7 +808,7 @@ ion-header {
   width: 100%;
   padding: 0 20px;
   z-index: 10;
-  pointer-events: none; // Allow clicks to pass through empty space
+  pointer-events: none;
   transition: bottom 0.3s ease-in-out;
 
   &.lowered {
@@ -609,26 +816,76 @@ ion-header {
   }
 
   .action-btn-wrapper {
-    pointer-events: auto; // Re-enable clicks on buttons
+    pointer-events: auto;
+  }
+
+  .glass-action-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 3px solid white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f34f27;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    outline: none;
+    margin: 0;
+    padding: 0;
+
+    ion-icon {
+      font-size: 28px;
+    }
+
+    &.play-btn {
+      width: 76px;
+      height: 76px;
+      background: linear-gradient(135deg, #f34f27, #ff6b81);
+      color: white;
+      box-shadow: 0 8px 20px rgba(243, 79, 39, 0.4);
+      border: 4px solid white;
+
+      ion-icon {
+        font-size: 36px;
+        margin-left: 4px; // Optical alignment for play button
+      }
+    }
+
+    &.learned-btn {
+      color: #70dc87;
+    }
+
+    &.active-learned {
+      background: linear-gradient(135deg, #70dc87, #4ca660);
+      color: white;
+      border: 4px solid white;
+      box-shadow: 0 8px 20px rgba(112, 220, 135, 0.4);
+    }
+
+    &:active {
+      transform: scale(0.9) translateY(4px);
+    }
   }
 }
 
-// ... existing code ...
+// ── Bottom Sheet ─────────────────────────────────────────────────────────────
 
 .bottom-sheet {
   position: absolute;
-  // Lift by Ad Height + Safe Area
   bottom: calc(var(--ad-banner-height, 0px) + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
-  background: white;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  // padding: 24px 0 30px;
-
-  // Fill the gap below with white box-shadow
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05), 0 100px 0 0 #ffffff;
-
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top-left-radius: 36px;
+  border-top-right-radius: 36px;
+  border-top: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.08);
   z-index: 20;
   transition: transform 0.3s ease-in-out, bottom 0.3s ease;
 
@@ -637,28 +894,42 @@ ion-header {
   }
 }
 
+// Drag handle indicator
+.sheet-drag-handle {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  padding-bottom: 4px;
+
+  &::after {
+    content: '';
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: #e0e0e0;
+  }
+}
+
 .sheet-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px 16px;
+  padding: 8px 24px 12px;
 
   h3 {
     margin: 0;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--text-matte-black);
   }
+}
 
-  .sheet-actions {
-    display: flex;
-    gap: 16px;
+// ── Swiper / Item Cards ──────────────────────────────────────────────────────
 
-    ion-icon {
-      font-size: 24px;
-      color: #999;
-    }
-  }
+.glass-item-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 3px solid white;
 }
 
 .swiper-wrapper {
@@ -667,24 +938,20 @@ ion-header {
 
   swiper-container {
     width: 100%;
-    height: 10rem;
-    margin-bottom: 1rem;
+    height: 180px; // Consistent: matches swiper-slide height
   }
 
   swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 160px;
-    height: 200px;
+    width: 150px;
+    height: 180px;
     contain: layout style;
     will-change: transform;
-    // margin-right: 20px; // Swiper handles spacing via space-between if needed, or margin on slide
   }
 }
 
 .item-card {
   width: 100%;
-  height: 50%;
+  height: 100%;
   border-radius: 24px;
   padding: 12px;
   display: flex;
@@ -692,9 +959,8 @@ ion-header {
   align-items: center;
   justify-content: space-between;
   position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); // Added shadow as requested
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   transition: transform 0.2s ease;
-  // margin-right removed as it's inside swiper-slide
 
   &:active {
     transform: scale(0.95);
@@ -702,38 +968,33 @@ ion-header {
 
   .item-favorite-wrapper {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
     z-index: 10;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    // background: rgba(255, 255, 255, 0.3);
-    // border-radius: 50%;
-    // backdrop-filter: blur(4px);
 
     ion-icon {
       font-size: 20px;
-      color: var(--text-matte-black);
-      opacity: 0.8;
-      transition: all 0.3s ease;
+      color: rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
 
       &.active {
         color: #ff4757;
-        opacity: 1;
       }
     }
   }
 
   .item-learned-badge {
     position: absolute;
-    top: 12px;
-    left: 12px;
+    top: 10px;
+    left: 10px;
     z-index: 10;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -742,7 +1003,7 @@ ion-header {
     box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
 
     ion-icon {
-      font-size: 18px;
+      font-size: 16px;
       color: #fff;
     }
   }
@@ -750,15 +1011,15 @@ ion-header {
   .item-image-container {
     position: relative;
     width: 100%;
-    height: 120px;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 8px;
 
     img {
-      max-width: 100%;
-      max-height: 100%;
+      max-width: 90%;
+      max-height: 90%;
       object-fit: contain;
       filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
       border-radius: 1rem;
@@ -766,38 +1027,23 @@ ion-header {
   }
 
   .item-name {
-    // font-family: 'Outfit', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: #2d3436;
-    margin: 0;
-    margin-bottom: 8px;
+    margin: 4px 0 2px;
     text-align: center;
   }
 
   &.learned {
-    border: 2px solid #22c55e; // Green border for learned items
+    border: 2px solid #22c55e;
   }
 }
 
-// Premium UI Styles
-.premium-locked {
+// ── Premium Lock ─────────────────────────────────────────────────────────────
+
+.premium-locked-modal {
   position: relative;
   opacity: 0.9;
-}
-
-.premium-lock-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 24px;
-  z-index: 5;
 }
 
 .premium-lock-badge {
@@ -826,15 +1072,16 @@ ion-header {
   opacity: 0.8;
 }
 
-// Premium Mode Styles (New)
+// ── Premium Mode (no-banner) Styles ──────────────────────────────────────────
+
 .premium-header {
-  padding-top: 10px; // Adjust spacing since banner is gone
+  padding-top: 10px;
 
   h3 {
     font-size: 22px;
-    font-weight: 800; // Bolder
+    font-weight: 800;
     letter-spacing: 0.5px;
-    color: #f34f27; // Make it pop more
+    color: #f34f27;
   }
 }
 
@@ -842,7 +1089,7 @@ ion-header {
   padding-bottom: 10px;
 
   .category-item {
-    min-width: 100px; // Wider items
+    min-width: 100px;
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     &:active {
@@ -852,7 +1099,6 @@ ion-header {
     .category-circle {
       width: 85px;
       height: 85px;
-
       margin-bottom: 12px;
     }
 
@@ -863,11 +1109,6 @@ ion-header {
       color: #2d3436;
     }
   }
-}
-
-ion-icon {
-  color: white;
-  font-size: 24px;
 }
 
 .premium-badge {
@@ -882,35 +1123,7 @@ ion-icon {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.premium-lock-badge {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
-  backdrop-filter: blur(4px);
-
-  ion-icon {
-    font-size: 24px;
-    color: #fff;
-  }
-}
-
-.premium-blur {
-  filter: blur(4px);
-  transition: filter 0.3s ease;
-}
-
-::ng-deep .swiper {
-  height: 9rem !important;
-}
+// ── Misc ─────────────────────────────────────────────────────────────────────
 
 .back-icon {
   color: #1a1a1a !important;

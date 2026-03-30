@@ -8,9 +8,6 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonList,
-  IonItem,
-  IonLabel,
   ModalController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -31,9 +28,6 @@ import { QuizResult } from '../../../services/quiz';
     IonButtons,
     IonButton,
     IonIcon,
-    IonList,
-    IonItem,
-    IonLabel,
   ],
 })
 export class ResultModalComponent {

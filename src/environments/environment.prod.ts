@@ -23,20 +23,25 @@ export const environment = {
     },
   },
   admob: {
-    // AdMob Ad Unit IDs - REPLACE WITH PRODUCTION AD UNIT IDs
-    // Get them from: https://apps.admob.com/
+    // Production mode — real ads served, revenue generated.
+    // Each platform requires its OWN ad unit IDs (AdMob console → Ad units).
+    // iOS and Android CANNOT share the same ad unit ID.
+    initializeForTesting: false,
     android: {
-      banner: 'ca-app-pub-4296184061584014/2916209158', // REPLACE: Test banner ID
-      interstitial: 'ca-app-pub-4296184061584014/1165919887', // REPLACE: Test interstitial ID
-      rewarded: 'ca-app-pub-4296184061584014/4887766375', // REPLACE: Test rewarded ID
-      appOpen: 'ca-app-pub-4296184061584014/3029725967', // REPLACE: Test app open ID
+      // TODO: Replace with your Android ad unit IDs from AdMob console
+      // AdMob → Apps → SignLingo (Android) → Ad units
+      banner: 'ca-app-pub-4296184061584014/2916209158',
+      interstitial: 'ca-app-pub-4296184061584014/1165919887',
+      rewarded: 'ca-app-pub-4296184061584014/4887766375',
+      appOpen: 'ca-app-pub-4296184061584014/3029725967',
     },
     ios: {
-      // iOS AdMob Ad Unit IDs - Production values
-      banner: 'ca-app-pub-4296184061584014/2916209158', // iOS Banner ad unit
-      interstitial: 'ca-app-pub-4296184061584014/1165919887', // iOS Interstitial ad unit
-      rewarded: 'ca-app-pub-4296184061584014/4887766375', // iOS Rewarded ad unit
-      appOpen: 'ca-app-pub-4296184061584014/3029725967', // iOS App Open ad unit
+      // TODO: Replace with your iOS-specific ad unit IDs from AdMob console
+      // AdMob → Apps → SignLingo (iOS) → Ad units (different IDs from Android)
+      banner: 'ca-app-pub-4296184061584014/2916209158',
+      interstitial: 'ca-app-pub-4296184061584014/1165919887',
+      rewarded: 'ca-app-pub-4296184061584014/4887766375',
+      appOpen: 'ca-app-pub-4296184061584014/3029725967',
     },
   },
 };

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserService } from './user.service';
 import { PurchasesService } from './purchases.service';
 
@@ -13,12 +13,13 @@ export interface UserProfile {
 @Injectable({
   providedIn: 'root',
 })
-export class ProfileService {
+export class ProfileService implements OnDestroy {
   private profileSubject = new BehaviorSubject<UserProfile | null>(null);
   profile$: Observable<UserProfile | null> = this.profileSubject.asObservable();
 
   /** Track last ID sent to RevenueCat to prevent duplicate logIn calls */
   private lastIdentifiedUserId: string | null = null;
+  private userDataSub?: Subscription;
 
   constructor(
     private userService: UserService,
@@ -28,36 +29,39 @@ export class ProfileService {
     this.loadProfile();
   }
 
-  private loadProfile() {
-    this.userService.ensureAuth().then(() => {
-      this.userService.userData$.subscribe((userData) => {
-        if (userData) {
-          console.log('ProfileService: Received user data', userData);
-          const currentProfile = this.profileSubject.value;
-          const profile: UserProfile = {
-            name: userData.displayName || 'Guest',
-            avatar: userData.photoURL || 'assets/images/avatars/default.png',
-            isPremium: this.purchasesService.isPremium() || userData.isPremium, // Prefer RevenueCat
-            createdAt: userData.createdAt,
-          };
-          this.profileSubject.next(profile);
+  ngOnDestroy() {
+    this.userDataSub?.unsubscribe();
+  }
 
-          // Identify user in RevenueCat — only when the ID actually changes
-          // (userData$ emits multiple times per session; without this guard,
-          //  RevenueCat.logIn fires 4+ times causing redundant network calls)
-          const userIdForRC = userData.deviceIdHash || userData.uid;
-          if (userIdForRC && userIdForRC !== this.lastIdentifiedUserId) {
-            this.lastIdentifiedUserId = userIdForRC;
-            this.purchasesService.identifyUser(userIdForRC);
-          }
-        } else {
-          // If no user data yet (e.g. just created), create it
-          const user = this.userService.auth.currentUser;
-          if (user) {
-            this.userService.createUserProfile(user);
-          }
+  private loadProfile() {
+    this.userService.ensureAuth();
+    this.userDataSub = this.userService.userData$.subscribe((userData) => {
+      if (userData) {
+        console.log('ProfileService: Received user data', userData);
+        const currentProfile = this.profileSubject.value;
+        const profile: UserProfile = {
+          name: userData.displayName || 'Guest',
+          avatar: userData.photoURL || 'assets/images/avatars/default.png',
+          isPremium: this.purchasesService.isPremium() || userData.isPremium, // Prefer RevenueCat
+          createdAt: userData.createdAt,
+        };
+        this.profileSubject.next(profile);
+
+        // Identify user in RevenueCat — only when the ID actually changes
+        // (userData$ emits multiple times per session; without this guard,
+        //  RevenueCat.logIn fires 4+ times causing redundant network calls)
+        const userIdForRC = userData.deviceIdHash || userData.uid;
+        if (userIdForRC && userIdForRC !== this.lastIdentifiedUserId) {
+          this.lastIdentifiedUserId = userIdForRC;
+          this.purchasesService.identifyUser(userIdForRC);
         }
-      });
+      } else {
+        // If no user data yet (e.g. just created), create it
+        const user = this.userService.auth.currentUser;
+        if (user) {
+          this.userService.createUserProfile(user);
+        }
+      }
     });
   }
 

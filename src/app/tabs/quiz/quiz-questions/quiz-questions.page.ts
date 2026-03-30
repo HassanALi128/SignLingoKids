@@ -127,14 +127,12 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.loadQuizQuestions();
-    this.hideTabBar();
   }
 
   private backButtonSubscription?: Subscription;
 
   ionViewWillLeave() {
     this.threeRenderer.pauseRendering();
-    this.showTabBar();
 
     // Unregister back button action
     if (this.backButtonSubscription) {
@@ -158,7 +156,6 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     this.destroy$.complete();
     this.stopConfetti(); // Ensure confetti is stopped
     this.threeRenderer.dispose();
-    this.showTabBar();
 
     if (this.backButtonSubscription) {
       this.backButtonSubscription.unsubscribe();
@@ -419,10 +416,9 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     // Navigate back to quiz page to show results
     // Only show ad if NOT premium
     if (!this.monetizationService.isPro) {
-      console.log('User is not premium, showing interstitial ad');
       await this.monetizationService.showInterstitial();
-    } else {
-      console.log('User is premium, skipping ad');
+      // Pre-load next interstitial immediately so it's ready for the next quiz
+      this.monetizationService.prepareInterstitial();
     }
 
     // Clean up confetti before navigating
@@ -484,7 +480,12 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
     this.confirmQuit();
   }
 
+  private isAlertOpen = false;
+
   async confirmQuit() {
+    if (this.isAlertOpen) return;
+    this.isAlertOpen = true;
+
     const alert = await this.alertController.create({
       header: 'Quit Quiz? 😢',
       message: "Are you sure you want to give up? You're doing great!",
@@ -495,7 +496,7 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
           role: 'confirm',
           cssClass: 'alert-button-confirm',
           handler: () => {
-            this.navController.back();
+            this.navController.navigateBack('/tabs/quiz');
           },
         },
         {
@@ -507,6 +508,10 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
           },
         },
       ],
+    });
+
+    alert.onDidDismiss().then(() => {
+      this.isAlertOpen = false;
     });
 
     await alert.present();
@@ -542,19 +547,5 @@ export class QuizQuestionsPage implements OnInit, OnDestroy {
       ...currentState,
       ...partialState,
     });
-  }
-
-  private hideTabBar() {
-    const tabBar = document.querySelector('ion-tab-bar');
-    if (tabBar) {
-      tabBar.style.display = 'none';
-    }
-  }
-
-  private showTabBar() {
-    const tabBar = document.querySelector('ion-tab-bar');
-    if (tabBar) {
-      tabBar.style.display = 'flex';
-    }
   }
 }

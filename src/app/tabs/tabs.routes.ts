@@ -33,6 +33,11 @@ export const routes: Routes = [
           import('./settings/settings.page').then((m) => m.SettingsPage),
       },
       {
+        path: 'premium',
+        loadComponent: () =>
+          import('./premium/premium.page').then((m) => m.PremiumPage),
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',

@@ -68,7 +68,8 @@ export class AppComponent implements OnInit {
 
     try {
       // On cold start, the iOS Networking process can take 9-12s to spin up.
-      // 20s gives enough headroom without waiting forever.
+      // The inner timeout (12s) ensures Firebase network failures fail fast
+      // within the outer 20s budget, giving the error handler time to recover.
       await Promise.race([
         this.performInitialization(() => aborted),
         new Promise((_, reject) =>
@@ -129,20 +130,8 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    // Update status
-    this.initStatus = 'Loading your data...';
-
-    // Give a brief moment for the status to show
-    await this.delay(500);
-
     // Initialize Hardware Back Button Service
     this.hardwareBackBtnService.init();
-
-    // Update status
-    this.initStatus = 'Almost ready!';
-
-    // Give a brief moment before hiding loader
-    await this.delay(300);
 
     // Hide the init loader
     this.showInitLoader = false;

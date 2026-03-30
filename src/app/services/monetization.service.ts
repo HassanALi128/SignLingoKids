@@ -22,7 +22,7 @@ import {
   PurchasesPackage,
 } from '@revenuecat/purchases-typescript-internal-esm';
 import { environment } from '../../environments/environment';
-import { combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +38,10 @@ export class MonetizationService {
   private readonly REWARDED_ID_ANDROID = environment.admob.android.rewarded;
   private readonly REWARDED_ID_IOS = environment.admob.ios.rewarded;
 
-  public isPro = false; // Synced with RevenueCat
+  public isPro = false; // Synced with RevenueCat (synchronous read for guards)
+
+  private isPremiumSubject = new BehaviorSubject<boolean>(false);
+  public isPremium$: Observable<boolean> = this.isPremiumSubject.asObservable();
 
   // RevenueCat offerings - exposed for premium page
   public offerings: PurchasesOfferings | null = null;
@@ -46,22 +49,18 @@ export class MonetizationService {
   // Track AdMob initialization status
   private adMobInitialized = false;
   private isInitializingAdMob = false;
+  // Resolved by initAdMob() when initialization completes.
   private adMobInitPromise: Promise<void>;
+  private adMobInitResolve!: () => void;
 
   constructor(
     private platform: Platform,
     private purchasesService: PurchasesService,
     private userService: UserService
   ) {
-    // Create an indefinite promise that we resolve when init is done
+    // Promise resolved by initAdMob() — no polling interval needed.
     this.adMobInitPromise = new Promise<void>((resolve) => {
-      // Small timeout to allow init to complete later
-      const checkInterval = setInterval(() => {
-        if (this.adMobInitialized) {
-          clearInterval(checkInterval);
-          resolve();
-        }
-      }, 500);
+      this.adMobInitResolve = resolve;
     });
   }
 
@@ -76,30 +75,24 @@ export class MonetizationService {
     combineLatest([
       this.purchasesService.isPremium$,
       this.userService.userData$,
-    ]).subscribe(([revenueCatPremium, userData]) => {
-      // Check test premium from localStorage (via UserService)
-      const testPremium =
-        localStorage.getItem('test_premium_status') === 'true';
-
-      // User is premium if either condition is true
+    ]).pipe(
+      map(([revenueCatPremium, userData]) => {
+        const testPremium = localStorage.getItem('test_premium_status') === 'true';
+        return revenueCatPremium || testPremium || (userData?.isPremium ?? false);
+      }),
+      distinctUntilChanged()
+    ).subscribe((isPro) => {
       const wasPremium = this.isPro;
-      this.isPro =
-        revenueCatPremium || testPremium || (userData?.isPremium ?? false);
+      this.isPro = isPro;
+      this.isPremiumSubject.next(isPro);
 
-      console.log('Premium status updated:', {
-        revenueCatPremium,
-        testPremium,
-        userDataPremium: userData?.isPremium,
-        finalStatus: this.isPro,
-      });
+      console.log('Premium status updated. FinalStatus:', this.isPro);
 
       // Handle premium state changes
       if (this.isPro && !wasPremium) {
-        // User just became premium - hide ads immediately
         console.log('User became premium - hiding ads');
         this.hideBanner();
       } else if (!this.isPro && wasPremium) {
-        // User lost premium status - show ads
         console.log('User lost premium - showing ads');
         this.showBanner();
       }
@@ -153,9 +146,10 @@ export class MonetizationService {
         tagForChildDirectedTreatment: true,
         tagForUnderAgeOfConsent: true,
         maxAdContentRating: MaxAdContentRating.General,
-        initializeForTesting: false, // set true only during local dev
+        initializeForTesting: environment.admob.initializeForTesting ?? false,
       });
-      this.adMobInitialized = true; // Mark as ready
+      this.adMobInitialized = true;
+      this.adMobInitResolve(); // Unblock any waiters
 
       // Listen for size changes — only apply height when banner actually loaded
       // When an ad fails, this event fires with width=0, height=0; we must set 0
@@ -182,8 +176,11 @@ export class MonetizationService {
       // Preload Reward
       await this.prepareReward();
 
-      // Show Banner - REMOVED: Managed by TabsPage
-      // this.showBanner();
+      // Show banner immediately after init if user is not premium.
+      // This fixes the race condition where ionViewWillEnter fires before init completes.
+      if (!this.isPro) {
+        await this.showBanner();
+      }
     } catch (e) {
       console.error('AdMob Init Error:', e);
     } finally {
@@ -284,10 +281,12 @@ export class MonetizationService {
     if (!this.adMobInitialized) return;
 
     try {
-      // Check if ready, if not prepare
       await AdMob.showInterstitial();
     } catch (e) {
-      console.error('Show Interstitial Error, trying to prepare again:', e);
+      console.error('Show Interstitial Error:', e);
+    } finally {
+      // Re-prepare immediately so the next call is ready
+      setTimeout(() => this.prepareInterstitial(), 500);
     }
   }
 
@@ -315,24 +314,36 @@ export class MonetizationService {
   }
 
   async showReward(): Promise<boolean> {
-    return new Promise(async (resolve) => {
-      try {
-        // Register event listener for reward
-        const handler = AdMob.addListener(
-          RewardAdPluginEvents.Rewarded,
-          (rewardItem) => {
-            console.log('User rewarded:', rewardItem);
-            resolve(true); // User watched and got reward
-          }
-        );
+    let settled = false;
+    let rewardedHandle: { remove: () => void } | null = null;
+    let dismissedHandle: { remove: () => void } | null = null;
 
-        // Show the ad
+    return new Promise(async (resolve) => {
+      const settle = (value: boolean) => {
+        if (settled) return;
+        settled = true;
+        rewardedHandle?.remove();
+        dismissedHandle?.remove();
+        resolve(value);
+      };
+
+      // addListener() is async — await so .remove() is available
+      rewardedHandle = await AdMob.addListener(
+        RewardAdPluginEvents.Rewarded,
+        () => settle(true)
+      );
+
+      dismissedHandle = await AdMob.addListener(
+        RewardAdPluginEvents.Dismissed,
+        () => settle(false)
+      );
+
+      try {
         await AdMob.showRewardVideoAd();
       } catch (e) {
         console.error('Show Reward Error:', e);
-        // Try to prepare again for next time
         this.prepareReward();
-        resolve(false); // Failed to show or complete
+        settle(false);
       }
     });
   }

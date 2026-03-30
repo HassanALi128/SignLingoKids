@@ -193,3 +193,34 @@ ion-toolbar {
   // -ms-flex-pack: end;
   justify-content: center;
 }
+
+/* DRY Background Classes for Kids Theme */
+.kids-gradient-bg {
+  --background: transparent;
+  background: linear-gradient(135deg, #FFD1E3 0%, #FFF5EB 50%, #E2F0FF 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-background {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.animated-bg-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.6;
+  animation: float 10s infinite ease-in-out alternate;
+}
+.animated-bg-shape-1 { width: 250px; height: 250px; background: #FF9B9B; top: -50px; left: -50px; animation-delay: 0s; }
+.animated-bg-shape-2 { width: 320px; height: 320px; background: #A0C4FF; bottom: -50px; right: -100px; animation-delay: -3s; }
+.animated-bg-shape-3 { width: 200px; height: 200px; background: #FDFFB6; top: 30%; left: 70%; animation-delay: -7s; }
+
+@keyframes float {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(40px) scale(1.15); }
+}

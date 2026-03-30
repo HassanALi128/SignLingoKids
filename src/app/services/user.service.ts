@@ -15,10 +15,12 @@ import {
   map,
   BehaviorSubject,
   combineLatest,
+  shareReplay,
 } from 'rxjs';
 import { DeviceService } from './device.service';
 import { PurchasesService } from './purchases.service';
-import { AlertService } from './alert.service'; // Added for debug alerts
+import { AlertService } from './alert.service';  // Added for debug alerts
+import { StorageService } from './storage.service';
 // import { CrashlyticsService } from './crashlytics.service';
 import { AnalyticsService } from './analytics.service';
 import { Platform } from '@ionic/angular';
@@ -54,7 +56,8 @@ export class UserService {
     private firestore: Firestore,
     private deviceService: DeviceService,
     private purchasesService: PurchasesService,
-    private alertService: AlertService, // Injected for debug
+    private alertService: AlertService,
+    private storageService: StorageService,
     private platform: Platform,
     // private crashlyticsService: CrashlyticsService,
     private analyticsService: AnalyticsService
@@ -75,24 +78,8 @@ export class UserService {
           return docData(userDoc).pipe(
             map((data) => {
               const userData = data as UserData;
-              // Override with test status if true (or handle logic as needed)
-              // Requirement: "Toggling ON should: Set user as premium"
-              // Requirement: "Toggling OFF should: Revert back to non-premium behavior"
-              // So if test premium is ON, force true. If OFF, use DB value?
-              // Or does the toggle mean "Force ON" vs "Force OFF"?
-              // "Toggling OFF should: Revert back to non-premium behavior" implies reverting to actual user state,
-              // but usually "non-premium behavior" means free.
-              // Let's assume the toggle overrides the DB value when ON.
-              // Wait, if I toggle OFF, I should probably respect the DB value.
-              // But if the DB value is FALSE, and I toggle ON, it becomes TRUE.
-              // If I toggle OFF, it goes back to FALSE (DB value).
-              // What if DB value is TRUE? Then toggling OFF should probably not force it to FALSE if they paid?
-              // "PREMIUM TOGGLE (FOR TESTING ONLY)"
-              // "Toggling ON should: Set user as premium"
-              // "Toggling OFF should: Revert back to non-premium behavior"
-              // This implies the toggle is a "Force Premium" switch.
-
-              if (isTestPremium) {
+              // Override with test status if true
+              if (isTestPremium && userData) {
                 userData.isPremium = true;
               }
               return userData;
@@ -101,7 +88,8 @@ export class UserService {
         } else {
           return of(null);
         }
-      })
+      }),
+      shareReplay({ bufferSize: 1, refCount: true })
     );
   }
 
@@ -267,90 +255,62 @@ export class UserService {
   }
 
   /**
-   * Initialize user from device
-   * This is the main entry point for app initialization
-   * Returns navigation path: 'onboarding', 'profile-setup', or 'home'
+   * Initialize user from device.
+   *
+   * Standard approach: read local state first (instant, no network),
+   * navigate immediately, then sync with Firebase in the background.
+   * This eliminates the 20-second timeout that happened when Firebase
+   * was slow or offline.
    */
   async initializeUserFromDevice(): Promise<string> {
     try {
-      // Step 1: Get device ID
-      const deviceIdHash = await this.deviceService.getDeviceId().toPromise();
+      // ── Step 1: Fast local check ─────────────────────────────────────
+      // Capacitor Preferences is synchronous-ish and never needs network.
+      const hasSeenOnboarding = await this.storageService.getHasSeenOnboarding();
+      const hasProfile = !!localStorage.getItem('user_profile_completed');
 
-      if (!deviceIdHash) {
-        throw new Error('Failed to get device ID');
-      }
-
-      // Step 2: Check if device exists in Firebase
-      // We need to get the actual document data to check linkedUids
-      const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
-      const deviceSnap = await (
-        await import('@angular/fire/firestore')
-      ).getDoc(deviceRef);
-
-      const deviceExists = deviceSnap.exists();
-      let oldUid: string | null = null;
-
-      if (deviceExists) {
-        const deviceData = deviceSnap.data();
-        const linkedUids = deviceData?.['linkedUids'] || [];
-        if (linkedUids.length > 0) {
-          oldUid = linkedUids[linkedUids.length - 1];
-        }
-      }
-
-      // Step 3: Ensure Firebase auth
-      await this.ensureAuth();
-
-      // Step 4: Create or update user profile
-      const currentUser = this.auth.currentUser;
-      if (!currentUser) {
-        throw new Error('Failed to authenticate user');
-      }
-
-      if (!deviceExists) {
-        // New device - create profile and register device
-        await this.createUserProfile(currentUser);
-
-        // New user should go through onboarding
+      if (!hasSeenOnboarding) {
+        // First launch — kick off auth+profile creation in background
+        this.bootstrapFirebaseInBackground();
         return 'onboarding';
-      } else {
-        // Existing device
-
-        // Check if we need to migrate data
-        if (oldUid && oldUid !== currentUser.uid) {
-          await this.migrateUserData(oldUid, currentUser.uid);
-        }
-
-        // Link current user to device
-        await this.loadUserDataByDevice(deviceIdHash, currentUser.uid);
-
-        // Check user status from FIRESTORE, not localStorage
-        const userRef = doc(this.firestore, 'users', currentUser.uid);
-        const userSnap = await (
-          await import('@angular/fire/firestore')
-        ).getDoc(userRef);
-
-        let onboardingCompleted = false;
-        let profileCompleted = false;
-
-        if (userSnap.exists()) {
-          const userData = userSnap.data() as UserData;
-          onboardingCompleted = !!userData.onboardingCompleted;
-          profileCompleted = !!userData.profileCompleted;
-        }
-
-        if (!onboardingCompleted) {
-          return 'onboarding';
-        } else if (!profileCompleted) {
-          return 'profile-setup';
-        } else {
-          return 'home';
-        }
       }
+
+      if (!hasProfile) {
+        this.bootstrapFirebaseInBackground();
+        return 'profile-setup';
+      }
+
+      // ── Step 2: Background Firebase sync (non-blocking) ──────────────
+      // Auth + last-active update happens after navigation, not before.
+      this.bootstrapFirebaseInBackground();
+
+      return 'home';
     } catch (error) {
       console.error('Error initializing user from device:', error);
-      // On error, default to onboarding to ensure user can still use the app
       return 'onboarding';
+    }
+  }
+
+  /**
+   * Runs Firebase authentication and Firestore sync in the background
+   * after the app has already navigated. Never blocks the UI.
+   */
+  private async bootstrapFirebaseInBackground(): Promise<void> {
+    try {
+      // Ensure anonymous auth (quick if already authenticated)
+      await Promise.race([
+        this.ensureAuth(),
+        new Promise<void>((resolve) => setTimeout(resolve, 8000)), // 8s max
+      ]);
+
+      const currentUser = this.auth.currentUser;
+      if (!currentUser) return;
+
+      // Non-blocking: register device + update lastActive
+      this.deviceService.registerDevice(currentUser.uid).catch(() => {});
+      this.updateLastActive().catch(() => {});
+    } catch (err) {
+      console.warn('Background Firebase sync failed (non-critical):', err);
     }
   }
 

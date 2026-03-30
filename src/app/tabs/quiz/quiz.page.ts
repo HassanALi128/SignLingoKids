@@ -18,6 +18,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QuizService, QuizResult } from '../../services/quiz';
 import { ProfileService } from '../../services/profile.service';
+import { MonetizationService } from '../../services/monetization.service';
 import { ResultModalComponent } from './result-modal/result-modal.component';
 
 interface UserProfile {
@@ -54,7 +55,6 @@ export class QuizPage implements OnInit, OnDestroy {
   private userNameSubject = new BehaviorSubject<string>('User');
   private userAvatarSubject = new BehaviorSubject<string | null>(null);
   private recentResultsSubject = new BehaviorSubject<ResultDisplay[]>([]);
-  private isPremiumSubject = new BehaviorSubject<boolean>(false);
   private destroy$ = new Subject<void>();
 
   // Public Observables
@@ -63,7 +63,8 @@ export class QuizPage implements OnInit, OnDestroy {
     this.userAvatarSubject.asObservable();
   recentResults$: Observable<ResultDisplay[]> =
     this.recentResultsSubject.asObservable();
-  isPremium$: Observable<boolean> = this.isPremiumSubject.asObservable();
+  // isPremium$ delegates to MonetizationService — single source of truth (assigned in constructor)
+  isPremium$!: Observable<boolean>;
 
   // Quiz unlock state observables
   quizUnlockState$: Observable<{
@@ -76,17 +77,17 @@ export class QuizPage implements OnInit, OnDestroy {
     private quizService: QuizService,
     private router: Router,
     private profileService: ProfileService,
+    private monetizationService: MonetizationService,
     private modalController: ModalController,
     private navCtrl: NavController
   ) {
     addIcons({ personCircleOutline, lockClosedOutline });
+    this.isPremium$ = this.monetizationService.isPremium$;
   }
 
   ngOnInit() {
     this.subscribeToProfile();
     this.loadRecentResults();
-    this.subscribeToPremiumStatus();
-    this.subscribeToPremiumStatus();
   }
 
   ngOnDestroy() {
@@ -101,16 +102,7 @@ export class QuizPage implements OnInit, OnDestroy {
         if (profile) {
           this.userNameSubject.next(profile.name || 'User');
           this.userAvatarSubject.next(profile.avatar || null);
-          this.isPremiumSubject.next(profile.isPremium || false);
         }
-      });
-  }
-
-  private subscribeToPremiumStatus() {
-    this.quizService.isPremium$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((isPremium) => {
-        this.isPremiumSubject.next(isPremium);
       });
   }
 
@@ -168,7 +160,7 @@ export class QuizPage implements OnInit, OnDestroy {
     }
 
     // Check if user has reached attempt limit (non-premium users)
-    const isPremium = this.isPremiumSubject.value;
+    const isPremium = this.monetizationService.isPro;
     const attempts = this.quizService.getAttempts();
 
     if (!isPremium && attempts >= 5) {

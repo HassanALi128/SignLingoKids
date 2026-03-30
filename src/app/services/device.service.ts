@@ -9,7 +9,7 @@ import {
   increment,
   arrayUnion,
 } from '@angular/fire/firestore';
-import { from, Observable, of } from 'rxjs';
+import { from, firstValueFrom, Observable, of } from 'rxjs';
 import { map, switchMap, tap, shareReplay } from 'rxjs/operators';
 
 export interface DeviceData {
@@ -49,8 +49,12 @@ export class DeviceService {
     return this.deviceIdHash$;
   }
 
+  private getCachedDeviceId(): Promise<string> {
+    return firstValueFrom(this.deviceIdHash$);
+  }
+
   async registerDevice(uid?: string): Promise<void> {
-    const deviceIdHash = await this.getDeviceIdHash();
+    const deviceIdHash = await this.getCachedDeviceId();
     const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
     const deviceSnap = await getDoc(deviceRef);
     const now = new Date().toISOString();
@@ -75,7 +79,7 @@ export class DeviceService {
   }
 
   async incrementQuizAttempt(ignoreLimit: boolean = false): Promise<boolean> {
-    const deviceIdHash = await this.getDeviceIdHash();
+    const deviceIdHash = await this.getCachedDeviceId();
     const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
     const deviceSnap = await getDoc(deviceRef);
 
@@ -93,7 +97,7 @@ export class DeviceService {
   }
 
   async checkQuizLimit(): Promise<boolean> {
-    const deviceIdHash = await this.getDeviceIdHash();
+    const deviceIdHash = await this.getCachedDeviceId();
     const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
     const deviceSnap = await getDoc(deviceRef);
 
@@ -103,7 +107,7 @@ export class DeviceService {
     return data.freeQuizAttempts < this.MAX_FREE_QUIZZES;
   }
   async resetDeviceProgress() {
-    const deviceIdHash = await this.getDeviceIdHash();
+    const deviceIdHash = await this.getCachedDeviceId();
     const deviceRef = doc(this.firestore, 'devices', deviceIdHash);
     await updateDoc(deviceRef, {
       freeQuizAttempts: 0,

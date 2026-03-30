@@ -2,6 +2,7 @@ import { ElementRef, Injectable, NgZone, OnDestroy } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,10 @@ export class ThreeRenderer implements OnDestroy {
   // Caching
   private globalActions = new Map<string, THREE.AnimationClip>();
   private loadedFiles = new Set<string>();
+  // Parsed model cache: avoids re-parsing GLB on every category open.
+  // skeletonClone() preserves bone/skinning hierarchy correctly.
+  private modelCache = new Map<string, THREE.Group>();
+  private loadingPromises = new Map<string, Promise<void>>();
 
   // Idle Scheduler
   private idleTimeoutId?: any;
@@ -40,7 +45,9 @@ export class ThreeRenderer implements OnDestroy {
 
   constructor(private ngZone: NgZone) {
     this.loader.setPath('');
-    // Mobile only: No detection needed, we assume mobile constraints
+    // Cache downloaded GLB files in memory so re-opening a category skips the
+    // network round-trip entirely (parser still runs but that's ~10x faster).
+    THREE.Cache.enabled = true;
   }
 
   initialize(
@@ -48,12 +55,13 @@ export class ThreeRenderer implements OnDestroy {
     width: number,
     height: number
   ): void {
-    this.dispose(); // Ensure clean slate
+    // Note: dispose() is NOT called here — call it explicitly when fully tearing down.
+    // For category-to-category transitions, use reinitialize() which preserves the WebGL context.
 
     this.scene = new THREE.Scene();
 
-    // 🔥 White Background for Model
-    this.scene.background = new THREE.Color(0xffffff);
+    // 🔥 Transparent Context (Allows CSS backdrop gradients!)
+    this.scene.background = null;
 
     // Camera
     this.camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 1000);
@@ -62,7 +70,7 @@ export class ThreeRenderer implements OnDestroy {
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvas.nativeElement,
-      antialias: true, // 🚀 Disable antialias for performance (Mobile only)
+      antialias: false, // Disabled for mobile GPU performance
       alpha: true,
       powerPreference: 'high-performance', // Hint to browser
     });
@@ -100,15 +108,102 @@ export class ThreeRenderer implements OnDestroy {
     this.startRendering();
   }
 
+  /**
+   * Pre-initialize the WebGL renderer on page load so the first category tap
+   * skips the expensive context-creation step entirely.
+   * No-op if the renderer is already alive.
+   */
+  preInitializeRenderer(
+    canvas: ElementRef<HTMLCanvasElement>,
+    width: number,
+    height: number
+  ): void {
+    if (!this.renderer) {
+      this.initialize(canvas, width, height);
+      console.log('🚀 Renderer pre-initialized');
+    }
+  }
+
+  /**
+   * Reuse the existing WebGL renderer across category changes.
+   * Clears the scene content and resets the animation state without destroying
+   * the WebGL context — avoids the 300-800ms freeze caused by re-creating it.
+   * Falls back to full initialize() on the very first call.
+   */
+  reinitialize(
+    canvas: ElementRef<HTMLCanvasElement>,
+    width: number,
+    height: number
+  ): void {
+    if (!this.renderer) {
+      // First time or after a full dispose — full initialization path
+      this.initialize(canvas, width, height);
+      return;
+    }
+
+    // Renderer is alive — preserve the WebGL context, just reset content
+    this.stopRendering();
+    this.stop();
+    this.stopIdleScheduler();
+
+    // Clear animation state
+    this.actions.clear();
+    this.mixer?.stopAllAction();
+    this.mixer?.uncacheRoot(this.mixer.getRoot());
+    this.mixer = undefined;
+    this.activeAction = undefined;
+
+    // Remove model from scene before clearing
+    this.disposeCurrentModel();
+
+    // Clear all scene children (lights, etc.) and re-add lights
+    this.scene.clear();
+    this.scene.background = null;
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 4.0);
+    this.scene.add(hemi);
+    const ambient = new THREE.AmbientLight(0xfff7e6, 0.8);
+    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    dir.position.set(3, 6, 4);
+    this.scene.add(ambient, dir);
+
+    // Resize renderer to match current canvas dimensions
+    this.renderer.setSize(width, height, false);
+
+    // Reset camera
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.camera.position.set(0, 1.6, 4.5);
+
+    // Reset orbit controls target
+    if (this.controls) {
+      this.controls.target.set(0, 1, 0);
+      this.controls.update();
+    }
+
+    this.startRendering();
+    console.log('♻️ Renderer reused — WebGL context preserved');
+  }
+
   async loadModel(
     url: string = 'assets/aslkidanimation/models/asl_new_modle.glb'
   ): Promise<THREE.Object3D> {
     this.disposeCurrentModel();
 
     try {
-      console.log('Loading model from:', url);
-      const gltf = await this.loader.loadAsync(url);
-      const model = gltf.scene;
+      let model: THREE.Group;
+      const cached = this.modelCache.get(url);
+
+      if (cached) {
+        // Clone preserving full skeleton/skinning hierarchy — ~10x faster than re-parsing
+        model = skeletonClone(cached) as THREE.Group;
+        console.log('✅ Model cloned from cache (skipping GLB parse)');
+      } else {
+        console.log('Loading model from:', url);
+        const gltf = await this.loader.loadAsync(url);
+        model = gltf.scene as THREE.Group;
+        // Store a master clone so our working copy and cache are independent
+        this.modelCache.set(url, skeletonClone(model) as THREE.Group);
+      }
 
       // Center and scale model
       const box = new THREE.Box3().setFromObject(model);
@@ -125,27 +220,10 @@ export class ThreeRenderer implements OnDestroy {
       // 🎥 Camera Position Adjustment
       this.camera.position.set(0, 1.6, 3.8);
 
-      // Handle animations
+      // Animations are loaded separately via loadActions() — just create the mixer.
+      // registerCachedActions() will bind all cached clips to this new mixer.
       this.actions.clear();
-      this.mixer = undefined;
-
-      if (gltf.animations && gltf.animations.length > 0) {
-        this.mixer = new THREE.AnimationMixer(model);
-        for (const clip of gltf.animations) {
-          const action = this.mixer.clipAction(clip);
-
-          // idle-common should loop, others play once
-          if (clip.name === this.IDLE_COMMON) {
-            action.loop = THREE.LoopRepeat;
-            action.clampWhenFinished = false;
-          } else {
-            action.loop = THREE.LoopOnce;
-            action.clampWhenFinished = true;
-          }
-
-          this.actions.set(clip.name, action);
-        }
-      }
+      this.mixer = new THREE.AnimationMixer(model);
 
       this.scene.add(model);
       this.currentModel = model;
@@ -298,6 +376,50 @@ export class ThreeRenderer implements OnDestroy {
   // 📦 Asset Loading & Caching
   // --------------------------------------------------------------------------
 
+  async preloadModel(url: string = 'assets/aslkidanimation/models/asl_new_modle.glb'): Promise<void> {
+    if (this.modelCache.has(url)) return;
+    try {
+      console.log('⏳ Silent Preloading Model...');
+      const gltf = await this.loader.loadAsync(url);
+      const model = gltf.scene as THREE.Group;
+      this.modelCache.set(url, skeletonClone(model) as THREE.Group);
+    } catch (e) {
+      console.warn('Preload model failed', e);
+    }
+  }
+
+  async preloadAction(url: string): Promise<void> {
+    if (this.loadedFiles.has(url)) return;
+
+    const existingPromise = this.loadingPromises.get(url);
+    if (existingPromise) {
+      console.log('⏳ Action already preloading, waiting for promise:', url);
+      await existingPromise;
+      return;
+    }
+
+    const loadPromise = (async () => {
+      try {
+        console.log('⏳ Silent Preloading Action...', url);
+        const gltf = await this.loader.loadAsync(url);
+        for (const clip of gltf.animations) {
+          if (!this.globalActions.has(clip.name)) {
+            this.globalActions.set(clip.name, clip);
+          }
+        }
+        this.loadedFiles.add(url);
+        this.disposeGLTF(gltf);
+      } catch (e) {
+        console.warn('Preload action failed', e);
+      } finally {
+        this.loadingPromises.delete(url);
+      }
+    })();
+
+    this.loadingPromises.set(url, loadPromise);
+    await loadPromise;
+  }
+
   async loadActions(url: string): Promise<void> {
     if (!this.currentModel) {
       throw new Error('Load the model first before actions');
@@ -313,33 +435,47 @@ export class ThreeRenderer implements OnDestroy {
       return;
     }
 
+    const existingPromise = this.loadingPromises.get(url);
+    if (existingPromise) {
+      console.log('⏳ Actions already loading, waiting for promise:', url);
+      await existingPromise;
+      this.registerCachedActions();
+      return;
+    }
+
     console.log('🔄 Loading actions from:', url);
 
-    try {
-      const gltf = await this.loader.loadAsync(url);
+    const loadPromise = (async () => {
+      try {
+        const gltf = await this.loader.loadAsync(url);
 
-      if (!gltf.animations || gltf.animations.length === 0) {
-        console.warn('⚠️ No animations found in:', url);
-        this.disposeGLTF(gltf);
-        return;
-      }
-
-      // Store clips in global cache
-      for (const clip of gltf.animations) {
-        if (!this.globalActions.has(clip.name)) {
-          this.globalActions.set(clip.name, clip);
+        if (!gltf.animations || gltf.animations.length === 0) {
+          console.warn('⚠️ No animations found in:', url);
+          this.disposeGLTF(gltf);
+          return;
         }
+
+        // Store clips in global cache
+        for (const clip of gltf.animations) {
+          if (!this.globalActions.has(clip.name)) {
+            this.globalActions.set(clip.name, clip);
+          }
+        }
+
+        this.loadedFiles.add(url);
+        // 🧹 Dispose of the loaded scene IMMEDIATELY to free memory
+        this.disposeGLTF(gltf);
+      } catch (error) {
+        console.error('Error loading actions:', error);
+        throw error;
+      } finally {
+        this.loadingPromises.delete(url);
       }
+    })();
 
-      this.loadedFiles.add(url);
-      this.registerCachedActions();
-
-      // 🧹 Dispose of the loaded scene IMMEDIATELY to free memory
-      this.disposeGLTF(gltf);
-    } catch (error) {
-      console.error('Error loading actions:', error);
-      throw error;
-    }
+    this.loadingPromises.set(url, loadPromise);
+    await loadPromise;
+    this.registerCachedActions();
   }
 
   private registerCachedActions(): void {
@@ -560,9 +696,10 @@ export class ThreeRenderer implements OnDestroy {
     this.mixer = undefined;
     this.activeAction = undefined;
 
-    // NOTE: We DO NOT clear globalActions or loadedFiles to persist cache across navigations!
+    // NOTE: Preserve these caches across navigations so re-opening a category is instant.
     // this.globalActions.clear();
     // this.loadedFiles.clear();
+    // this.modelCache.clear();
 
     // Dispose Controls
     this.controls?.dispose();

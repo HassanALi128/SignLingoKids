@@ -1,57 +1,44 @@
-<ion-header>
-  <ion-toolbar>
+<ion-content [fullscreen]="true" class="kids-gradient-bg">
+  <div class="animated-background">
+    <div class="animated-bg-shape animated-bg-shape-1"></div>
+    <div class="animated-bg-shape animated-bg-shape-2"></div>
+    <div class="animated-bg-shape animated-bg-shape-3"></div>
+  </div>
 
-  </ion-toolbar>
-</ion-header>
-<ion-content [fullscreen]="true" class="onboarding-content">
-  <swiper-container pagination="true" #slides (slidechange)="onSlideDidChange(slides)" effect="fade"
-    fade-effect-cross-fade="true" speed="1000">
+  <swiper-container pagination="true" #slides (slidechange)="onSlideDidChange(slides)" effect="fade" fade-effect-cross-fade="true" speed="800" class="swiper-kid-style">
     <swiper-slide>
-      <div class="card">
-        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/first.png" alt="Welcome" />
-        <h2 class="title">Welcome to 🤘 Hand Hero 3D ASL</h2>
-        <p class="subtitle">Explore American Sign Language through clear,
-          visually accurate demonstrations by 3D characters.</p>
+      <div class="card playful-card">
+        <img class="illustration" src="assets/on-boarding/first.png" alt="Welcome" />
+        <h2 class="title highlighted-text">Welcome to <br/>🤘 Hand Hero</h2>
+        <p class="subtitle">Explore American Sign Language through clear, visually accurate 3D characters.</p>
       </div>
     </swiper-slide>
     <swiper-slide>
-      <div class="card">
-        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/second.png"
-          alt="Learn Step by Step" />
-        <h2 class="title">Learn Step by Step 😎✌️</h2>
-        <p class="subtitle">Explore ASL signs through precise and
-          easy-to-follow 3D character demonstrations.</p>
+      <div class="card playful-card">
+        <img class="illustration" src="assets/on-boarding/second.png" alt="Learn Step by Step" />
+        <h2 class="title highlighted-text">Learn Step <br/>by Step 😎✌️</h2>
+        <p class="subtitle">Explore ASL signs with precise and easy-to-follow demonstrations.</p>
       </div>
     </swiper-slide>
     <swiper-slide>
-      <div class="card">
-        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/third.png"
-          alt="Grow Your Skills" />
-        <h2 class="title">Grow Your Skills 📈</h2>
-        <p class="subtitle">Practice regularly, test your knowledge,
-          and improve your signing confidence over time.</p>
+      <div class="card playful-card">
+        <img class="illustration" src="assets/on-boarding/third.png" alt="Grow Your Skills" />
+        <h2 class="title highlighted-text">Grow Your <br/>Skills 📈</h2>
+        <p class="subtitle">Practice regularly, test your knowledge, and boost your confidence!</p>
       </div>
     </swiper-slide>
     <swiper-slide>
-      <div class="card">
-        <img class="illustration" style="margin-bottom: 3rem;" src="assets/on-boarding/fourth.png" alt="Let’s Begin" />
-        <h2 class="title">✨ Let’s Begin</h2>
-        <p class="subtitle">You’re ready to start learning ASL
-          and communicate with confidence.</p>
+      <div class="card playful-card">
+        <img class="illustration" src="assets/on-boarding/fourth.png" alt="Let’s Begin" />
+        <h2 class="title highlighted-text">✨ Let’s Begin!</h2>
+        <p class="subtitle">You’re fully ready to start learning ASL and communicating!</p>
       </div>
     </swiper-slide>
   </swiper-container>
 
-
-  <!-- <div class="cta-bar" [class.visible]="currentIndex === 2"> -->
-  <!-- <ion-button expand="block" shape="round" class="cta" (click)="getStarted()">Let’s Learn</ion-button> -->
-  <!-- </div> -->
-
-</ion-content>
-<ion-footer>
-  <ion-toolbar class="footer-toolbar">
-    <ion-button expand="block" size="large" shape="round" class="lets-learn-btn" (click)="getStarted()">
+  <div class="onboarding-cta-container">
+    <ion-button expand="block" shape="round" size="large" class="lets-learn-btn bounce-anim" (click)="getStarted()">
       Let's Learn! 🚀
     </ion-button>
-  </ion-toolbar>
-</ion-footer>
+  </div>
+</ion-content>

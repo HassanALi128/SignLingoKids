@@ -1,82 +1,61 @@
-<ion-header>
-  <ion-toolbar>
+<ion-header class="ion-no-border absolute-header safe-area-top">
+  <ion-toolbar class="transparent-toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/onboarding"></ion-back-button>
+      <ion-back-button defaultHref="/onboarding" text="Back" mode="ios" class="dark-back-btn"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="profile-setup-content">
-  <div class="profile-container">
-    <!-- Title Section -->
+<ion-content [fullscreen]="true" class="kids-gradient-bg">
+  <div class="animated-background">
+    <div class="animated-bg-shape animated-bg-shape-1"></div>
+    <div class="animated-bg-shape animated-bg-shape-2"></div>
+    <div class="animated-bg-shape animated-bg-shape-3"></div>
+  </div>
+
+  <div class="profile-container playful-card">
     <div class="title-section">
-      <h1 class="main-title">Choose profile picture</h1>
-      <p class="subtitle">Choose a photo that represent you</p>
+      <h1 class="main-title highlighted-text">Choose Profile<br/>Picture</h1>
+      <p class="subtitle">Choose a photo that represents you</p>
     </div>
 
-    <!-- Avatar Display Section -->
     <div class="avatar-section">
-      <div class="avatar-wrapper">
+      <div class="avatar-wrapper bouncy-element">
         <div class="avatar-circle" [class.has-image]="selectedAvatar">
-          <ion-img
-            *ngIf="selectedAvatar"
-            [src]="selectedAvatar"
-            class="selected-avatar-img"
-          >
-          </ion-img>
-          <ion-icon
-            *ngIf="!selectedAvatar"
-            name="person"
-            class="default-avatar-icon"
-          >
-          </ion-icon>
+          <ion-img *ngIf="selectedAvatar" [src]="selectedAvatar" class="selected-avatar-img"></ion-img>
+          <ion-icon *ngIf="!selectedAvatar" name="person" class="default-avatar-icon"></ion-icon>
         </div>
-        <!-- <button class="upload-btn" (click)="uploadPhoto()">
-          <ion-icon name="add"></ion-icon>
-        </button> -->
       </div>
     </div>
 
-    <!-- Name Input Section -->
     <div class="name-section">
-      <ion-item lines="none" class="name-input-item">
-        <input
-          [(ngModel)]="userName"
-          placeholder="Enter your name"
-          class="name-input"
-          type="text"
-          maxlength="10"
-        />
-      </ion-item>
+      <ion-input
+        type="text"
+        placeholder="Guest"
+        [(ngModel)]="userName"
+        maxlength="10"
+        class="custom-ion-input"
+        clearInput="true"
+      ></ion-input>
       <p class="helper-text">Only 10 characters are allowed</p>
     </div>
 
-    <!-- Avatar Selection Grid -->
     <div class="avatar-selection-section">
       <p class="selection-label">Or choose a Signlingo Avatar</p>
       <div class="avatar-grid">
-        <div
-          *ngFor="let avatar of avatars; let i = index"
-          class="avatar-item"
-          [class.selected]="selectedAvatar === avatar"
-          (click)="selectAvatar(avatar)"
-        >
+        <div *ngFor="let avatar of avatars; let i = index"
+             class="avatar-item"
+             [class.selected-bouncy]="selectedAvatar === avatar"
+             (click)="selectAvatar(avatar)">
           <ion-img [src]="avatar"></ion-img>
         </div>
       </div>
     </div>
   </div>
-</ion-content>
 
-<ion-footer>
-  <ion-toolbar>
-    <ion-button
-      expand="block"
-      class="save-btn"
-      [disabled]="!userName || !selectedAvatar"
-      (click)="saveProfile()"
-    >
+  <div class="save-action-container">
+    <ion-button expand="block" shape="round" size="large" class="profile-save-btn bounce-anim" [disabled]="!selectedAvatar" (click)="saveProfile()">
       Save
     </ion-button>
-  </ion-toolbar>
-</ion-footer>
+  </div>
+</ion-content>

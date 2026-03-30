@@ -115,7 +115,22 @@ export class FavoritesViewAllPage implements OnInit {
   }
 
   navigateToItem(item: FavoriteItem) {
-    if (item.route) {
+    if (!item.route) return;
+
+    // Parse the saved route (e.g. /tabs/home?categoryId=XXX&signId=YYY)
+    // and navigate to /tabs/home so the landing page opens the category inline.
+    const url = new URL(item.route, window.location.origin);
+    const categoryId = url.searchParams.get('categoryId');
+    const signId = url.searchParams.get('signId');
+
+    if (categoryId) {
+      this.navController.navigateRoot('/tabs/home', {
+        queryParams: { categoryId, signId: signId || null },
+        animated: true,
+        animationDirection: 'back',
+      });
+    } else {
+      // Generic fallback
       this.navController.navigateForward(item.route);
     }
   }

@@ -321,6 +321,52 @@ ion-header {
   }
 }
 
+// Developer Testing Section
+.dev-label {
+  color: #7c3aed;
+  border: 1.5px dashed rgba(124, 58, 237, 0.3);
+  border-radius: 8px;
+  padding: 4px 10px;
+  background: rgba(124, 58, 237, 0.05);
+}
+
+.dev-card {
+  border: 1.5px dashed rgba(124, 58, 237, 0.25) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+
+  &:active { transform: scale(0.97) !important; }
+}
+
+.dev-icon {
+  background: rgba(124, 58, 237, 0.12) !important;
+  ion-icon { color: #7c3aed !important; font-size: 22px !important; }
+
+  &.dev-active {
+    background: rgba(16, 185, 129, 0.12) !important;
+    ion-icon { color: #10b981 !important; }
+  }
+}
+
+.dev-on-text  { color: #10b981 !important; }
+.dev-off-text { color: #7c3aed !important; }
+
+.dev-pill {
+  min-width: 36px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+  background: rgba(180, 180, 180, 0.2);
+  color: #aaa;
+  letter-spacing: 0.5px;
+
+  &.on {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+}
+
 .version-info {
   text-align: center;
   margin-top: 24px;

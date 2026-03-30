@@ -103,7 +103,7 @@
       </div>
       <div class="text-box">
         <h3 class="item-title white-text">Go Premium 🚀</h3>
-        <p class="item-desc light-text">Unlock 200+ Signs & much more!</p>
+        <p class="item-desc light-text">Unlock 200+ Signs &amp; much more!</p>
       </div>
       <ion-icon
         name="chevron-forward-outline"
@@ -112,7 +112,17 @@
     </div>
     }
 
-    <!-- Manage / Cancel Subscription — shown only if premium -->
+    <!--
+      Manage Subscription — shown only if premium.
+
+      Store-compliance note:
+      Apple App Store & Google Play both require that subscription management
+      is handled through a native flow, NOT a browser link. We use
+      RevenueCat's Customer Center (RevenueCatUI.presentCustomerCenter())
+      which is the RevenueCat-approved, store-compliant approach for both
+      iOS and Android. The Customer Center handles view/change/cancel
+      in one place and satisfies all store requirements.
+    -->
     @if(isPremium) {
     <div class="setting-card" (click)="manageSubscription()">
       <div class="icon-box manage">
@@ -188,22 +198,19 @@
       </div>
       <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
+    }
 
-    <!-- Cancel Subscription -->
-    <div class="setting-card danger-card" (click)="cancelSubscription()">
-      <div class="icon-box cancel-icon">
-        <ion-icon name="close-circle-outline"></ion-icon>
+    <!-- Restore Purchases — always visible, required by Apple App Store guidelines -->
+    <div class="setting-card" (click)="restorePurchase()">
+      <div class="icon-box restart">
+        <ion-icon name="cloud-download-outline"></ion-icon>
       </div>
       <div class="text-box">
-        <h3 class="item-title danger-text">Cancel Subscription</h3>
-        <p class="item-desc">End your premium membership</p>
+        <h3 class="item-title">Restore Purchases</h3>
+        <p class="item-desc">Already subscribed? Tap to restore access</p>
       </div>
-      <ion-icon
-        name="chevron-forward-outline"
-        class="arrow danger-arrow"
-      ></ion-icon>
+      <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
-    }
 
     <!-- General Section -->
     <div class="section-label">General</div>
@@ -301,6 +308,36 @@
       </div>
       <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
     </div>
+
+    <!-- ╔══════════════════════════════════════════════════════════╗ ║ 🛠 DEVELOPER
+    TESTING — COMMENTED OUT FOR PRODUCTION ║ ║ Uncomment locally to simulate
+    premium/free views. ║
+    ╚══════════════════════════════════════════════════════════╝ -->
+
+    <!-- <div class="section-label dev-label">🛠 Developer Testing</div>
+    <div class="setting-card dev-card" (click)="togglePremium()">
+      <div class="icon-box dev-icon" [class.dev-active]="isPremium">
+        <ion-icon
+          [name]="isPremium ? 'checkmark-circle-outline' : 'flask-outline'"
+        ></ion-icon>
+      </div>
+      <div class="text-box">
+        <h3
+          class="item-title"
+          [class.dev-on-text]="isPremium"
+          [class.dev-off-text]="!isPremium"
+        >
+          {{ isPremium ? '✅ Premium Active (Test)' : '🔓 Simulate Premium' }}
+        </h3>
+        <p class="item-desc">
+          {{ isPremium ? 'Tap to disable test mode' : 'Unlock all premium views
+          for testing' }}
+        </p>
+      </div>
+      <div class="dev-pill" [class.on]="isPremium">
+        {{ isPremium ? 'ON' : 'OFF' }}
+      </div>
+    </div> -->
 
     <div class="version-info">Version 1.1 · HandHero3D</div>
   </div>

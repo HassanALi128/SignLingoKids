@@ -1,10 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController, AlertController } from '@ionic/angular/standalone';
+import {
+  ToastController,
+  AlertController,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButton,
+  IonIcon,
+  IonImg,
+  IonModal,
+  Platform,
+} from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { IonicModule, Platform } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 import {
   cardOutline,
   refreshCircleOutline,
@@ -23,12 +33,16 @@ import {
   personOutline,
   bugOutline,
   closeCircleOutline,
+  flaskOutline,
+  checkmarkCircleOutline,
 } from 'ionicons/icons';
 
 import { CommonService } from '../../core/services/common';
 import { ProfileService } from '../../services/profile.service';
 import { UserService } from '../../services/user.service';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular/standalone';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { PremiumSuccessModalComponent } from '../../components/premium-success-modal/premium-success-modal.component';
 import { CustomerCenterModalComponent } from '../../components/customer-center-modal/customer-center-modal.component';
 import { FormsModule } from '@angular/forms';
@@ -46,9 +60,21 @@ import { Browser } from '@capacitor/browser';
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButton,
+    IonIcon,
+    IonImg,
+    IonModal,
+  ],
 })
-export class SettingsPage implements OnInit {
+export class SettingsPage implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   userName: string = 'User';
   userAvatar: string = '';
   showEditModal = false;
@@ -107,10 +133,19 @@ export class SettingsPage implements OnInit {
       starOutline,
       'bug-outline': bugOutline,
       'close-circle-outline': closeCircleOutline,
+      'flask-outline': flaskOutline,
+      'checkmark-circle-outline': checkmarkCircleOutline,
     });
   }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   ngOnInit(): void {
-    this.profileService.profile$.subscribe((profile) => {
+    this.profileService.profile$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((profile) => {
       if (profile) {
         this.userName = profile.name;
         this.userAvatar = profile.avatar;

@@ -11,14 +11,22 @@ ion-header {
   justify-content: space-between;
   align-items: center;
 
-  .back-btn,
-  .help-btn {
+  .glass-header-btn {
     --color: var(--ion-text-color);
-    --padding-start: 8px;
-    --padding-end: 8px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --background: rgba(255,255,255,0.4);
+    --border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid white;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    margin: 8px;
 
     ion-icon {
-      font-size: 28px;
+      font-size: 24px;
     }
   }
 }
@@ -40,7 +48,9 @@ ion-header {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,19 +85,16 @@ ion-header {
 // 3D Character Section
 .character-section {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0; width: 100%; height: 100%;
   z-index: 0;
-  background: #ffffff;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 
   // Shift the center point up so the character isn't hidden by the bottom card
-  padding-bottom: 180px;
+  padding-bottom: 220px;
 
   .character-canvas {
     width: 100%;
@@ -97,101 +104,94 @@ ion-header {
 }
 
 // Question Section (Bottom Sheet)
-.question-section {
+.question-section.glass-sheet {
   position: absolute;
-  // Lift by Ad Height + Safe Area to avoid overlap
-  bottom: calc(var(--ad-banner-height, 0px) + env(safe-area-inset-bottom));
-  left: 0;
-  right: 0;
+  bottom: 0;
+  left: 0; right: 0;
   z-index: 20;
-  background: #ffffff;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  padding: 24px 20px 30px;
-
-  // Fill the gap below the card (created by lifting) with white
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05), 0 100px 0 0 #ffffff;
-
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  border-top-left-radius: 36px;
+  border-top-right-radius: 36px;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
   display: flex;
-  transition: bottom 0.3s ease; // Smooth transition for ad show/hide
   flex-direction: column;
-  max-height: 50vh;
-  overflow-y: auto;
+  transition: bottom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow-y: visible;
 
   .question-text {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 800;
     text-align: left;
-    margin: 0 0 20px 0;
+    margin: 0;
     color: var(--ion-text-color);
   }
 
   .answers-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: 16px;
+    margin-bottom: 24px;
   }
 
-  .progress-indicator {
-    display: none; // Hide progress for cleaner look or move to top
-  }
+  .progress-indicator { display: none; }
 }
 
-.play-button {
-  // position: absolute;
-  // top: 60%;
-  // left: 50%;
-  transform: translate(-50%, -34%);
-  width: 50px;
-  height: 50px;
-  border-radius: 20%;
-  background: var(--primary-gradient);
-  border: none;
+.glass-play-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(214, 51, 132, 0.4);
+  box-shadow: 0 8px 24px rgba(243, 79, 39, 0.25);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
   z-index: 10;
+  color: #f34f27;
 
   &:active {
-    transform: translate(-50%, -50%) scale(0.95);
-    box-shadow: 0 2px 8px rgba(214, 51, 132, 0.3);
+    transform: scale(0.9);
+    box-shadow: 0 4px 12px rgba(243, 79, 39, 0.15);
   }
 
   ion-icon {
-    font-size: 30px;
-    color: #ffffff;
+    font-size: 24px;
+    margin-left: 4px; // Optical balance for play icon
   }
 }
 
 // Answer Options
 .answer-option {
-  background: #ffffff;
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 24px;
   padding: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease,
-    background-color 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 3px solid transparent;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border: 4px solid rgba(255, 255, 255, 0.8);
 
   &:active {
-    transform: translateY(2px);
+    transform: scale(0.92);
   }
 
   .option-image {
     width: 100%;
     aspect-ratio: 1;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -204,8 +204,8 @@ ion-header {
   }
 
   .option-text {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     margin: 0;
     text-align: center;
     color: var(--ion-text-color);
@@ -213,22 +213,23 @@ ion-header {
 
   // Selected state
   &.selected {
-    border-color: #2196f3;
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    border-color: #f34f27;
+    box-shadow: 0 8px 24px rgba(243, 79, 39, 0.3);
+    background: rgba(255, 255, 255, 0.95);
   }
 
   // Correct answer state
   &.correct {
     border-color: #4caf50;
-    background-color: rgba(76, 175, 80, 0.1);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    background-color: rgba(76, 175, 80, 0.15);
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3);
   }
 
   // Wrong answer state
   &.wrong {
     border-color: #f44336;
-    background-color: rgba(244, 67, 54, 0.1);
-    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+    background-color: rgba(244, 67, 54, 0.15);
+    box-shadow: 0 8px 24px rgba(244, 67, 54, 0.3);
   }
 }
 
@@ -341,21 +342,29 @@ ion-popover.help-popover {
 }
 
 .actions-section {
-  // margin-top: 24px;
-  padding: 10px 8px;
+  padding: 16px 0 0 0;
 
-  .action-btn {
-    --border-radius: 16px;
-    height: 56px;
-    font-weight: 700;
+  .bouncy-check-btn {
+    --border-radius: 24px;
+    height: 60px;
+    font-weight: 800;
     font-size: 18px;
-    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    // font-family: 'Fredoka One', cursive;
     letter-spacing: 0.5px;
+    --background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --background-activated: linear-gradient(135deg, #0e847b 0%, #2bdaba 100%);
+    --color: #ffffff;
+    --box-shadow: 0 8px 24px rgba(56, 239, 125, 0.4);
+    margin: 0;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 
-    &.check-btn {
-      --background: var(--ion-color-primary);
-      --background-activated: var(--ion-color-primary-shade);
+    &:active {
+      transform: scale(0.96);
+    }
+
+    &[disabled] {
+      --background: rgba(255, 255, 255, 0.6) !important;
+      --color: #aaaaaa !important;
+      --box-shadow: none;
     }
   }
 }
@@ -364,4 +373,5 @@ ion-popover.help-popover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 24px;
 }

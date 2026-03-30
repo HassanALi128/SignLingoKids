@@ -1,21 +1,21 @@
-<ion-header>
-  <ion-toolbar>
+<ion-header class="ion-no-border" style="position: absolute; z-index: 10;">
+  <ion-toolbar style="--background: transparent; --ion-color-base: transparent;">
     <div class="header-content">
-      <ion-button fill="clear" (click)="goBack()" class="back-btn">
+      <ion-button fill="clear" (click)="goBack()" class="glass-header-btn">
         <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" id="help-trigger" class="help-btn">
+      <ion-button fill="clear" id="help-trigger" class="glass-header-btn">
         <ion-icon name="help-circle-outline" slot="icon-only"></ion-icon>
       </ion-button>
       <ion-popover trigger="help-trigger" triggerAction="click" side="bottom" alignment="end" class="help-popover">
         <ng-template>
           <div class="help-content">
-            <h3>How to play ?</h3>
+            <h3>How to play?</h3>
             <ul>
               <li>Watch the animation</li>
               <li>Select the card that matches the animation</li>
               <li>Click the "Check Answer" button</li>
-              <li>To play the animation again, deselect the card</li>
+              <li>To play the animation again, tap the play button!</li>
             </ul>
           </div>
         </ng-template>
@@ -24,7 +24,14 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="quiz-questions-content">
+<ion-content class="quiz-questions-content kids-gradient-bg">
+  <!-- Dynamic Background Orbs -->
+  <div class="animated-background">
+    <div class="animated-bg-shape animated-bg-shape-1"></div>
+    <div class="animated-bg-shape animated-bg-shape-2"></div>
+    <div class="animated-bg-shape animated-bg-shape-3"></div>
+  </div>
+
   <!-- Loader Overlay -->
   @if((isLoading$ | async)) {
   <div class="custom-loader">
@@ -42,13 +49,13 @@
 
   <!-- Question Section -->
   @if(state.questions[state.currentIndex]; as question) {
-  <div class="question-section">
+  <div class="question-section glass-sheet">
     <div class="question-header">
       <h2 class="question-text">Select the answer!</h2>
       <!-- Play Button Overlay -->
-      <button class="play-button" (click)="playQuestionAnimation()" [disabled]="(isAnimationLoading$ | async)">
+      <button class="glass-play-btn" (click)="playQuestionAnimation()" [disabled]="(isAnimationLoading$ | async)">
         @if((isAnimationLoading$ | async)) {
-        <ion-spinner name="crescent" color="light"></ion-spinner>
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
         } @else {
         <ion-icon name="play"></ion-icon>
         }
@@ -70,11 +77,11 @@
 
     <!-- Actions -->
     <div class="actions-section">
-      <ion-button expand="block" (click)="checkAnswer()" class="action-btn check-btn"
+      <ion-button expand="block" (click)="checkAnswer()" class="action-btn bouncy-check-btn"
         [disabled]="!state.selectedOption || state.isChecked || state.isTransitioning">
         @if(state.isTransitioning) {
         Next Question
-        <ion-spinner name="dots" slot="end"></ion-spinner>
+        <ion-spinner name="dots" slot="end" color="light"></ion-spinner>
         } @else { Check Answer
         <ion-icon name="checkmark-circle" slot="end"></ion-icon>
         }

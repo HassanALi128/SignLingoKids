@@ -42,8 +42,14 @@ export class ProfileSetupPage implements OnInit {
     // Check if user already has a profile
     this.profileService.profile$.subscribe((profile) => {
       if (profile) {
-        this.userName = profile.name || '';
-        this.selectedAvatar = profile.avatar || '';
+        this.userName = (profile.name === 'Guest') ? '' : (profile.name || '');
+        if (profile.avatar && this.avatars.includes(profile.avatar)) {
+          this.selectedAvatar = profile.avatar;
+        } else {
+          this.selectedAvatar = this.avatars[0];
+        }
+      } else {
+        this.selectedAvatar = this.avatars[0];
       }
     });
   }
@@ -59,12 +65,14 @@ export class ProfileSetupPage implements OnInit {
   }
 
   async saveProfile() {
-    if (!this.userName || !this.selectedAvatar) {
+    if (!this.selectedAvatar) {
       return;
     }
 
+    const finalName = (!this.userName || this.userName.trim() === '') ? 'Guest' : this.userName.trim();
+
     this.profileService.updateProfile({
-      name: this.userName,
+      name: finalName,
       avatar: this.selectedAvatar,
       createdAt: new Date().toISOString(),
     });

@@ -1,70 +1,88 @@
-<ion-header class="ion-no-border">
-    <ion-toolbar>
-        <ion-title>Quiz Results</ion-title>
+<ion-header class="ion-no-border" style="position: absolute; z-index: 10; width: 100%;">
+    <ion-toolbar style="--background: transparent; --ion-color-base: transparent;">
+        <ion-title style="color: #383838; font-weight: 800; text-shadow: 2px 2px 0px rgba(255,255,255,0.9);">Quiz Results</ion-title>
         <ion-buttons slot="end">
-            <ion-button (click)="dismiss()">
+            <ion-button (click)="dismiss()" style="--color: #383838;">
                 <ion-icon name="close-outline" size="large"></ion-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-    <div class="summary-card">
-        <div class="score-circle">
-            <div class="score-text">
-                <span class="score">{{ result.score }}</span>
-                <span class="total">/ {{ result.total }}</span>
-            </div>
-        </div>
-        <div class="stats-row">
-            <div class="stat-item correct">
-                <ion-icon name="checkmark-circle"></ion-icon>
-                <span>{{ correctCount }} Correct</span>
-            </div>
-            <div class="stat-item wrong">
-                <ion-icon name="close-circle"></ion-icon>
-                <span>{{ wrongCount }} Wrong</span>
-            </div>
-        </div>
+<ion-content class="quiz-results-content kids-gradient-bg">
+    <!-- Dynamic Background Orbs -->
+    <div class="animated-background">
+        <div class="animated-bg-shape animated-bg-shape-1"></div>
+        <div class="animated-bg-shape animated-bg-shape-2"></div>
+        <div class="animated-bg-shape animated-bg-shape-3"></div>
     </div>
 
-    @if (result.details && result.details.length > 0) {
-    <div class="details-section">
-        @if (correctQuestions.length > 0) {
-        <h3 class="section-title correct-title">Correct Answers</h3>
-        <ion-list lines="none" class="result-list">
-            @for (item of correctQuestions; track item.question) {
-            <ion-item class="result-item correct-item">
-                <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
-                <ion-label>
-                    <h2>{{ item.question }}</h2>
-                    <p>You answered: {{ item.userAnswer }}</p>
-                </ion-label>
-            </ion-item>
-            }
-        </ion-list>
-        }
+    <div class="scroll-wrapper">
+        <div class="summary-card glass-sheet">
+            <div class="score-circle">
+                <div class="score-text">
+                    <span class="score">{{ result.score }}</span>
+                    <span class="total">/ {{ result.total }}</span>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item correct squircle-btn">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                    <span>{{ correctCount }} Correct</span>
+                </div>
+                <div class="stat-item wrong squircle-btn">
+                    <ion-icon name="close-circle"></ion-icon>
+                    <span>{{ wrongCount }} Wrong</span>
+                </div>
+            </div>
+        </div>
 
-        @if (wrongQuestions.length > 0) {
-        <h3 class="section-title wrong-title">Incorrect Answers</h3>
-        <ion-list lines="none" class="result-list">
-            @for (item of wrongQuestions; track item.question) {
-            <ion-item class="result-item wrong-item">
-                <ion-icon name="close-circle" slot="start" color="danger"></ion-icon>
-                <ion-label>
-                    <h2>{{ item.question }}</h2>
-                    <p>You answered: <span class="wrong-text">{{ item.userAnswer }}</span></p>
-                    <p>Correct: <span class="correct-text">{{ item.correctAnswer }}</span></p>
-                </ion-label>
-            </ion-item>
+        @if (result.details && result.details.length > 0) {
+        <div class="details-section">
+            @if (correctQuestions.length > 0) {
+            <div class="section-title-wrap">
+                <h3 class="section-title correct-title">Awesome Job! 🎉</h3>
+            </div>
+            <div class="result-list">
+                @for (item of correctQuestions; track item.question) {
+                <div class="result-item correct-item glass-result-card">
+                    <div class="icon-bubble correct-bubble">
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                    </div>
+                    <div class="item-details">
+                        <h2>{{ item.question }}</h2>
+                        <p>You answered: <strong>{{ item.userAnswer }}</strong></p>
+                    </div>
+                </div>
+                }
+            </div>
             }
-        </ion-list>
+
+            @if (wrongQuestions.length > 0) {
+            <div class="section-title-wrap">
+                <h3 class="section-title wrong-title">Keep Trying! 💪</h3>
+            </div>
+            <div class="result-list">
+                @for (item of wrongQuestions; track item.question) {
+                <div class="result-item wrong-item glass-result-card">
+                    <div class="icon-bubble wrong-bubble">
+                        <ion-icon name="close-outline"></ion-icon>
+                    </div>
+                    <div class="item-details">
+                        <h2>{{ item.question }}</h2>
+                        <p>You answered: <span class="wrong-text">{{ item.userAnswer }}</span></p>
+                        <p>Correct: <span class="correct-text">{{ item.correctAnswer }}</span></p>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="no-details glass-sheet">
+            <ion-icon name="star-half-outline" class="empty-star"></ion-icon>
+            <p>Detailed results are not available for this quiz.</p>
+        </div>
         }
     </div>
-    } @else {
-    <div class="no-details">
-        <p>Detailed results are not available for this quiz.</p>
-    </div>
-    }
 </ion-content>
